@@ -4,6 +4,7 @@
 .git
 .gitignore
 .github
+.devcontainer
 .venv
 venv
 .specify

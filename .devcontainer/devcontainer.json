@@ -1,0 +1,21 @@
+{
+  "name": "Dien toan dam may - Cloud RAG Backup (8GB RAM)",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [7860],
+  "portsAttributes": {
+    "7860": {
+      "label": "Digital Archive Cloud RAG",
+      "visibility": "public",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "containerEnv": {
+    "CLOUD_STATELESS_ENV": "1",
+    "LLM_PROVIDER": "openrouter",
+    "OPENROUTER_MODEL": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "HF_STORAGE_REPO": "nhatlx205/tra-cuu-luu-tru-so-storage"
+  }
+}

@@ -9,6 +9,14 @@ services:
     envVars:
       - key: CLOUD_STATELESS_ENV
         value: "1"
+      - key: ASYNC_STARTUP
+        value: "1"
+      - key: OCR_RENDER_DPI
+        value: "180"
+      - key: OMP_THREAD_LIMIT
+        value: "1"
+      - key: MALLOC_ARENA_MAX
+        value: "2"
       - key: DENSE
         value: "0"
       - key: LLM_PROVIDER

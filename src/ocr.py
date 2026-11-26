@@ -3,6 +3,7 @@
 Chạy từ gốc Du_an/:  python -m src.ocr [--split dev] [--docs id1,id2] [--only-scan] [--limit N]
 """
 import argparse
+import gc
 import hashlib
 import re
 import json
@@ -151,6 +152,7 @@ class TesseractEngine:
     def __init__(self, lang: str = TESS_LANG, config: str = TESS_CONFIG, cmd: str | None = None,
                  steps: tuple[str, ...] = DEFAULT_STEPS, tessdata: Path | None = None):
         import pytesseract
+        os.environ.setdefault("OMP_THREAD_LIMIT", "1")
         cmd = cmd or find_tesseract_cmd()
         if cmd:
             pytesseract.pytesseract.tesseract_cmd = cmd
@@ -338,6 +340,7 @@ def ocr_document(pdf_path: Path, doc_id: str, engine=None, cache_dir: Path = OCR
         if page.is_scan:
             records.append(ocr_page_cached(doc_id, page.page_no, render_page(pdf_path, page.page_no), engine,
                                            cache_dir))
+            gc.collect()
     if pages and pages[0].layer_kind == "digital":
         image = header_crop(render_page(pdf_path, 1))
         records.append(ocr_page_cached(doc_id, 1, image, engine, cache_dir, part="header"))
@@ -348,6 +351,7 @@ def ocr_document(pdf_path: Path, doc_id: str, engine=None, cache_dir: Path = OCR
         sign_engine = (TesseractEngine(steps=SIGN_STEPS, config=SIGN_CONFIG)
                        if isinstance(engine, TesseractEngine) else engine)   # engine giả trong test
         records.append(ocr_page_cached(doc_id, page_no, image, sign_engine, cache_dir, part="sign"))
+    gc.collect()
     return records
 
 

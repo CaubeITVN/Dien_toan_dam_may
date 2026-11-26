@@ -1,4 +1,5 @@
 """Đọc PDF theo trang: lấy lớp chữ, phân loại trang có chữ thật hay scan, render ảnh."""
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +14,7 @@ from src.text import normalize_text
 SIGNATURE_LINE = re.compile(r"^(Ký bởi|Giờ ký|Thời gian ký|Signed by)\s*:", re.IGNORECASE)
 # Ít hơn ngưỡng này (sau khi bỏ dòng chữ ký) thì coi trang là scan
 MIN_TEXT_CHARS = 200
-RENDER_DPI = 300
+RENDER_DPI = int(os.environ.get("OCR_RENDER_DPI", "300"))
 TITLE_SIZE_RATIO = 1.3      # dòng tiêu đề phải to hơn cỡ chữ trung vị ít nhất 30%
 MAX_TITLE_CHARS = 200
 
@@ -102,8 +103,14 @@ def load_pages(pdf_path: Path) -> list[PageInfo]:
     return pages
 
 
-def render_page(pdf_path: Path, page_no: int, dpi: int = RENDER_DPI) -> np.ndarray:
+def render_page(pdf_path: Path, page_no: int, dpi: int | None = None) -> np.ndarray:
     """Render một trang thành mảng RGB (cao, rộng, 3)."""
+    use_dpi = int(os.environ.get("OCR_RENDER_DPI", str(RENDER_DPI))) if dpi is None else dpi
     with pymupdf.open(pdf_path) as doc:
-        pix = doc[page_no - 1].get_pixmap(dpi=dpi, alpha=False)
-        return np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.h, pix.w, 3).copy()
+        pix = doc[page_no - 1].get_pixmap(dpi=use_dpi, alpha=False)
+        arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.h, pix.w, 3).copy()
+    try:
+        pymupdf.TOOLS.store_shrink(100)
+    except Exception:
+        pass
+    return arr

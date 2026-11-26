@@ -52,6 +52,26 @@ _SAFE_DOC_ID = re.compile(r"^[A-Za-z0-9_.\-]{1,120}$")
 
 state: dict = {}
 _state_lock = threading.RLock()
+_startup_ready = threading.Event()
+_startup_ready.set()
+
+
+def _release_memory() -> None:
+    """Thu hồi bộ nhớ Python, bộ đệm C của MuPDF và heap glibc trên Linux."""
+    import gc
+
+    gc.collect()
+    try:
+        pymupdf.TOOLS.store_shrink(100)
+    except Exception:
+        pass
+    if os.name != "nt":
+        try:
+            import ctypes
+
+            ctypes.CDLL("libc.so.6").malloc_trim(0)
+        except Exception:
+            pass
 
 
 def _archive_mgr() -> ArchiveManager:
@@ -90,13 +110,31 @@ def load_state(pages_path: Path = PAGES_PATH) -> None:
             meta=meta,
             archive_mgr=archive_mgr,
         )
+    _release_memory()
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    async_boot = os.environ.get("ASYNC_STARTUP", "").strip().lower() in ("1", "true", "yes")
+    if async_boot and "assistant" not in state:
+        _startup_ready.clear()
+
+        def _bg_init() -> None:
+            try:
+                get_cloud_store().bootstrap_on_startup(DATA_DIR, MODELS_DIR)
+                if "assistant" not in state:
+                    load_state()
+            finally:
+                _startup_ready.set()
+
+        threading.Thread(target=_bg_init, daemon=True, name="cloud-bootstrap").start()
+        yield
+        return
+
     get_cloud_store().bootstrap_on_startup(DATA_DIR, MODELS_DIR)
     if "assistant" not in state:
         load_state()
+    _startup_ready.set()
     yield
 
 
@@ -129,6 +167,10 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 def _assistant() -> Assistant:
+    if "assistant" not in state and not _startup_ready.is_set():
+        _startup_ready.wait(timeout=45)
+    if "assistant" not in state:
+        raise HTTPException(503, "Hệ thống đang khởi tạo dữ liệu, vui lòng thử lại sau vài giây.")
     return state["assistant"]
 
 
@@ -417,9 +459,16 @@ def get_doc(doc_id: str, request: Request = None):
 # --- CÁC ENDPOINT QUẢN LÝ LƯU TRỮ (ARCHIVE FONDS & DOSSIERS) ---
 
 @app.get("/api/archive/tree")
-def archive_tree():
-    """Lấy cây Phông lưu trữ -> Mục lục -> Danh mục Hồ sơ."""
-    return _archive_mgr().get_tree()
+def archive_tree(request: Request = None):
+    """Lấy cây Phông lưu trữ -> Mục lục -> Danh mục Hồ sơ (ẩn danh sách doc_ids nội bộ khi chưa đăng nhập)."""
+    mgr = _archive_mgr()
+    role = _resolve_request_role(request, None)
+    tree = mgr.get_tree()
+    for f in tree:
+        for d in f.get("dossiers", []):
+            if not mgr.is_access_allowed(d.get("usage_mode"), user_role=role):
+                d["doc_ids"] = []
+    return tree
 
 
 @app.get("/api/archive/fonds")
@@ -430,9 +479,10 @@ def archive_fonds():
 
 
 @app.get("/api/archive/dossiers")
-def list_dossiers(title: str = "", file_code: str = "", status: str = ""):
+def list_dossiers(title: str = "", file_code: str = "", status: str = "", request: Request = None):
     """Danh sách tất cả hồ sơ kèm bộ lọc tiêu đề, mã hồ sơ và trạng thái."""
     mgr = _archive_mgr()
+    role = _resolve_request_role(request, None)
     items = []
     for dos in mgr.dossiers.values():
         if title and title.lower() not in dos.title.lower():
@@ -443,6 +493,8 @@ def list_dossiers(title: str = "", file_code: str = "", status: str = ""):
             continue
         d = dos.to_dict()
         d["doc_count"] = len(dos.doc_ids)
+        if not mgr.is_access_allowed(dos.usage_mode, user_role=role):
+            d["doc_ids"] = []
         items.append(d)
     return items
 
@@ -570,9 +622,10 @@ def import_dossiers_api(req: DossierImportRequest, request: Request):
 
 
 @app.get("/api/archive/dossiers-export")
-def export_dossiers_csv(fond_id: str = "", status: str = "", q: str = "", file_codes: str = ""):
+def export_dossiers_csv(fond_id: str = "", status: str = "", q: str = "", file_codes: str = "", request: Request = None):
     """Xuất danh mục hồ sơ ra file CSV chuẩn UTF-8 BOM mở trực tiếp bằng Excel."""
     mgr = _archive_mgr()
+    role = _resolve_request_role(request, None)
     selected_codes = {c.strip() for c in file_codes.split(",") if c.strip()} if file_codes else None
     q_low = q.strip().lower()
 
@@ -582,6 +635,8 @@ def export_dossiers_csv(fond_id: str = "", status: str = "", q: str = "", file_c
 
     idx = 0
     for dos in mgr.dossiers.values():
+        if not mgr.is_access_allowed(dos.usage_mode, user_role=role):
+            continue
         if selected_codes is not None and dos.file_code not in selected_codes:
             continue
         if fond_id and dos.fond_id != fond_id:
@@ -914,7 +969,12 @@ def _highlight_rects(page: pymupdf.Page, doc_id: str, page_no: int, source: str,
             return []
         key = lambda s: re.sub(r"\W+", "", remove_diacritics(normalize_for_eval(s)).lower())
         target = key(cited)
-        scale = 72 / OCR_DPI
+        img_shape = rec.get("image_shape")
+        scale = (
+            (page.rect.width / img_shape[1])
+            if (isinstance(img_shape, list) and len(img_shape) >= 2 and img_shape[1])
+            else (72 / OCR_DPI)
+        )
         return [
             pymupdf.Rect(*(v * scale for v in line["bbox"]))
             for line in rec["lines"]
@@ -951,7 +1011,7 @@ def _contiguous_chain(hits: list[list]) -> list:
     return best
 
 
-@lru_cache(maxsize=64)
+@lru_cache(maxsize=6)
 def render_png(doc_id: str, page_no: int, start: int, end: int) -> bytes:
     a = _assistant()
     page_rec = a.pages.get((doc_id, page_no))
@@ -971,7 +1031,9 @@ def render_png(doc_id: str, page_no: int, start: int, end: int) -> bytes:
         if end > start:
             for r in _highlight_rects(page, doc_id, page_no, page_rec["source"], page_rec["text"][start:end]):
                 page.add_highlight_annot(r)
-        return page.get_pixmap(dpi=VIEW_DPI, alpha=False).tobytes("png")
+        png_bytes = page.get_pixmap(dpi=VIEW_DPI, alpha=False).tobytes("png")
+    _release_memory()
+    return png_bytes
 
 
 @app.get("/api/page/{doc_id}/{page_no}.png")
@@ -1024,14 +1086,14 @@ def doc_pdf(doc_id: str, request: Request = None):
     )
 
 
-def _register_uploaded_doc(doc_id: str, pages: list[dict], meta: dict, raw_name: str) -> dict:
+def _register_uploaded_doc(doc_id: str, pages: list[dict], meta: dict, raw_name: str, request: Request | None = None) -> dict:
     with _state_lock:
         state.setdefault("paths", {})[doc_id] = uploads.upload_folder(doc_id, UPLOAD_DIR) / uploads.PDF_NAME
         state.setdefault("meta", {})[doc_id] = meta | {"group": "upload", "split": "upload"}
         _assistant().add_document(pages)
         _archive_mgr().ensure_upload_doc(doc_id, raw_name)
         render_png.cache_clear()
-        return get_doc(doc_id)
+        return get_doc(doc_id, request=request)
 
 
 @app.post("/api/upload")
@@ -1056,9 +1118,10 @@ async def upload(request: Request):
     raw_name = Path(unquote(request.headers.get("x-filename", "tai_len.pdf")).replace("\\", "/")).name or "tai_len.pdf"
     try:
         doc_id, pages, meta = await run_in_threadpool(uploads.save_upload, body, raw_name, UPLOAD_DIR, OCR_DIR)
-        doc_out = await run_in_threadpool(_register_uploaded_doc, doc_id, pages, meta, raw_name)
+        doc_out = await run_in_threadpool(_register_uploaded_doc, doc_id, pages, meta, raw_name, request)
         get_cloud_store().sync_upload(doc_id, UPLOAD_DIR, OCR_DIR)
         get_cloud_store().sync_archive_structure(_archive_mgr().structure_path)
+        _release_memory()
         return doc_out
     except HTTPException:
         raise
@@ -1100,4 +1163,5 @@ def delete_uploaded(doc_id: str, request: Request):
                 p.unlink()
             except OSError:
                 pass
+    _release_memory()
     return {"deleted": doc_id}

@@ -185,8 +185,8 @@ def make_fig_1_3() -> None:
     _box(ax, 0.04, 0.69, 0.92, 0.23,
          "Lớp 1: Ảnh Bộ chứa Bất biến (Container Image Layer)\n"
          "Mã nguồn ứng dụng gọn nhẹ (< 1 MB)  |  Môi trường Python & Bộ nhận dạng quang học tiếng Việt\n"
-         "Trọng số mô hình chuyển đổi ngữ nghĩa đa ngôn ngữ được nạp sẵn giúp khởi động trong ~3 giây",
-         fc="#EFF6FF", ec="#1D4ED8", fs=9.0, bold=False)
+         "Cấu hình kép: tối ưu bộ chứa nhẹ Render (< 450 MB RAM) hoặc nạp mô hình ngữ nghĩa (≥ 2 GB RAM)",
+         fc="#EFF6FF", ec="#1D4ED8", fs=8.8, bold=False)
 
     _box(ax, 0.04, 0.37, 0.92, 0.23,
          "Lớp 2: Bộ nhớ Đệm Tạm thời Trong Bộ chứa (Ephemeral Runtime Cache)\n"
@@ -241,68 +241,78 @@ def make_fig_1_4() -> None:
 
 
 def make_fig_1_5() -> None:
-    """So sánh bộ nhớ RAM bậc miễn phí của 5 nền tảng đám mây."""
+    """So sánh bộ nhớ RAM bậc miễn phí cho Docker của 5 nền tảng đám mây."""
     providers = [
-        "Hugging Face\nSpaces (Chọn)",
-        "Google\nCloud Run",
-        "Render\n(Gói miễn phí)",
+        "Render (Chọn ·\nGói miễn phí)",
         "Fly\n(Gói cơ bản)",
+        "Hugging Face\nSpaces (Docker)",
+        "Google\nCloud Run",
         "Railway\n(Dùng thử)",
     ]
-    ram_gb = [16.0, 4.0, 0.5, 0.25, 8.0]
-    colors = ["#16A34A", "#94A3B8", "#EF4444", "#EF4444", "#F59E0B"]
+    ram_gb = [0.50, 0.25, 0.0, 4.0, 8.0]
+    colors = ["#16A34A", "#EF4444", "#EF4444", "#94A3B8", "#F59E0B"]
+    notes = [
+        "0,50 GB (Không thẻ · Đạt chuẩn ~445 MB RAM)",
+        "0,25 GB (Tràn bộ nhớ khi khởi chạy)",
+        "0,00 GB miễn phí Docker (Yêu cầu gói PRO)",
+        "4,00 GB (Bắt buộc thẻ thanh toán)",
+        "8,00 GB (Giới hạn dùng thử 30 ngày)",
+    ]
 
     fig, ax = plt.subplots(figsize=(9.5, 4.4), dpi=220)
     bars = ax.barh(providers[::-1], ram_gb[::-1], color=colors[::-1], height=0.54, edgecolor="#1E293B")
-    ax.axvline(2.0, color="#1D4ED8", linestyle="--", linewidth=1.5, label="Ngưỡng tối thiểu cho PyTorch + mô hình ngữ nghĩa (2,0 GB)")
-    for b, val in zip(bars, ram_gb[::-1]):
-        note = " (Miễn phí, không thẻ)" if val == 16.0 else (" (Hết hạn sau 30 ngày)" if val == 8.0 else (" (Bắt buộc thẻ)" if val == 4.0 else " (Tràn bộ nhớ)"))
-        ax.text(val + 0.25, b.get_y() + b.get_height() / 2, f"{val:.2f} GB{note}".replace(".", ","),
-                va="center", fontsize=8.6, color="#0F172A")
-    ax.set_xlim(0, 22.8)
-    ax.set_xlabel("Bộ nhớ RAM tối đa khả dụng ở bậc dùng thử / miễn phí (GB)", fontsize=9.5)
+    ax.axvline(0.45, color="#15803D", linestyle="--", linewidth=1.5,
+               label="Ngưỡng bộ chứa nhẹ tối ưu Render (~0,45 GB RAM)")
+    ax.axvline(2.0, color="#1D4ED8", linestyle=":", linewidth=1.4,
+               label="Ngưỡng đầy đủ PyTorch + ngữ nghĩa (2,00 GB)")
+    for b, val, note in zip(bars, ram_gb[::-1], notes[::-1]):
+        ax.text(val + 0.18, b.get_y() + b.get_height() / 2, note,
+                va="center", fontsize=8.2, color="#0F172A",
+                fontweight="bold" if val == 0.50 else "normal")
+    ax.set_xlim(0, 13.8)
+    ax.set_xlabel("Bộ nhớ RAM miễn phí khả dụng cho Docker ở bậc dùng thử / miễn phí (GB)", fontsize=9.1)
     ax.grid(axis="x", linestyle=":", alpha=0.5)
-    ax.legend(loc="lower right", fontsize=8.6)
+    ax.legend(loc="upper right", fontsize=8.2)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     _save(fig, "fig_1_5.png")
 
 
 def make_fig_1_6() -> None:
-    """Minh họa giao diện bảng điều khiển Space (trái) & biến bí mật mã hóa (phải)."""
+    """Minh họa giao diện bảng điều khiển Render (trái) & biến bí mật mã hóa (phải)."""
     fig, ax = plt.subplots(figsize=(10.8, 4.8), dpi=220)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Hugging Face Space · Tổng quan & Nhật ký", "#1E3A8A")
-    _box(ax, 0.04, 0.72, 0.42, 0.11, "Không gian: Lưu trữ Số hóa Cloud\nTrạng thái: Đang hoạt động (Running · 2 vCPU · 16 GB RAM)", fc="#DCFCE7", ec="#15803D", fs=8.0, bold=True)
-    tabs = [("Ứng dụng", "#DBEAFE"), ("Tệp mã", "#F1F5F9"), ("Cài đặt", "#F1F5F9"), ("Nhật ký", "#E0E7FF")]
+    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Render Cloud · Tổng quan Dịch vụ & Nhật ký", "#1E3A8A")
+    _box(ax, 0.04, 0.72, 0.42, 0.11, "Dịch vụ: Lưu trữ Số hóa Cloud\nTrạng thái: Đang hoạt động (Live · Cụm Singapore · 512 MB RAM)", fc="#DCFCE7", ec="#15803D", fs=7.7, bold=True)
+    tabs = [("Tổng quan", "#DBEAFE"), ("Sự kiện", "#F1F5F9"), ("Môi trường", "#F1F5F9"), ("Nhật ký", "#E0E7FF")]
     for i, (t, fc) in enumerate(tabs):
-        _box(ax, 0.04 + i * 0.105, 0.62, 0.098, 0.07, t, fc=fc, ec="#64748B", fs=7.8, bold=(i in (0, 3)))
+        _box(ax, 0.04 + i * 0.105, 0.62, 0.098, 0.07, t, fc=fc, ec="#64748B", fs=7.6, bold=(i in (0, 3)))
     _box(ax, 0.04, 0.11, 0.42, 0.47,
-         "[Luồng Xây dựng ảnh] Hoàn tất cài Tesseract tiếng Việt & mô hình\n"
-         "[Luồng Bộ chứa] Khởi tạo cổng kết nối 7860 trên địa chỉ 0.0.0.0\n"
+         "[Luồng Xây dựng ảnh] Hoàn tất cài Tesseract tiếng Việt & hồ sơ nhẹ\n"
+         "[Luồng Bộ chứa] Khởi tạo cổng kết nối 10000 trên 0.0.0.0\n"
          "[Đồng bộ Đám mây] Khôi phục thành công cấu trúc 14 hồ sơ\n"
          "[Chỉ mục Tìm kiếm] Nạp 110 văn bản · 630 trang · 3.476 đoạn\n"
-         "[Cổng LLM Mặc định] Sẵn sàng suy luận trực tuyến phía máy chủ\n"
-         "[Kiểm tra Sức khỏe] Phản hồi hợp lệ trạng thái sẵn sàng",
-         fc="#0F172A", ec="#334155", tc="#E2E8F0", fs=7.3, ha="left")
+         "[Cổng LLM Mặc định] Sẵn sàng suy luận Nemotron 3 Ultra phía máy chủ\n"
+         "[Kiểm tra Sức khỏe] Phản hồi hợp lệ · RAM thực tế ~445 MB",
+         fc="#0F172A", ec="#334155", tc="#E2E8F0", fs=7.2, ha="left")
 
     _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Cài đặt · Biến môi trường & Bí mật Mã hóa", "#0F766E")
-    _box(ax, 0.54, 0.74, 0.42, 0.09, "Phần cứng: CPU Cơ bản · Miễn phí (0 USD/giờ)\nChế độ ngủ đông mặc định: Sau 48 giờ không truy cập", fc="#F0FDFA", ec="#0F766E", fs=7.8)
+    _box(ax, 0.54, 0.74, 0.42, 0.09, "Phần cứng: Render Miễn phí · 0,1 vCPU · 512 MB RAM (0 USD)\nChế độ ngủ đông: Tự nghỉ sau 15 phút rỗi", fc="#F0FDFA", ec="#0F766E", fs=7.7)
     secrets_rows = [
         ("Khóa cổng mô hình ngôn ngữ mặc định", "••••••••1a8e  (Mã hóa)"),
         ("Mã thông báo truy cập kho lưu trữ", "••••••••9f2c  (Mã hóa)"),
         ("Mật khẩu quản trị và khóa ký phiên", "••••••••••••  (Mã hóa)"),
         ("Định danh kho tập dữ liệu riêng tư", "Kho lưu trữ riêng tư"),
-        ("Tên mô hình ngôn ngữ mặc định", "Gemini 2.0 Flash"),
-        ("Cờ vận hành phi trạng thái", "Đã kích hoạt (Bật)"),
+        ("Tên mô hình ngôn ngữ mặc định", "Nemotron 3 Ultra 550B"),
+        ("Cờ bộ chứa nhẹ & phi trạng thái", "Đã kích hoạt (Bật)"),
     ]
     for i, (k, v) in enumerate(secrets_rows):
         y = 0.62 - i * 0.092
         _box(ax, 0.54, y, 0.25, 0.072, k, fc="#F8FAFC", ec="#CBD5E1", fs=7.2, ha="left")
-        _box(ax, 0.80, y, 0.16, 0.072, v, fc="#ECFDF5", ec="#047857", fs=7.1, bold=True)
+        _box(ax, 0.80, y, 0.16, 0.072, v, fc="#ECFDF5", ec="#047857", fs=7.0, bold=True)
 
     _save(fig, "fig_1_6.png")
 
@@ -350,7 +360,7 @@ def make_fig_1_8() -> None:
     ax.axis("off")
 
     _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Cổng Mô hình Ngôn ngữ · Quản lý Khóa & Hạn mức", "#C2410C")
-    _box(ax, 0.04, 0.67, 0.42, 0.14, "Khóa hệ thống mặc định: ••••••••1a8e\nMô hình mặc định: Google Gemini 2.0 Flash\nTrạng thái: Hoạt động sẵn sàng phía máy chủ", fc="#FFF7ED", ec="#C2410C", fs=7.8, ha="left", bold=True)
+    _box(ax, 0.04, 0.67, 0.42, 0.14, "Khóa hệ thống mặc định: ••••••••1a8e\nMô hình mặc định: Nemotron 3 Ultra 550B\nTrạng thái: Hoạt động sẵn sàng phía máy chủ", fc="#FFF7ED", ec="#C2410C", fs=7.8, ha="left", bold=True)
     _box(ax, 0.04, 0.40, 0.42, 0.22, "Cơ chế kiểm soát chi phí áp dụng:\n• Chặn câu hỏi thiếu căn cứ trước khi gọi API\n• Giới hạn tối đa 5 đoạn nguồn × 900 ký tự\n• Không bắt buộc người dùng nhập khóa cá nhân", fc="#F8FAFC", ec="#94A3B8", fs=7.6, ha="left")
     _box(ax, 0.04, 0.12, 0.42, 0.22, "Lịch sử suy luận kiểm thử gần nhất:\n• Thời gian phản hồi trung bình: 1,2 – 2,4 giây\n• Tỷ lệ thành công kiểm chứng nguồn: 100%", fc="#ECFDF5", ec="#047857", fs=7.7, ha="left")
 
@@ -358,9 +368,9 @@ def make_fig_1_8() -> None:
     _box(ax, 0.54, 0.69, 0.42, 0.12, "Nhánh chính bảo vệ · Luồng tự động hóa đang bật\nTách biệt hoàn toàn khỏi thư mục môn học khác", fc="#F1F5F9", ec="#475569", fs=7.8, bold=True)
     checks = [
         ("1. Cài đặt môi trường & OCR tiếng Việt", "Đạt", "#DCFCE7"),
-        ("2. Chạy 85 bài kiểm thử tự động toàn diện", "85/85 Đạt", "#DCFCE7"),
+        ("2. Chạy toàn bộ bộ kiểm thử tự động", "100% Đạt", "#DCFCE7"),
         ("3. Kiểm tra gói tách dữ liệu (< 5 MB)", "0,65 MB · Đạt", "#DCFCE7"),
-        ("4. Triển khai tự động lên Không gian Cloud", "Hoàn tất", "#DBEAFE"),
+        ("4. Triển khai tự động lên Dịch vụ Render", "Hoàn tất", "#DBEAFE"),
     ]
     for i, (lbl, st, fc) in enumerate(checks):
         y = 0.55 - i * 0.115
@@ -442,40 +452,40 @@ def make_fig_2_3() -> None:
     _box(ax, 0.27, 0.83, 0.46, 0.11,
          "Tầng 1: Người dùng & Quản trị viên (Trình duyệt qua HTTPS)\nCổng Quản lý Hồ sơ  |  Không gian Hỏi đáp 3 cột  |  Bảng Giám sát Cloud",
          fc="#DBEAFE", ec="#1D4ED8", fs=8.8, bold=True)
-    _box(ax, 0.16, 0.53, 0.68, 0.18,
-         "Tầng 2: Không gian Bộ chứa Tính toán Phi Trạng thái (2 vCPU, 16 GB RAM)\n"
-         "Máy chủ Web bất đồng bộ  |  Tìm kiếm lai (BM25 + TF-IDF + Vector)  |  OCR tiếng Việt\n"
+    _box(ax, 0.13, 0.53, 0.74, 0.18,
+         "Tầng 2: Dịch vụ Bộ chứa Tính toán Phi Trạng thái trên Render (Singapore · 512 MB RAM)\n"
+         "Máy chủ Web bất đồng bộ  |  Tìm kiếm từ vựng chuẩn hóa & chế độ lai  |  OCR tiếng Việt\n"
          "Xác thực chữ ký điện tử bền vững  |  Tích hợp sẵn khóa mô hình ngôn ngữ mặc định",
-         fc="#EFF6FF", ec="#1E40AF", fs=8.8)
+         fc="#EFF6FF", ec="#1E40AF", fs=8.4)
 
-    _box(ax, 0.04, 0.21, 0.42, 0.20,
-         "Tầng 3: Kho Tập Dữ liệu Riêng tư Bền vững\n"
+    _box(ax, 0.03, 0.21, 0.41, 0.20,
+         "Tầng 3: Kho Dữ liệu Riêng tư Hugging Face Hub\n"
          "• Danh mục Phông – Hồ sơ (đồng bộ tức thời)\n"
          "• Tài liệu tải lên & kết quả nhận dạng đệm\n"
-         "• Kho tài liệu gốc phục vụ tải lười PDF",
-         fc="#ECFDF5", ec="#047857", fs=8.5)
+         "• Kho tài liệu gốc phục vụ tải lười PDF (110 tệp)",
+         fc="#ECFDF5", ec="#047857", fs=7.9)
 
-    _box(ax, 0.54, 0.21, 0.42, 0.20,
-         "Tầng 4: Cổng Mô hình Ngôn ngữ Mặc định\n"
-         "• Suy luận từ các đoạn trích đã kiểm duyệt\n"
-         "• Hoạt động sẵn sàng ngay không cần nhập khóa\n"
-         "• Giới hạn token & thử lại tự động khi quá tải",
-         fc="#FFF7ED", ec="#C2410C", fs=8.5)
+    _box(ax, 0.56, 0.21, 0.41, 0.20,
+         "Tầng 4: Cổng Mô hình Ngôn ngữ Mặc định (OpenRouter)\n"
+         "• Mô hình Nemotron 3 Ultra 550B bậc miễn phí\n"
+         "• Sẵn sàng ngay không cần nhập khóa cá nhân\n"
+         "• Tự dự phòng mô hình cục bộ hoặc trích xuất cơ sở",
+         fc="#FFF7ED", ec="#C2410C", fs=7.9)
 
-    _box(ax, 0.20, 0.03, 0.60, 0.10,
-         "Đường ống Tự động hóa: Kiểm thử 85 kịch bản -> Kiểm tra gói tách (< 1 MB) -> Triển khai bộ chứa",
-         fc="#F3E8FF", ec="#7E22CE", fs=8.5, bold=True)
+    _box(ax, 0.18, 0.03, 0.64, 0.10,
+         "Đường ống Tự động hóa: Kiểm thử tự động -> Kiểm tra gói (< 1 MB) -> Triển khai lên Render",
+         fc="#F3E8FF", ec="#7E22CE", fs=8.4, bold=True)
 
     _arrow(ax, 0.50, 0.83, 0.50, 0.71, "HTTPS + Mã phiên")
-    _arrow(ax, 0.34, 0.53, 0.25, 0.41, "Khôi phục & Đồng bộ")
-    _arrow(ax, 0.66, 0.53, 0.75, 0.41, "Yêu cầu suy luận")
-    _arrow(ax, 0.50, 0.13, 0.50, 0.53, "Triển khai liên tục", color="#7E22CE")
+    _arrow(ax, 0.34, 0.53, 0.24, 0.41, "Khôi phục & Đồng bộ")
+    _arrow(ax, 0.66, 0.53, 0.76, 0.41, "Yêu cầu suy luận")
+    _arrow(ax, 0.50, 0.13, 0.50, 0.53, "Triển khai\nliên tục", color="#7E22CE", fs=7.4)
     _save(fig, "fig_2_3.png")
 
 
 def make_fig_2_4(bench: dict) -> None:
     """Cấu trúc phân lớp bộ chứa (trái) & biểu đồ giảm 99,77% dung lượng gói (phải)."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.6), dpi=220, gridspec_kw={"width_ratios": [1.05, 1]})
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.6), dpi=220, gridspec_kw={"width_ratios": [1.08, 1]})
     ax1.set_xlim(0, 1)
     ax1.set_ylim(0, 1)
     ax1.axis("off")
@@ -484,16 +494,16 @@ def make_fig_2_4(bench: dict) -> None:
     layers = [
         ("6. Tiến trình Web phi đặc quyền (UID 1000) + Kiểm tra sống", "#DCFCE7", "#15803D"),
         ("5. Mã nguồn gọn nhẹ (0,65 MB) — không chứa bí mật/dữ liệu", "#DBEAFE", "#1D4ED8"),
-        ("4. Nạp sẵn trọng số mô hình ngữ nghĩa đa ngôn ngữ (~470 MB)", "#E0E7FF", "#4338CA"),
-        ("3. Thư viện Python tối ưu CPU (không cài gói giao diện thừa)", "#FEF3C7", "#B45309"),
+        ("4. Cấu hình kép: Hồ sơ nhẹ Render (< 450 MB RAM) / Hồ sơ đầy đủ ngữ nghĩa", "#E0E7FF", "#4338CA"),
+        ("3. Thư viện Python tối ưu CPU (lược bỏ gói nặng ở hồ sơ nhẹ)", "#FEF3C7", "#B45309"),
         ("2. Bộ nhận dạng quang học Tesseract + gói tiếng Việt", "#FFEDD5", "#C2410C"),
         ("1. Ảnh nền Linux tối giản kèm Python 3.10", "#F1F5F9", "#475569"),
     ]
     for i, (txt, fc, ec) in enumerate(layers):
-        _box(ax1, 0.03, 0.80 - i * 0.15, 0.94, 0.115, txt, fc=fc, ec=ec, fs=7.7, bold=(i == 0))
+        _box(ax1, 0.02, 0.80 - i * 0.15, 0.96, 0.115, txt, fc=fc, ec=ec, fs=7.3, bold=(i == 0))
 
     pkg = bench["packaging"]
-    labels = ["Đơn khối cũ", "Độc lập nhẹ", "Kho dữ liệu", "Mã nguồn Space"]
+    labels = ["Đơn khối cũ", "Độc lập nhẹ", "Kho dữ liệu", "Mã nguồn Bộ chứa"]
     vals = [pkg["legacy_monolith_mb"], pkg["standalone_mb"], pkg["decoupled_storage_mb"], pkg["decoupled_space_mb"]]
     colors = ["#EF4444", "#F59E0B", "#0EA5E9", "#16A34A"]
     bars = ax2.barh(labels[::-1], vals[::-1], color=colors[::-1], height=0.52, edgecolor="#1E293B")
@@ -569,19 +579,19 @@ def make_fig_2_7() -> None:
     ax.axis("off")
 
     _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 4 · Thiết lập Khóa LLM Mặc định Phía Máy chủ", "#C2410C")
-    _box(ax, 0.04, 0.60, 0.42, 0.22, "Cổng Dịch vụ Mô hình Ngôn ngữ Mặc định\n• Nhà cung cấp: OpenRouter (Google Gemini 2.0 Flash)\n• Khóa hệ thống mặc định: ••••••••1a8e (Đã kích hoạt)", fc="#FFF7ED", ec="#C2410C", fs=7.9, ha="left", bold=True)
-    _box(ax, 0.04, 0.14, 0.42, 0.38, "Trải nghiệm không cần thiết lập cho người dùng cuối:\n• Trình duyệt tự động sử dụng kết nối LLM có sẵn ở máy chủ\n• Ẩn hoàn toàn yêu cầu nhập khóa API đối với độc giả\n• Hỗ trợ chuyển tức thời sang chế độ trích câu cơ sở\n• Giá trị khóa thô luôn được che kín ở mọi điểm cuối trạng thái", fc="#F8FAFC", ec="#94A3B8", fs=7.7, ha="left")
+    _box(ax, 0.04, 0.60, 0.42, 0.22, "Cổng Dịch vụ Mô hình Ngôn ngữ Mặc định\n• Nhà cung cấp: OpenRouter (Nemotron 3 Ultra 550B)\n• Khóa hệ thống mặc định: ••••••••1a8e (Đã kích hoạt)", fc="#FFF7ED", ec="#C2410C", fs=7.7, ha="left", bold=True)
+    _box(ax, 0.04, 0.14, 0.42, 0.38, "Trải nghiệm không cần thiết lập cho người dùng cuối:\n• Trình duyệt tự động sử dụng kết nối LLM có sẵn ở máy chủ\n• Ẩn hoàn toàn yêu cầu nhập khóa API đối với độc giả\n• Tự động dự phòng mô hình cục bộ hoặc trích xuất cơ sở\n• Giá trị khóa thô luôn được che kín ở mọi điểm cuối trạng thái", fc="#F8FAFC", ec="#94A3B8", fs=7.5, ha="left")
 
-    _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Kiểm soát Hạn mức & Chống Gọi Thừa API", "#1E40AF")
+    _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Kiểm soát Hạn mức & Cơ chế Tự động Dự phòng", "#1E40AF")
     rules = [
         ("Cổng từ chối trước LLM", "Chặn câu hỏi thiếu căn cứ (< ngưỡng phủ)", "#DBEAFE"),
         ("Giới hạn ngữ cảnh gửi đi", "Tối đa 5 đoạn nguồn × 900 ký tự/lượt", "#EFF6FF"),
-        ("Giới hạn độ dài phản hồi", "Tối đa 280 token · Nhiệt độ giải mã 0,0", "#EFF6FF"),
-        ("Cơ chế thử lại an toàn", "Tối đa 2 lần thử lại khi quá tải tạm thời", "#DCFCE7"),
+        ("Giới hạn độ dài phản hồi", "Mức suy luận thấp · Trần 1.500 token · Nhiệt độ 0,0", "#EFF6FF"),
+        ("Thử lại & Tự dự phòng", "Thử lại 2 lần; tự chuyển cục bộ / trích xuất cơ sở", "#DCFCE7"),
     ]
     for i, (t, d, fc) in enumerate(rules):
         y = 0.66 - i * 0.145
-        _box(ax, 0.54, y, 0.42, 0.11, f"{t}: {d}", fc=fc, ec="#1E40AF", fs=7.7, ha="left")
+        _box(ax, 0.54, y, 0.42, 0.11, f"{t}: {d}", fc=fc, ec="#1E40AF", fs=7.4, ha="left")
 
     _save(fig, "fig_2_7.png")
 
@@ -622,45 +632,45 @@ def make_fig_2_8(bench: dict) -> None:
 
 
 def make_fig_2_9() -> None:
-    """Bước 6: Cấu hình Không gian bộ chứa 16 GB RAM & biến bí mật máy chủ."""
+    """Bước 6: Cấu hình Dịch vụ Bộ chứa Render 512 MB RAM & biến bí mật máy chủ."""
     fig, ax = plt.subplots(figsize=(10.8, 4.5), dpi=220)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 6 · Cấu hình Không gian Bộ chứa Đám mây", "#1D4ED8")
+    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 6 · Cấu hình Dịch vụ Bộ chứa Đám mây trên Render", "#1D4ED8")
     specs = [
-        ("Nền tảng đóng gói", "Bộ chứa tùy biến chuẩn mở"),
-        ("Cấu hình phần cứng", "2 vCPU · 16 GB RAM · 50 GB đĩa tạm"),
-        ("Cổng lắng nghe Web", "7860 (Giao thức HTTPS tự động)"),
-        ("Kho dữ liệu kết nối", "Kho tập dữ liệu riêng tư"),
+        ("Nền tảng đóng gói", "Bộ chứa tối ưu (gói Render miễn phí)"),
+        ("Cấu hình phần cứng", "0,1 vCPU · 512 MB RAM · Cụm Singapore"),
+        ("Cổng lắng nghe Web", "10000 (Giao thức HTTPS tự động)"),
+        ("Kết nối triển khai", "Bản thiết kế tự động từ GitHub + Kho riêng tư"),
         ("Dung lượng mã nguồn đẩy", "37 tệp · 0,65 MB (giảm 99,77%)"),
         ("Chi phí duy trì", "0 đồng/tháng · Không gắn thẻ"),
     ]
     for i, (k, v) in enumerate(specs):
         y = 0.68 - i * 0.105
-        _box(ax, 0.04, y, 0.18, 0.082, k, fc="#EFF6FF", ec="#93C5FD", fs=7.5, bold=True)
-        _box(ax, 0.23, y, 0.23, 0.082, v, fc="#FFFFFF", ec="#CBD5E1", fs=7.5, ha="left")
+        _box(ax, 0.04, y, 0.18, 0.082, k, fc="#EFF6FF", ec="#93C5FD", fs=7.3, bold=True)
+        _box(ax, 0.23, y, 0.23, 0.082, v, fc="#FFFFFF", ec="#CBD5E1", fs=7.2, ha="left")
 
-    _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Biến Bí mật Mã hóa Đã Đồng bộ Lên Máy chủ", "#047857")
+    _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Biến Bí mật Mã hóa Đã Đồng bộ Lên Render", "#047857")
     sec_rows = [
         ("Khóa truy cập kho lưu trữ", "••••••••9f2c (Đã mã hóa)"),
         ("Định danh kho dữ liệu riêng tư", "Kho lưu trữ bền vững"),
         ("Khóa mô hình ngôn ngữ mặc định", "••••••••1a8e (Sẵn sàng)"),
-        ("Mô hình ngôn ngữ & nhà cung cấp", "OpenRouter · Gemini Flash"),
+        ("Mô hình ngôn ngữ & nhà cung cấp", "OpenRouter · Nemotron 3 Ultra"),
         ("Mật khẩu quản trị & khóa ký", "•••••••••••• (HMAC-SHA256)"),
-        ("Chế độ vận hành phi trạng thái", "Bật (Không ghi khóa ra đĩa)"),
+        ("Hồ sơ bộ chứa nhẹ & phi trạng thái", "Bật (Tiêu thụ ~445 MB RAM)"),
     ]
     for i, (k, v) in enumerate(sec_rows):
         y = 0.68 - i * 0.105
-        _box(ax, 0.54, y, 0.23, 0.082, k, fc="#F0FDF4", ec="#86EFAC", fs=7.3, ha="left")
-        _box(ax, 0.78, y, 0.18, 0.082, v, fc="#ECFDF5", ec="#047857", fs=7.2, bold=True)
+        _box(ax, 0.54, y, 0.23, 0.082, k, fc="#F0FDF4", ec="#86EFAC", fs=7.2, ha="left")
+        _box(ax, 0.78, y, 0.18, 0.082, v, fc="#ECFDF5", ec="#047857", fs=7.0, bold=True)
 
     _save(fig, "fig_2_9.png")
 
 
 def make_fig_2_10(bench: dict) -> None:
-    """Bước 7: Nhật ký xây dựng ảnh thành công & kiểm tra trạng thái sẵn sàng."""
+    """Bước 7: Nhật ký xây dựng ảnh thành công trên Render & kiểm tra sẵn sàng."""
     startup_s = f"{bench['startup_seconds']:.2f}".replace(".", ",")
     c = bench["corpus"]
     fig, ax = plt.subplots(figsize=(10.8, 4.5), dpi=220)
@@ -668,31 +678,31 @@ def make_fig_2_10(bench: dict) -> None:
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 7 · Nhật ký Xây dựng & Khởi chạy Bộ chứa", "#0F172A")
+    _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 7 · Nhật ký Xây dựng & Khởi chạy trên Render", "#0F172A")
     _box(ax, 0.04, 0.12, 0.42, 0.72,
-         "[Bước ảnh 1–3] Cài đặt Linux tối giản, Tesseract tiếng Việt & Python OK\n"
-         "[Bước ảnh 4] Nạp sẵn trọng số mô hình ngữ nghĩa vào ảnh OK\n"
+         "[Bước ảnh 1–3] Cài Linux tối giản, Tesseract tiếng Việt & Python nhẹ OK\n"
+         "[Bước ảnh 4] Hồ sơ nhẹ Render (bỏ trọng số nặng ở 512 MB; giữ bản ≥ 2 GB)\n"
          "[Bước ảnh 5] Chuyển quyền thực thi sang người dùng phi đặc quyền OK\n"
          "[Khởi động máy chủ] Kéo trạng thái từ kho riêng tư trong 25,0 ms\n"
-         f"[Nạp chỉ mục lai] {c['n_docs']} văn bản · {c['n_pages']} trang · {c['n_chunks']} đoạn ({startup_s} s)\n"
-         "[Mô hình ngôn ngữ] Khóa mặc định máy chủ sẵn sàng hoạt động\n"
-         "[Trạng thái dịch vụ] Đang lắng nghe HTTPS · Trạng thái: Đang chạy",
-         fc="#0F172A", ec="#334155", tc="#E2E8F0", fs=7.4, ha="left")
+         f"[Nạp chỉ mục] {c['n_docs']} văn bản · {c['n_pages']} trang · {c['n_chunks']} đoạn ({startup_s} s)\n"
+         "[Mô hình ngôn ngữ] OpenRouter · Nemotron 3 Ultra sẵn sàng\n"
+         "[Trạng thái dịch vụ] Mở HTTPS cổng 10000 · Đang chạy (~445 MB RAM)",
+         fc="#0F172A", ec="#334155", tc="#E2E8F0", fs=7.1, ha="left")
 
     _panel_frame(ax, 0.52, 0.06, 0.46, 0.88, "Phản hồi Điểm cuối Sống & Sẵn sàng", "#15803D")
     _box(ax, 0.54, 0.55, 0.42, 0.27,
-         "Kiểm tra Trạng thái Sống (Mỗi 30 giây)\n"
+         "Kiểm tra Trạng thái Sống (Cổng 10000 · Mỗi 30 giây)\n"
          "• Trạng thái phản hồi: Hợp lệ (Mã 200 OK)\n"
          "• Độ trễ trung vị: 1,19 mili-giây\n"
-         "• Không truy xuất ổ đĩa hay mô hình nặng",
-         fc="#DCFCE7", ec="#15803D", fs=7.8, ha="left", bold=True)
+         "• Mức RAM thực tế: ~444,58 MB / 512 MB",
+         fc="#DCFCE7", ec="#15803D", fs=7.7, ha="left", bold=True)
     _box(ax, 0.54, 0.14, 0.42, 0.34,
          "Kiểm tra Mức độ Sẵn sàng Phục vụ\n"
-         "• Chỉ mục lai & mô hình ngữ nghĩa: Đã nạp\n"
-         "• Tầng lưu trữ: Đám mây bền vững (Kho riêng tư)\n"
+         "• Chỉ mục từ vựng chuẩn hóa: Đã nạp (tùy chọn lai ≥ 2 GB)\n"
+         "• Tầng lưu trữ: Kho riêng tư Hugging Face Hub\n"
          "• Xác thực phiên: Phi trạng thái (vượt khởi động lại)\n"
-         "• Cổng LLM mặc định: Sẵn sàng không cần thiết lập",
-         fc="#EFF6FF", ec="#1D4ED8", fs=7.8, ha="left")
+         "• Cổng LLM mặc định: Nemotron 3 Ultra sẵn sàng",
+         fc="#EFF6FF", ec="#1D4ED8", fs=7.6, ha="left")
 
     _save(fig, "fig_2_10.png")
 
@@ -708,9 +718,9 @@ def make_fig_2_11(bench: dict) -> None:
     _panel_frame(ax, 0.02, 0.06, 0.46, 0.88, "Bước 8a · Tự động hóa Kiểm thử & Triển khai", "#7E22CE")
     steps = [
         ("1. Đẩy mã mới lên nhánh chính", "#F3E8FF"),
-        ("2. Chạy tự động 85 bài kiểm thử", "#DCFCE7"),
+        ("2. Chạy tự động toàn bộ bộ kiểm thử", "#DCFCE7"),
         ("3. Rà soát đóng gói (< 5 MB, không lọt khóa)", "#FEF3C7"),
-        ("4. Cập nhật Không gian Bộ chứa Đám mây", "#DBEAFE"),
+        ("4. Triển khai tự động lên Bộ chứa Render", "#DBEAFE"),
     ]
     for i, (s, fc) in enumerate(steps):
         y = 0.67 - i * 0.145
@@ -735,18 +745,18 @@ def make_fig_2_11(bench: dict) -> None:
 
 
 def make_fig_2_12() -> None:
-    """Theo dõi bộ nhớ RAM so với giới hạn 16 GB & bảng đối soát chi phí 0 đồng."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.4), dpi=220, gridspec_kw={"width_ratios": [1.05, 1]})
-    cats = ["Khởi động\ncơ bản", "Nạp mô hình\nngữ nghĩa", "Tìm kiếm lai\n& Hỏi đáp", "Nhận dạng PDF\nđộ phân giải cao", "Giới hạn gói\nmiễn phí"]
-    vals = [0.22, 1.48, 1.65, 2.35, 16.0]
+    """Theo dõi bộ nhớ RAM thực tế so với giới hạn 512 MB & đối soát chi phí 0 đồng."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.4), dpi=220, gridspec_kw={"width_ratios": [1.08, 1]})
+    cats = ["Khởi động\ncơ bản", "Nạp chỉ mục\n3.476 đoạn", "Tra cứu &\nHỏi đáp AI", "Vận hành thực tế\n(Render Live)", "Giới hạn gói\nmiễn phí"]
+    vals = [185, 320, 415, 445, 512]
     cols = ["#60A5FA", "#3B82F6", "#2563EB", "#D97706", "#16A34A"]
     bars = ax1.bar(cats, vals, color=cols, width=0.52, edgecolor="#1E293B")
     for b, v in zip(bars, vals):
-        ax1.text(b.get_x() + b.get_width() / 2, v + 0.35, f"{v:.2f} GB".replace(".", ","), ha="center", fontsize=8.0, fontweight="bold")
-    ax1.set_ylim(0, 18.5)
-    ax1.set_ylabel("Dung lượng RAM (GB)", fontsize=9.0)
-    ax1.set_title("Mức tiêu thụ RAM so với giới hạn 16 GB", fontsize=9.3, fontweight="bold")
-    ax1.tick_params(axis="x", labelsize=7.5)
+        ax1.text(b.get_x() + b.get_width() / 2, v + 12, f"{v} MB", ha="center", fontsize=8.0, fontweight="bold")
+    ax1.set_ylim(0, 600)
+    ax1.set_ylabel("Dung lượng RAM (MB)", fontsize=9.0)
+    ax1.set_title("Mức tiêu thụ RAM thực tế so với giới hạn 512 MB trên Render", fontsize=8.7, fontweight="bold")
+    ax1.tick_params(axis="x", labelsize=7.4)
     ax1.grid(axis="y", linestyle=":", alpha=0.5)
     ax1.spines["top"].set_visible(False)
     ax1.spines["right"].set_visible(False)
@@ -756,7 +766,7 @@ def make_fig_2_12() -> None:
     ax2.axis("off")
     _panel_frame(ax2, 0.02, 0.06, 0.96, 0.88, "Đối soát Chi phí Vận hành & An toàn Tài chính", "#15803D")
     billing = [
-        ("Không gian Bộ chứa (2 vCPU, 16 GB)", "0 đồng / tháng"),
+        ("Dịch vụ Bộ chứa Render (512 MB RAM)", "0 đồng / tháng"),
         ("Kho Tập Dữ liệu Riêng tư", "0 đồng / tháng"),
         ("Đường ống Tự động hóa Kiểm thử", "0 đồng / tháng"),
         ("Thẻ tín dụng / Ghi nợ liên kết", "Không yêu cầu"),
@@ -902,13 +912,13 @@ def make_fig_3_4(bench: dict) -> None:
 
     _panel_frame(ax, 0.02, 0.05, 0.96, 0.90, "Bảng điều khiển Hạ tầng & Vận hành Đám mây · Thời gian thực", "#0F2D5E")
     cards = [
-        ("1. Bộ chứa PaaS", "TRỰC TUYẾN\n1.480 MB / 16 GB RAM", "#DCFCE7", "#15803D"),
+        ("1. Bộ chứa Render", "TRỰC TUYẾN\n445 MB / 512 MB RAM", "#DCFCE7", "#15803D"),
         ("2. Kho Bền vững", "BỀN VỮNG\nKho riêng tư · Lỗi: 0", "#DCFCE7", "#15803D"),
-        ("3. Cổng LLM Mặc định", "SẴN SÀNG\nGemini Flash · ••••1a8e", "#DCFCE7", "#15803D"),
+        ("3. Cổng LLM Mặc định", "SẴN SÀNG\nNemotron 3 Ultra · ••••1a8e", "#DCFCE7", "#15803D"),
         ("4. Xác thực Phiên", "VƯỢT RESTART\nHMAC-SHA256 · 24 giờ", "#DBEAFE", "#1D4ED8"),
     ]
     for i, (t, body, fc, ec) in enumerate(cards):
-        _box(ax, 0.04 + i * 0.235, 0.66, 0.215, 0.16, f"{t}\n{body}", fc=fc, ec=ec, fs=7.6, bold=True)
+        _box(ax, 0.04 + i * 0.235, 0.66, 0.215, 0.16, f"{t}\n{body}", fc=fc, ec=ec, fs=7.2, bold=True)
 
     _box(ax, 0.04, 0.36, 0.45, 0.24,
          "Thông số Tài nguyên & Độ trễ Phản hồi:\n"
@@ -920,7 +930,7 @@ def make_fig_3_4(bench: dict) -> None:
          "Quy mô Kho dữ liệu & Lưu lượng LLM:\n"
          f"• {c['n_fonds']} phông · {c['n_dossiers']} hồ sơ · {c['n_docs']} văn bản\n"
          f"• {c['n_pages']} trang · {c['n_chunks']} đoạn chỉ mục\n"
-         "• Cổng LLM mặc định hoạt động ổn định, không lỗi",
+         "• Cổng Nemotron 3 Ultra hoạt động ổn định, không lỗi",
          fc="#F8FAFC", ec="#CBD5E1", fs=7.5, ha="left")
     _box(ax, 0.04, 0.10, 0.92, 0.20,
          "Nhật ký Sự kiện Đồng bộ Đám mây (Gần nhất):\n"

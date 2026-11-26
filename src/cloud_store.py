@@ -204,19 +204,19 @@ class CloudStorageManager:
                 )
                 self._record_event("bootstrap", str(self.volume_dir), "ok", f"Khôi phục {restored['uploads_files']} tệp tải lên")
             elif self.backend == "hf_dataset":
+                has_base_data = (data_dir / "manifest.csv").is_file() and any((data_dir / "processed").glob("*.jsonl"))
+                has_base_models = models_dir.is_dir() and any(models_dir.iterdir())
+                patterns = ["state/*", "uploads/*", "ocr/up_*"]
+                if not has_base_data:
+                    patterns.extend(["data/manifest.csv", "data/processed/*", "ocr/*"])
+                if not has_base_models:
+                    patterns.append("models/*")
                 snap_dir = Path(
                     self._snapshot_download(
                         repo_id=self.hf_repo,
                         repo_type="dataset",
                         token=self.hf_token or None,
-                        allow_patterns=[
-                            "state/*",
-                            "data/manifest.csv",
-                            "data/processed/*",
-                            "models/*",
-                            "uploads/*",
-                            "ocr/*",
-                        ],
+                        allow_patterns=patterns,
                     )
                 )
                 snap_state = snap_dir / "state" / "archive_structure.json"

@@ -491,6 +491,8 @@ class LocalLLM:
             if isinstance(content, list):
                 content = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in content)
             text = re.sub(r"<think>.*?(?:</think>|$)\s*", "", str(content).strip(), flags=re.DOTALL).strip()
+            text = re.sub(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]+", "", text)
+            text = re.sub(r"[ \t]{2,}", " ", text).strip()
             if not text:
                 finish_reason = first_choice.get("finish_reason")
                 has_reasoning = bool(msg_obj.get("reasoning") or msg_obj.get("reasoning_content"))
