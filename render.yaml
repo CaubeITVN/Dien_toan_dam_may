@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: tra-cuu-luu-tru-so-cloud
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    plan: free
+    region: singapore
+    healthCheckPath: /healthz
+    envVars:
+      - key: CLOUD_STATELESS_ENV
+        value: "1"
+      - key: DENSE
+        value: "0"
+      - key: LLM_PROVIDER
+        value: openrouter
+      - key: OPENROUTER_MODEL
+        value: nvidia/nemotron-3-ultra-550b-a55b:free
+      - key: HF_STORAGE_REPO
+        value: nhatlx205/tra-cuu-luu-tru-so-storage
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: APP_ADMIN_PASSWORD
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: HF_TOKEN
+        sync: false

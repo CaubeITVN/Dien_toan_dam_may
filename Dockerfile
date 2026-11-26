@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     HF_HOME=/app/.cache/huggingface \
     CLOUD_STATELESS_ENV=1 \
     LLM_PROVIDER=openrouter \
-    OPENROUTER_MODEL=google/gemini-2.0-flash-001 \
+    OPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free \
     PORT=7860
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
