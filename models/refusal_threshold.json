@@ -1,0 +1,111 @@
+{
+  "min_coverage": 0.4,
+  "min_coverage_doc_specified": 0.224,
+  "min_coverage_list": 0.312,
+  "min_field_coverage": 0.34,
+  "min_rrf": 0.0,
+  "dense_min": 0.84,
+  "min_coverage_with_dense": 0.3,
+  "dense_veto": 0.8,
+  "combined_alpha": 0.7,
+  "min_combined_score": 0.0,
+  "calibration": {
+    "split": "dev",
+    "qa_mode": "qwen25_1_5b",
+    "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+    "retrieval_config": {
+      "dense_model": "intfloat/multilingual-e5-small",
+      "chunk_strategy": "default",
+      "include_metadata_prefix": false,
+      "return_parent": false
+    },
+    "n_questions": 120,
+    "max_false_refusal": 0.25,
+    "best_metrics": {
+      "tp": 11,
+      "fp": 11,
+      "fn": 9,
+      "tn": 89,
+      "refusal_precision": 0.5,
+      "refusal_recall": 0.55,
+      "refusal_f1": 0.5238095238095238,
+      "false_refusal_rate": 0.11,
+      "baselines": {
+        "always_refuse": {
+          "tp": 20,
+          "fp": 100,
+          "fn": 0,
+          "tn": 0,
+          "refusal_precision": 0.16666666666666666,
+          "refusal_recall": 1.0,
+          "refusal_f1": 0.2857142857142857,
+          "false_refusal_rate": 1.0
+        },
+        "never_refuse": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 20,
+          "tn": 100,
+          "refusal_precision": 0.0,
+          "refusal_recall": 0.0,
+          "refusal_f1": 0.0,
+          "false_refusal_rate": 0.0
+        }
+      }
+    },
+    "feasible_count": 42,
+    "total_candidates": 60,
+    "n_bins": 5,
+    "ece": 0.316,
+    "reliability_bins": [
+      {
+        "bin_index": 0,
+        "low": 0.0,
+        "high": 0.2,
+        "count": 3,
+        "avg_confidence": 0.0523,
+        "empirical_answerable_rate": 0.0,
+        "ece_contribution": 0.0013
+      },
+      {
+        "bin_index": 1,
+        "low": 0.2,
+        "high": 0.4,
+        "count": 21,
+        "avg_confidence": 0.3463,
+        "empirical_answerable_rate": 0.619,
+        "ece_contribution": 0.0477
+      },
+      {
+        "bin_index": 2,
+        "low": 0.4,
+        "high": 0.6,
+        "count": 58,
+        "avg_confidence": 0.5126,
+        "empirical_answerable_rate": 0.8966,
+        "ece_contribution": 0.1856
+      },
+      {
+        "bin_index": 3,
+        "low": 0.6,
+        "high": 0.8,
+        "count": 34,
+        "avg_confidence": 0.6664,
+        "empirical_answerable_rate": 0.9412,
+        "ece_contribution": 0.0778
+      },
+      {
+        "bin_index": 4,
+        "low": 0.8,
+        "high": 1.0,
+        "count": 4,
+        "avg_confidence": 0.8555,
+        "empirical_answerable_rate": 0.75,
+        "ece_contribution": 0.0035
+      }
+    ],
+    "diagram_path": "reports/figures/reliability_dev.png",
+    "dry_run": false,
+    "created_at": "2026-11-22 09:35:33"
+  }
+}

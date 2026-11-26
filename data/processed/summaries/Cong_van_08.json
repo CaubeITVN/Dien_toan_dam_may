@@ -1,0 +1,85 @@
+{
+ "doc_id": "Cong_van_08",
+ "key": "7d6311450c80daea",
+ "kind": "llm",
+ "points": [
+  {
+   "text": "UBND tỉnh Thái Nguyên đã quyết định thành lập Hội đồng ra đề thi khảo sát năng lực tiếng Anh Bậc 1 học sinh lớp 6 cấp THCS và Bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016.",
+   "sources": [
+    1
+   ]
+  },
+  {
+   "text": "Hội đồng này được thành lập dựa trên các quy định của Ủy ban nhân dân tỉnh và Sở Giáo dục và Đào tạo.",
+   "sources": [
+    2
+   ]
+  },
+  {
+   "text": "Hội đồng này sẽ thực hiện quy trình ra đề thi theo quy định của Bộ GDĐT và Sở GD&ĐT.",
+   "sources": [
+    3
+   ]
+  },
+  {
+   "text": "Thời gian thực hiện là từ ngày 07/7/2015 đến ngày 10/7/2015.",
+   "sources": [
+    3
+   ]
+  },
+  {
+   "text": "Kinh phí chi cho việc ra đề thi được chi theo chế độ tài chính hiện hành.",
+   "sources": [
+    3
+   ]
+  },
+  {
+   "text": "Các ông (bà) Trưởng phòng GDTrH, KHÍC - Sở GD&ĐT và các ông (bà) có tên trong danh sách tại Điều 1 chịu trách nhiệm thi hành quyết định này.",
+   "sources": [
+    4
+   ]
+  }
+ ],
+ "citations": [
+  {
+   "doc_id": "Cong_van_08",
+   "page_no": 1,
+   "start": 184,
+   "end": 320,
+   "text": "Loại: Quyết định\nCơ quan: UBND TỈNH THÁI NGUYÊN\nTrích yếu: thành lập Hội đồng ra đề thi khảo sát năng lực tiếng Anh Bậc 1 học sinh lớp 6 cấp THCS; Bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016"
+  },
+  {
+   "doc_id": "Cong_van_08",
+   "page_no": 1,
+   "start": 0,
+   "end": 846,
+   "text": "UBND TỈNH THÁI NGUYÊN\nSỞ GIÁO DỤC VÀ ĐÀO TẠO sẻ:{/4Ó /QĐ-SGD ĐT\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\nThái Nguyên, ngày do tháng 7 năm 2015\nQUYẾT ĐỊNH\nVề việc thành lập Hội đồng ra đề thi khảo sát năng lực tiếng Anh Bậc 1 học sinh lớp 6 cấp THCS; Bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016\nGIÁM ĐỐC SỞ GIÁO DỤC VÀ ĐÀO TẠO THÁI NGUYÊN\nCăn cứ Quyết định 01/2015/QĐ-UBND ngày 07/01/2015 của Ủy ban nhân dân tỉnh Thái Nguyên về việc phân cấp quản lý tổ chức bộ máy, biên chế, tiền lương, cán bộ, công chức, viên chức và lao động hợp đồng trong các cơ quan, đơn vị thuộc tỉnh\nThái Nguyên;\nCăn cứ công văn số 677/SGDĐT-GDTrH ngày 23/6/2014 của Sở Giáo dục và Đào tạo về việc tổ chức thi khảo sát Tiếng Anh cho học sinh lớp 6, 10 theo Đề án NN2020 năm học 2015-2016;\nXét đề nghị của Trưởng phòng GDTrH-Sở GDĐT,\nQUYẾT ĐỊNH:"
+  },
+  {
+   "doc_id": "Cong_van_08",
+   "page_no": 1,
+   "start": 1020,
+   "end": 1476,
+   "text": "Điều 2. Hội đồng ra đề thi khảo sát năng lực tiếng Anh bậc 1 học sinh lớp 6 cấp\nTHCS và bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016 có trách nhiệm thực hiện dựng theo quy trình ra đề thi của Bộ GDĐT, của Sở GDĐT.\nThời gian: Từ ngày 07/7/2015 đến ngày 10/7/2015.\nKinh phí: Kinh phí chi cho Hội đồng ra đề thi khảo sát năng lực tiếng Anh bậc 1 học sinh lớp 6 cấp THCS. và bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016 theo chế độ tài chính hiện hành."
+  },
+  {
+   "doc_id": "Cong_van_08",
+   "page_no": 1,
+   "start": 1477,
+   "end": 1627,
+   "text": "Điều 3. Các ông (bà) Trưởng phòng GDTrH, KHÍC - Sở GD&ĐT và các ông (bà) có tên trong danh sách tại Điều 1 chịu trách nhiệm thi hành quyết định này./."
+  }
+ ],
+ "meta": {
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "n_passages": 4,
+  "pages": [
+   1
+  ],
+  "seconds": 26.78,
+  "new_tokens": 219,
+  "raw": "- UBND tỉnh Thái Nguyên đã quyết định thành lập Hội đồng ra đề thi khảo sát năng lực tiếng Anh Bậc 1 học sinh lớp 6 cấp THCS và Bậc 2 học sinh lớp 10 cấp THPT năm học 2015-2016.\n\n- Hội đồng này được thành lập dựa trên các quy định của Ủy ban nhân dân tỉnh và Sở Giáo dục và Đào tạo.\n\n- Hội đồng này sẽ thực hiện quy trình ra đề thi theo quy định của Bộ GDĐT và Sở GD&ĐT.\n\n- Thời gian thực hiện là từ ngày 07/7/2015 đến ngày 10/7/2015.\n\n- Kinh phí chi cho việc ra đề thi được chi theo chế độ tài chính hiện hành.\n\n- Các ông (bà) Trưởng phòng GDTrH, KHÍC - Sở GD&ĐT và các ông (bà) có tên trong danh sách tại Điều 1 chịu trách nhiệm thi hành quyết định này.",
+  "dropped": [],
+  "n_auto_cited": 6
+ }
+}

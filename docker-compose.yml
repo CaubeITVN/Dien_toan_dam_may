@@ -1,0 +1,35 @@
+services:
+  archive-cloud-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tra-cuu-luu-tru-so-cloud
+    ports:
+      - "7860:7860"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: "7860"
+      CLOUD_STATELESS_ENV: "1"
+      CLOUD_VOLUME_DIR: "/app/cloud_volume"
+      LLM_PROVIDER: "${LLM_PROVIDER:-openrouter}"
+      OPENROUTER_MODEL: "${OPENROUTER_MODEL:-google/gemini-2.0-flash-001}"
+    volumes:
+      - archive_cloud_storage:/app/cloud_volume
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7860/healthz', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    restart: unless-stopped
+
+volumes:
+  archive_cloud_storage:
+    driver: local

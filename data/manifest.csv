@@ -1,0 +1,111 @@
+doc_id,group,doc_type_ref,md5,n_pages,n_scan_pages,n_ocr_layer_pages,split
+Bao_cao_TTTN_07,sgd_scan,,7036664c1a86aa3be62a5db5a7548700,7,7,7,train
+Bao_cao_TTTN_08,sgd_scan,,10c0bb6d77f63a27a2522cff7cf446a6,2,2,1,train
+Bao_cao_TTTN_09,sgd_scan,,332b5eaf2df8f83a877726d33a382c27,14,14,13,train
+Cong_van_06,sgd_scan,,73e409e944fdeb783d9392fa56694c04,6,6,0,test
+Cong_van_07,sgd_scan,,12a3cd403f4ab6b3a0e78b359ef4dcba,3,3,0,dev
+Cong_van_08,sgd_scan,,d0efe7d3af829e2772e1c984ea89d832,2,2,0,train
+Cong_van_09,sgd_scan,,457eb6da2183707c632e6831aa7111cb,4,4,0,train
+Cong_van_14,sgd_scan,,9033df1604f151982cc9af7bc810be8c,2,2,0,train
+Cong_van_70,sgd_scan,,c29887ec510bb05e995fead1ff551063,1,1,0,dev
+cp_219692,chinhphu,Nghị quyết,229148e5438d028865753124d220dcb9,6,6,0,train
+cp_219702,chinhphu,Nghị định,caf4bec1bd5029f68dc52f7d68d29f22,9,9,0,train
+cp_219717,chinhphu,Công văn,ed78393968503126b24456ef2d56bde9,18,18,0,test
+cp_219739,chinhphu,Nghị quyết,0422838040ff531a27ee7710b47bacaa,2,0,0,dev
+cp_219754,chinhphu,Nghị định,7021c05f28bcf82face48cf104024ae7,20,20,0,train
+cp_219755,chinhphu,Công văn,385e2e578cf997849ff2a4b5678bd102,2,1,0,train
+cp_219786,chinhphu,Nghị định,f7a15b92e5f49bff989110d3379fae4d,3,3,0,test
+cp_219794,chinhphu,Công văn,014ab2cc159bb1e15144a38426f516e9,1,0,0,train
+cp_219890,chinhphu,Công văn,4c527305b5a95d7a9ed637b5b5e14b8b,2,0,0,train
+cp_219891,chinhphu,Thông báo,b40f487979c339da20c7c69f66df7afc,6,0,0,train
+cp_219892,chinhphu,Nghị định,36183a7fbf3680f8d45d2cc13199c729,4,4,0,dev
+cp_219911,chinhphu,Nghị quyết,73e3250aeac875ee6e01f15a164d02ea,6,6,0,dev
+cp_219913,chinhphu,Công văn,53d68160db01144b252ae0f9f0a2c3ad,15,15,0,dev
+cp_219915,chinhphu,Nghị quyết,17393aeedc641ade87875124d94e47f5,4,4,0,train
+cp_219916,chinhphu,Công văn,8e27e33880479a050b715cddcb1fa17e,1,0,0,train
+cp_219917,chinhphu,Công văn,ba8de603a2216ed04a25a432df02924c,2,0,0,dev
+cp_219918,chinhphu,Công văn,026d7b224db66dfb058fb017bb6fa226,1,0,0,train
+cp_219922,chinhphu,Nghị định,7f96079b8fd6bf9a1b5a535b49902698,28,0,0,train
+cp_219934,chinhphu,Nghị định,82c6f0deb38e7f32230166d4ed980789,8,8,0,train
+cp_219946,chinhphu,Thông báo,a96371eff28bd1cbf154b18b98fbec0e,6,0,0,train
+cp_219947,chinhphu,Thông báo,70d2285c80d5adc0513cdaeea3999045,6,0,0,train
+cp_219948,chinhphu,Thông báo,1c15809f6d1a0b906f2acdf88564af94,8,0,0,dev
+cp_219955,chinhphu,Nghị quyết,7bbdbdfbc4f8533e0c6f5a3d43f6a184,3,3,0,train
+cp_219956,chinhphu,Chỉ thị,34af9e593c7719dc76e7803e1bf63f1e,11,11,0,train
+cp_219962,chinhphu,Quyết định,a8dcd12554fee8bc4bd12d56452cd5ec,17,0,0,test
+cp_219963,chinhphu,Quyết định,3626db28974f6a80c6014cf0f779c310,9,9,0,train
+cp_219966,chinhphu,Quyết định,bb684df7a6acc874e951429a3434d22a,12,12,0,train
+cp_219967,chinhphu,Quyết định,3fe8d145c5563c487ede3c50feeab5ba,4,4,0,train
+cp_219968,chinhphu,Quyết định,8ac2c3135850cfbdb43be6a179914820,4,4,0,train
+cp_220004,chinhphu,Nghị định,41366b27d8fb93cbfc21e91c59e87875,21,21,0,train
+cp_220006,chinhphu,Thông báo,3478f12caecd0e516ad4962a611741b4,4,0,0,dev
+cp_220016,chinhphu,Công văn,cf48f4c549ca6163f7cf497a6e9292c1,14,14,0,train
+cp_220017,chinhphu,Quyết định,127dc69f476e016f4392c71ad3a52f54,5,5,0,dev
+cp_220022,chinhphu,Thông báo,93068f7f9e15d079237aeca3f4e3d936,5,0,0,train
+cp_220023,chinhphu,Quyết định,d137de3cb78c6ced60d4a690d8dcb380,3,3,0,train
+cp_220024,chinhphu,Công văn,d2dde5781f2f5cf71150c76a920bf530,1,0,0,train
+cp_220028,chinhphu,Quyết định,90a0c179de2c3e061b46d5e70602677b,3,3,0,train
+cp_220030,chinhphu,Thông báo,8eef58f2b51690d81186ff93c98d5512,6,0,0,train
+cp_220032,chinhphu,Quyết định,a8b96f23007b95c5c003a12005a67375,9,9,0,train
+cp_220033,chinhphu,Nghị định,679f2201a24ce99bd82be33b51407745,5,5,0,test
+cp_220034,chinhphu,Thông tư,e49b84a00f690d2bebf143f6470b02ab,15,15,0,test
+cp_220035,chinhphu,Quyết định,f7f6f6f1e035adbfd82b819b9c13e2cf,4,4,0,train
+cp_220039,chinhphu,Quyết định,8e406b0043c528dbe5788568fee3e23e,3,0,0,dev
+cp_220040,chinhphu,Công văn,5f7a2f62119ccfc9b93a2f7e5ec9c720,1,0,0,train
+cp_220041,chinhphu,Thông báo,821c165df1232cb9ee7fad6e18b85a60,3,3,0,train
+cp_220042,chinhphu,Quyết định,7362fae5b3f324579dfc60dd85ff9763,1,0,0,dev
+cp_220046,chinhphu,Thông tư,e6662a89264363db78f71917660c4162,5,5,0,train
+cp_220047,chinhphu,Quyết định,6e8f2f437b86f353696d25f3cd53d7f8,3,0,0,train
+cp_220048,chinhphu,Quyết định,f2f7ac832e95cd780d9c3bc163307f09,6,0,0,test
+cp_220049,chinhphu,Thông tư,7b3b7730dfe0bca81fb1cc0aeede5db9,5,0,0,test
+cp_220054,chinhphu,Công văn,c585fb2fcbda1348e16a835e07082954,16,16,0,dev
+cp_220056,chinhphu,Quyết định,45542cbffd6467e1d60fcd00837ad954,1,1,0,test
+cp_220057,chinhphu,Chỉ thị,f6accd12214888b6cd301878b80f74ec,5,5,0,test
+cp_220061,chinhphu,Thông báo,a0d78f6968ec7c9e65988e39a7b340b6,5,0,0,train
+cp_220063,chinhphu,Quyết định,c8370a676c5a4fe5c99e989002b1af21,3,3,0,train
+cp_220065,chinhphu,Công văn,1c5d44203dcb33fa391cd8aba90de533,2,1,0,dev
+cp_220067,chinhphu,Thông tư,1bec7ca25753e48e74d6ee797da5fbd2,7,1,0,dev
+cp_220068,chinhphu,Thông tư,4f5b441f3a53e6c8bd064bf010f6540e,1,0,0,test
+cp_220069,chinhphu,Thông tư,995d4b7ccaa1b986632e6040e60b65d0,10,10,0,dev
+cp_220070,chinhphu,Thông tư,f8aa18f636085910de6b1cee9f638b44,10,10,0,train
+cp_220072,chinhphu,Thông tư,c385bed90537841f584d4672bc5d3768,15,15,0,test
+cp_220073,chinhphu,Thông tư,31e39c246c9023fbb9fa7e23e0ffd767,4,4,0,test
+cp_220074,chinhphu,Quyết định,d4d497f7b8e1062eb7f4ebf13daa09ca,4,4,0,train
+cp_220075,chinhphu,Quyết định,d56dc68ae514fcff2e6bfbba0941d6d6,2,2,0,train
+cp_220076,chinhphu,Quyết định,7986396fef3dd9f4a45599114f0f9b62,1,1,0,train
+cp_220077,chinhphu,Công văn,b1fb70aa6cf6b56c4c79724612c5d041,4,0,0,train
+cp_220078,chinhphu,Thông báo,88899fc9c098f98a6eb08d340c818f06,5,0,0,test
+cp_220079,chinhphu,Công văn,23450f10680e65b3d7aa2b9ae0183bda,2,0,0,train
+cp_220080,chinhphu,Quyết định,6559fd80d16792094db7d87888788108,5,0,0,train
+cp_220084,chinhphu,Thông tư,f49c65d6ebf74b5924038a4f2f0b27e5,22,22,0,test
+Quyet_dinh_03,sgd_scan,,21e103af73d233dd5b5d08909f1897a1,2,2,0,test
+SGD_05,sgd_scan,,b05f0da00938c457364e7262ee73c536,11,11,11,train
+tn_294733,thainguyen,,f92499ac443fee2ef855f44d27ae7cd5,1,0,0,dev
+tn_294780,thainguyen,,422d73daa22e6b5b75863c4e543a1fd9,2,0,0,test
+tn_294987,thainguyen,,02ebda397dd1611737023f6bd381ed1d,1,0,0,test
+tn_294988,thainguyen,,e493ad9e3d526e4e998aa1f4b025c85a,2,0,0,train
+tn_294990,thainguyen,,144cda171d453ccf6383422c932b3227,3,0,0,test
+tn_294992,thainguyen,,8f0d33f4c469f121fe6679d0b4fe7578,5,1,0,train
+tn_295974,thainguyen,,fbf82acff1a6b5554c1ea02ce7bfcc2c,3,0,0,dev
+tn_295981,thainguyen,,c674100db486cb5cb1238f59a6037417,4,0,0,test
+tn_296173,thainguyen,,d8e78ce6ef9cecb8c6a3237f49de533e,9,0,0,train
+tn_296526,thainguyen,,45058e4d930c946d66e3c4d6d2f53da0,3,0,0,dev
+tn_297092,thainguyen,,72471179641f891cb20946bac26094fc,4,0,0,train
+tn_297093,thainguyen,,1becf726650b98479ee4ad58e06fa8e5,2,0,0,train
+tn_297094,thainguyen,,364d2dcf61dd1dcab7d96b27155ecb64,3,1,0,dev
+tn_297096,thainguyen,,6197445e4934febcbb3e789c277f372f,2,0,0,train
+tn_297097,thainguyen,,07fd0b6daefba9233ef1530a765b1853,4,0,0,train
+tn_297099,thainguyen,,526cb406e5b232594201dda8e6b2c4cf,1,0,0,train
+tn_297306,thainguyen,,3888e9edc38c5c3d39e741c0656ce8df,2,0,0,train
+tn_297836,thainguyen,,0fa9c8220511274d222fa3d1265d87f5,4,4,0,dev
+tn_297952,thainguyen,,c79c159c58f87030ab0590f278289416,1,0,0,train
+tn_298937,thainguyen,,5aff92764d02fb4d5ba1d541eb1bb979,9,9,0,train
+tn_299137,thainguyen,,d5d1a976e38a6ab5125c9f17e6a4994a,8,0,0,train
+tn_299908,thainguyen,,fb452809cb54aebd19d116f6edb3bcbe,3,1,0,test
+tn_300380,thainguyen,,34dc65dd2d96f62d3dbef95a086d44ec,3,0,0,train
+TTTN_01,sgd_scan,,0db9475a25274fd744692aa7beeaf1b1,12,12,6,train
+TTTN_02,sgd_scan,,930478750c833a2267b180fbcc9a05f0,2,2,1,dev
+TTTN_03,sgd_scan,,25d965f91fb05f8baf3f1bd34855354f,2,2,2,train
+TTTN_05,sgd_scan,,47a3b3f64c225eb6ed1610ddda92f5f1,4,4,4,test
+TTTN_36,sgd_scan,,77ca40804d2bad41b22c08f0c52eb9f7,6,6,6,train
+TTTN_37,sgd_scan,,7692738416e0516908ab628df602fabe,7,7,6,train

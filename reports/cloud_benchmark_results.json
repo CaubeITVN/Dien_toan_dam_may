@@ -1,0 +1,90 @@
+{
+  "corpus": {
+    "n_docs": 110,
+    "n_pages": 630,
+    "n_chunks": 3476,
+    "n_fonds": 4,
+    "n_dossiers": 14
+  },
+  "startup_seconds": 3.014,
+  "packaging": {
+    "decoupled_space_files": 37,
+    "decoupled_space_mb": 0.65,
+    "decoupled_storage_files": 562,
+    "decoupled_storage_mb": 55.41,
+    "standalone_files": 599,
+    "standalone_mb": 56.06,
+    "legacy_monolith_mb": 282.75,
+    "reduction_vs_legacy_pct": 99.77
+  },
+  "latency": {
+    "healthz": {
+      "n": 40,
+      "min_ms": 1.105,
+      "avg_ms": 1.349,
+      "p50_ms": 1.19,
+      "p95_ms": 2.233,
+      "max_ms": 3.074
+    },
+    "readyz": {
+      "n": 40,
+      "min_ms": 1.121,
+      "avg_ms": 1.376,
+      "p50_ms": 1.202,
+      "p95_ms": 2.675,
+      "max_ms": 2.787
+    },
+    "cloud_status": {
+      "n": 30,
+      "min_ms": 1.581,
+      "avg_ms": 1.854,
+      "p50_ms": 1.667,
+      "p95_ms": 2.981,
+      "max_ms": 3.276
+    },
+    "hybrid_search": {
+      "n": 20,
+      "min_ms": 43.49,
+      "avg_ms": 51.27,
+      "p50_ms": 50.643,
+      "p95_ms": 59.153,
+      "max_ms": 64.823
+    },
+    "grounded_qa_extractive": {
+      "n": 20,
+      "min_ms": 89.282,
+      "avg_ms": 100.837,
+      "p50_ms": 96.911,
+      "p95_ms": 130.309,
+      "max_ms": 134.545
+    },
+    "stateless_auth_p50_ms": 1986.572
+  },
+  "durability": {
+    "sync_ms": 783.99,
+    "restore_ms": 25.0,
+    "restored_100pct": true,
+    "boot_details": {
+      "backend": "local_volume",
+      "durable": true,
+      "restored": {
+        "archive_structure": true,
+        "uploads_files": 3,
+        "ocr_files": 0,
+        "data_files": 0,
+        "model_files": 0
+      }
+    }
+  },
+  "runtime_snapshot": {
+    "hostname": "Admin-PC",
+    "platform": "Windows",
+    "python_version": "3.10.11",
+    "cpu_count": 12,
+    "is_container": false,
+    "space_id": null,
+    "space_host": null,
+    "memory_rss_mb": null,
+    "memory_limit_mb": null
+  }
+}

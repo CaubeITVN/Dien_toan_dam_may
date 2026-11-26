@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bảng điều khiển Hạ tầng &amp; Vận hành Đám mây — Lưu trữ Số hóa RAG</title>
+<style>
+  :root {
+    --bg: #f1f5f9;
+    --panel: #ffffff;
+    --navy: #14366e;
+    --blue: #2563eb;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --ok-bg: #dcfce7;
+    --ok-fg: #166534;
+    --warn-bg: #fef3c7;
+    --warn-fg: #92400e;
+    --err-bg: #fee2e2;
+    --err-fg: #991b1b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: linear-gradient(135deg, #0f2d5e 0%, #1d4ed8 100%);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px rgba(15, 45, 94, 0.18);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    border: 1px solid rgba(255,255,255,0.28);
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: rgba(255,255,255,0.24); }
+  .btn-primary {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+  }
+  .btn-primary:hover { background: #1e40af; }
+  .btn-light {
+    background: #fff;
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-light:hover { background: #f8fafc; }
+  main {
+    max-width: 1260px;
+    margin: 20px auto 40px;
+    padding: 0 18px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .big-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .sub-val {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  .badge-ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .badge-err { background: var(--err-bg); color: var(--err-fg); }
+  .arch-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .arch-node {
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 12px 14px;
+    position: relative;
+  }
+  .arch-node strong {
+    display: block;
+    color: var(--navy);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .arch-node span {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.45;
+    display: block;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; }
+  .kv-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    font-size: 13px;
+  }
+  .kv-row:last-child { border-bottom: none; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  #syncMsg {
+    font-size: 13px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span>☁️ Bảng điều khiển Hạ tầng &amp; Vận hành Đám mây — Hệ thống Lưu trữ Số hóa RAG</span>
+  </div>
+  <div class="nav-actions">
+    <a class="btn" href="/">🏛️ Cổng Quản lý Lưu trữ</a>
+    <a class="btn" href="/notebooklm">📑 Giao diện NotebookLM</a>
+    <button class="btn" onclick="loadCloudStatus()">🔄 Làm mới ngay</button>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <div>
+      <span class="badge badge-ok" id="healthBadge">Đang kiểm tra /healthz...</span>
+      <span class="sub-val" id="lastRefresh" style="margin-left:8px;"></span>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span id="syncMsg"></span>
+      <button class="btn btn-primary" onclick="triggerCloudSync('push')">⬆️ Đồng bộ Cloud ngay</button>
+      <button class="btn btn-light" onclick="triggerCloudSync('pull')">⬇️ Khôi phục từ Cloud</button>
+    </div>
+  </div>
+
+  <!-- 4 thẻ trạng thái dịch vụ -->
+  <section class="grid-4">
+    <div class="card">
+      <div class="card-title">1. Compute Container (PaaS) <span class="badge badge-ok" id="badgeCompute">ONLINE</span></div>
+      <div class="big-val" id="valUptime">--</div>
+      <div class="sub-val" id="subCompute">Đang nạp thông tin máy chủ...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">2. Lưu trữ Bền vững (Storage) <span class="badge badge-warn" id="badgeStorage">--</span></div>
+      <div class="big-val" id="valStorageBackend">--</div>
+      <div class="sub-val" id="subStorage">Đang kiểm tra kho lưu trữ...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">3. SaaS LLM Gateway <span class="badge badge-ok" id="badgeLlm">--</span></div>
+      <div class="big-val" id="valLlmModel">--</div>
+      <div class="sub-val" id="subLlm">Đang kiểm tra kết nối OpenRouter...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Xác thực Phi Trạng thái <span class="badge badge-ok" id="badgeAuth">--</span></div>
+      <div class="big-val" id="valAuthMode">--</div>
+      <div class="sub-val" id="subAuth">Đang kiểm tra chế độ phiên...</div>
+    </div>
+  </section>
+
+  <!-- Sơ đồ kiến trúc 4 tầng -->
+  <section class="card" style="margin-bottom: 18px;">
+    <div class="card-title">Kiến trúc Cloud-Native 4 Tầng Đang Vận Hành</div>
+    <div class="arch-flow">
+      <div class="arch-node">
+        <strong>Tầng 1 · Truy cập HTTPS &amp; Giao diện</strong>
+        <span>Cổng Quản lý Lưu trữ (/), Không gian nghiên cứu RAG (/notebooklm) và Giám sát (/cloud).</span>
+      </div>
+      <div class="arch-node">
+        <strong>Tầng 2 · Compute Container Phi Trạng thái</strong>
+        <span>FastAPI + Uvicorn + Tesseract OCR tiếng Việt + mô hình vector multilingual-e5-small (CPU).</span>
+      </div>
+      <div class="arch-node">
+        <strong>Tầng 3 · Lưu trữ Đối tượng Bền vững</strong>
+        <span>Đồng bộ danh mục Phông–Hồ sơ, PDF tải lên, cache OCR và tải lười PDF gốc từ kho riêng tư.</span>
+      </div>
+      <div class="arch-node">
+        <strong>Tầng 4 · Suy luận LLM Đám mây &amp; CI/CD</strong>
+        <span>OpenRouter API cho RAG tốc độ cao + GitHub Actions kiểm thử và triển khai liên tục.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-title">Thông số Tài nguyên &amp; Hiệu năng HTTP</div>
+      <div id="httpMetricsBox">Đang tải...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Kho Tài liệu &amp; Lưu lượng OpenRouter LLM</div>
+      <div id="corpusLlmBox">Đang tải...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">Nhật ký Sự kiện Đồng bộ Đám mây (20 sự kiện gần nhất)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Thời điểm (UTC)</th>
+          <th>Thao tác</th>
+          <th>Đối tượng</th>
+          <th>Trạng thái</th>
+          <th>Chi tiết</th>
+        </tr>
+      </thead>
+      <tbody id="eventsBody">
+        <tr><td colspan="5">Đang tải nhật ký...</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+function fmtUptime(sec) {
+  sec = Math.floor(sec || 0);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}g ${m}p ${s}s`;
+  if (m > 0) return `${m}p ${s}s`;
+  return `${s} giây`;
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+async function loadCloudStatus() {
+  try {
+    const [hzRes, stRes] = await Promise.all([
+      fetch("/healthz"),
+      fetch("/api/cloud/status"),
+    ]);
+    const hz = await hzRes.json();
+    const data = await stRes.json();
+
+    const hb = document.getElementById("healthBadge");
+    if (hzRes.ok && hz.status === "ok") {
+      hb.className = "badge badge-ok";
+      hb.textContent = `HEALTHY · /healthz OK (${hz.uptime_seconds}s)`;
+    } else {
+      hb.className = "badge badge-err";
+      hb.textContent = "UNHEALTHY";
+    }
+    document.getElementById("lastRefresh").textContent = "Cập nhật lúc " + new Date().toLocaleTimeString("vi-VN");
+
+    const rt = data.telemetry?.runtime || {};
+    const http = data.telemetry?.http || {};
+    const llmCalls = data.telemetry?.llm_calls || {};
+    const st = data.storage || {};
+    const auth = data.auth || {};
+    const llm = data.llm || {};
+    const corpus = data.corpus || {};
+
+    document.getElementById("valUptime").textContent = fmtUptime(data.telemetry?.uptime_seconds);
+    const ramTxt = rt.memory_rss_mb != null ? `${rt.memory_rss_mb} MB` : "N/A";
+    const limTxt = rt.memory_limit_mb != null ? ` / ${rt.memory_limit_mb} MB` : "";
+    document.getElementById("subCompute").innerHTML =
+      `Môi trường: <b>${escapeHtml(rt.platform)}</b> · Python ${escapeHtml(rt.python_version)} · ${rt.cpu_count || 1} CPU<br>` +
+      `RAM sử dụng: <b>${escapeHtml(ramTxt + limTxt)}</b> · Container: <b>${rt.is_container ? "Có" : "Cục bộ"}</b>` +
+      (rt.space_id ? `<br>Space ID: <span class="mono">${escapeHtml(rt.space_id)}</span>` : "");
+
+    const badgeSt = document.getElementById("badgeStorage");
+    badgeSt.className = st.durable ? "badge badge-ok" : "badge badge-warn";
+    badgeSt.textContent = st.durable ? "BỀN VỮNG" : "TẠM THỜI";
+    document.getElementById("valStorageBackend").textContent = st.backend || "ephemeral";
+    document.getElementById("subStorage").innerHTML =
+      `Đích: <span class="mono">${escapeHtml(st.target)}</span><br>` +
+      `Đồng bộ thành công: <b>${st.sync_ok_count || 0}</b> · Lỗi: <b>${st.sync_err_count || 0}</b> · Tải lười PDF: <b>${st.lazy_fetches || 0}</b>`;
+
+    const badgeLlm = document.getElementById("badgeLlm");
+    badgeLlm.className = llm.has_api_key || llm.loaded ? "badge badge-ok" : "badge badge-warn";
+    badgeLlm.textContent = llm.has_api_key ? "SẴN SÀNG" : "CHỜ KHÓA API";
+    document.getElementById("valLlmModel").textContent = llm.model || "--";
+    document.getElementById("subLlm").innerHTML =
+      `Nhà cung cấp: <b>${escapeHtml(llm.provider)}</b> · Khóa: <span class="mono">${escapeHtml(llm.api_key_masked || "Chưa đặt")}</span><br>` +
+      `Đã gọi: <b>${llmCalls.total || 0}</b> lượt (Lỗi: ${llmCalls.errors || 0}, Thử lại: ${llmCalls.retries || 0})`;
+
+    const badgeAuth = document.getElementById("badgeAuth");
+    badgeAuth.className = auth.stateless_across_restarts ? "badge badge-ok" : "badge badge-warn";
+    badgeAuth.textContent = auth.stateless_across_restarts ? "BỀN VỮNG QUA RESTART" : "THEO PHIÊN CHẠY";
+    document.getElementById("valAuthMode").textContent = auth.mode || "stateless_hmac_sha256";
+    document.getElementById("subAuth").innerHTML =
+      `Thời hạn token: <b>${Math.round((auth.token_ttl_seconds || 86400) / 3600)} giờ</b><br>` +
+      `Phiên hoạt động trong bộ nhớ: <b>${auth.active_sessions_count ?? 0}</b>`;
+
+    const byGrp = Object.entries(http.by_group || {}).map(([k, v]) => `${escapeHtml(k)}: <b>${v}</b>`).join(" · ") || "Chưa có";
+    document.getElementById("httpMetricsBox").innerHTML = `
+      <div class="kv-row"><span>Tổng yêu cầu HTTP</span><b>${http.total_requests || 0}</b></div>
+      <div class="kv-row"><span>Phân bố mã trạng thái</span><span>2xx: <b>${http.status_2xx || 0}</b> · 4xx: <b>${http.status_4xx || 0}</b> · 5xx: <b>${http.status_5xx || 0}</b></span></div>
+      <div class="kv-row"><span>Độ trễ trung bình / P50 / P95</span><b>${http.latency_avg_ms || 0} ms / ${http.latency_p50_ms || 0} ms / ${http.latency_p95_ms || 0} ms</b></div>
+      <div class="kv-row"><span>Lưu lượng theo nhóm API</span><span>${byGrp}</span></div>
+    `;
+
+    document.getElementById("corpusLlmBox").innerHTML = `
+      <div class="kv-row"><span>Phông / Hồ sơ lưu trữ</span><b>${corpus.n_fonds || 0} phông · ${corpus.n_dossiers || 0} hồ sơ</b></div>
+      <div class="kv-row"><span>Tài liệu / Trang / Đoạn văn</span><b>${corpus.n_docs || 0} văn bản · ${corpus.n_pages || 0} trang · ${corpus.n_chunks || 0} đoạn</b></div>
+      <div class="kv-row"><span>Tổng Token LLM đã dùng</span><b>${llmCalls.prompt_tokens || 0} prompt · ${llmCalls.completion_tokens || 0} completion</b></div>
+      <div class="kv-row"><span>Độ trễ trung bình OpenRouter</span><b>${llmCalls.avg_latency_ms || 0} ms</b></div>
+    `;
+
+    const tbody = document.getElementById("eventsBody");
+    const evs = st.recent_events || [];
+    if (!evs.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:#64748b;">Chưa có sự kiện đồng bộ nào được ghi nhận.</td></tr>';
+    } else {
+      tbody.innerHTML = evs.map(ev => `
+        <tr>
+          <td class="mono">${escapeHtml(ev.timestamp)}</td>
+          <td><b>${escapeHtml(ev.action)}</b></td>
+          <td class="mono">${escapeHtml(ev.target)}</td>
+          <td><span class="badge ${ev.status === "ok" ? "badge-ok" : ev.status === "error" ? "badge-err" : "badge-warn"}">${escapeHtml(ev.status)}</span></td>
+          <td>${escapeHtml(ev.detail)}</td>
+        </tr>
+      `).join("");
+    }
+  } catch (err) {
+    document.getElementById("healthBadge").className = "badge badge-err";
+    document.getElementById("healthBadge").textContent = "LỖI KẾT NỐI";
+  }
+}
+
+async function triggerCloudSync(action) {
+  const msg = document.getElementById("syncMsg");
+  const token = localStorage.getItem("archive_token") || "";
+  if (!token) {
+    msg.style.color = "#92400e";
+    msg.textContent = "Vui lòng đăng nhập tài khoản quản trị ở Cổng chính (/) trước khi đồng bộ.";
+    return;
+  }
+  msg.style.color = "#1d4ed8";
+  msg.textContent = "Đang thực hiện đồng bộ...";
+  try {
+    const res = await fetch("/api/cloud/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ action }),
+    });
+    const out = await res.json();
+    if (!res.ok) {
+      msg.style.color = "#991b1b";
+      msg.textContent = out.detail || "Đồng bộ thất bại";
+    } else {
+      msg.style.color = "#166534";
+      msg.textContent = action === "pull" ? "Đã khôi phục dữ liệu từ Cloud thành công." : "Đã đồng bộ dữ liệu lên Cloud thành công.";
+      await loadCloudStatus();
+    }
+  } catch (e) {
+    msg.style.color = "#991b1b";
+    msg.textContent = "Lỗi mạng khi gọi /api/cloud/sync";
+  }
+}
+
+loadCloudStatus();
+setInterval(loadCloudStatus, 10000);
+</script>
+</body>
+</html>

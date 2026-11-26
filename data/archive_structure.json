@@ -1,0 +1,360 @@
+{
+  "portal_name": "Cổng Quản lý Tài liệu Lưu trữ Số hóa tỉnh Thái Nguyên",
+  "portal_url": "https://quanlytlltsohoa.thainguyen.gov.vn",
+  "managing_unit": "Sở Nội vụ tỉnh Thái Nguyên - Trung tâm Lưu trữ Lịch sử",
+  "regulations": [
+    "Luật Lưu trữ số 33/2024/QH15",
+    "Nghị định số 30/2020/NĐ-CP về công tác văn thư",
+    "Thông tư số 02/2019/TT-BNV quy định tiêu chuẩn dữ liệu thông tin đầu vào và quản lý CSDL lưu trữ điện tử"
+  ],
+  "fonds": [
+    {
+      "fond_id": "P_UBND_TN",
+      "fond_name": "Phông Ủy ban nhân dân tỉnh Thái Nguyên",
+      "agency_name": "Ủy ban nhân dân tỉnh Thái Nguyên",
+      "time_range": "2026",
+      "description": "Tài liệu chỉ đạo, điều hành của UBND tỉnh Thái Nguyên về phát triển kinh tế - xã hội, chuyển đổi số, quy hoạch đô thị và thủ tục hành chính.",
+      "dossiers": [
+        {
+          "file_code": "H55.11.1997.30.VP",
+          "catalog_no": "11",
+          "title": "Báo cáo quyết toán tài chính của Văn phòng UBND và các đơn vị trực thuộc năm 1997",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "01/01/1997",
+          "end_date": "30/12/1997",
+          "creator_unit": "Văn phòng UBND Tỉnh Thái Nguyên",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_297093",
+            "tn_297097",
+            "tn_294733",
+            "tn_299137",
+            "tn_300380"
+          ]
+        },
+        {
+          "file_code": "H55.11.1997.29.VP",
+          "catalog_no": "11",
+          "title": "Báo cáo quyết toán tài chính của Chi cục thuế và các huyện thị năm 1997",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "01/01/1997",
+          "end_date": "30/12/1997",
+          "creator_unit": "Văn phòng UBND Tỉnh Thái Nguyên",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_294780"
+          ]
+        },
+        {
+          "file_code": "H55.11.1997.28.VP",
+          "catalog_no": "11",
+          "title": "Báo cáo quyết toán tài chính ngân sách sự nghiệp giáo dục năm 1997",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "01/01/1997",
+          "end_date": "30/12/1997",
+          "creator_unit": "Văn phòng UBND Tỉnh Thái Nguyên",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_294987"
+          ]
+        },
+        {
+          "file_code": "UBNDTN.2026.P01.01.001",
+          "catalog_no": "01",
+          "title": "Hồ sơ chỉ đạo triển khai Chuyển đổi số và ứng dụng CNTT tỉnh Thái Nguyên năm 2026",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "17/09/2026",
+          "end_date": "29/09/2026",
+          "creator_unit": "Sở Thông tin và Truyền thông / Văn phòng UBND tỉnh",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_297093",
+            "tn_297097",
+            "tn_294733"
+          ]
+        },
+        {
+          "file_code": "UBNDTN.2026.P01.01.002",
+          "catalog_no": "01",
+          "title": "Hồ sơ quản lý quy hoạch, phát triển đô thị, vệ sinh môi trường và khoáng sản trên địa bàn tỉnh",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "16/09/2026",
+          "end_date": "13/10/2026",
+          "creator_unit": "Sở Xây dựng / Sở Tài nguyên và Môi trường",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_299137",
+            "tn_300380",
+            "tn_294780",
+            "tn_294987",
+            "tn_297092",
+            "tn_297099",
+            "tn_297306"
+          ]
+        },
+        {
+          "file_code": "UBNDTN.2026.P01.01.003",
+          "catalog_no": "01",
+          "title": "Hồ sơ chỉ đạo kiểm soát thủ tục hành chính, đất đai và triển khai các văn bản pháp luật mới",
+          "retention_period": "50 năm",
+          "usage_mode": "Công khai",
+          "start_date": "17/09/2026",
+          "end_date": "29/09/2026",
+          "creator_unit": "Trung tâm Phục vụ Hành chính công / Sở Tư pháp",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_294990",
+            "tn_297836",
+            "tn_297094",
+            "tn_294988",
+            "tn_297952"
+          ]
+        },
+        {
+          "file_code": "UBNDTN.2026.P01.01.004",
+          "catalog_no": "01",
+          "title": "Hồ sơ các phiên họp chỉ đạo điều hành của Lãnh đạo UBND tỉnh và công tác phục vụ Kỳ họp HĐND tỉnh khóa XV",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Nội bộ",
+          "start_date": "17/09/2026",
+          "end_date": "12/10/2026",
+          "creator_unit": "Văn phòng UBND tỉnh Thái Nguyên",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "tn_294992",
+            "tn_296173",
+            "tn_296526",
+            "tn_298937",
+            "tn_295974",
+            "tn_295981",
+            "tn_297096",
+            "tn_299908"
+          ]
+        }
+      ]
+    },
+    {
+      "fond_id": "P_SGD_TN",
+      "fond_name": "Phông Sở Giáo dục và Đào tạo tỉnh Thái Nguyên",
+      "agency_name": "Sở Giáo dục và Đào tạo tỉnh Thái Nguyên",
+      "time_range": "2009 - 2015",
+      "description": "Tài liệu lưu trữ lịch sử của Sở GD&ĐT Thái Nguyên gồm báo cáo phổ cập giáo dục, quản lý biên chế đào tạo và tài sản cơ quan.",
+      "dossiers": [
+        {
+          "file_code": "SGDTN.2010.P02.01.001",
+          "catalog_no": "01",
+          "title": "Hồ sơ báo cáo sơ kết, tổng kết công tác giáo dục và phổ cập giáo dục giai đoạn 2009 - 2010",
+          "retention_period": "20 năm",
+          "usage_mode": "Công khai",
+          "start_date": "01/01/2009",
+          "end_date": "30/06/2010",
+          "creator_unit": "Phòng Giáo dục Trung học / Văn phòng Sở GD&ĐT",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "Bao_cao_TTTN_07",
+            "Bao_cao_TTTN_08",
+            "Bao_cao_TTTN_09",
+            "TTTN_01",
+            "TTTN_05",
+            "TTTN_36",
+            "TTTN_37"
+          ]
+        },
+        {
+          "file_code": "SGDTN.2015.P02.01.002",
+          "catalog_no": "01",
+          "title": "Hồ sơ quản lý biên chế, đào tạo giáo viên và tổ chức hoạt động trải nghiệm sáng tạo năm 2015",
+          "retention_period": "50 năm",
+          "usage_mode": "Công khai",
+          "start_date": "02/07/2015",
+          "end_date": "14/07/2015",
+          "creator_unit": "Phòng Tổ chức cán bộ / Sở GD&ĐT",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "Cong_van_08",
+            "Cong_van_09",
+            "Cong_van_14",
+            "Cong_van_70",
+            "Quyet_dinh_03",
+            "SGD_05"
+          ]
+        },
+        {
+          "file_code": "SGDTN.2015.P02.01.003",
+          "catalog_no": "01",
+          "title": "Hồ sơ quản lý cơ sở vật chất, thanh lý tài sản và kiểm tra an toàn PCCC cơ quan",
+          "retention_period": "10 năm",
+          "usage_mode": "Nội bộ",
+          "start_date": "01/01/2010",
+          "end_date": "30/12/2015",
+          "creator_unit": "Phòng Kế hoạch - Tài chính / Văn phòng Sở GD&ĐT",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "Cong_van_06",
+            "Cong_van_07",
+            "TTTN_02",
+            "TTTN_03"
+          ]
+        }
+      ]
+    },
+    {
+      "fond_id": "P_TW_APPLY",
+      "fond_name": "Phông Văn bản Trung ương chỉ đạo và áp dụng tại tỉnh Thái Nguyên",
+      "agency_name": "Chính phủ và các Bộ ngành Trung ương",
+      "time_range": "2026",
+      "description": "Các văn bản quy phạm pháp luật và quyết định chỉ đạo của Chính phủ làm căn cứ pháp lý để địa phương tổ chức triển khai.",
+      "dossiers": [
+        {
+          "file_code": "TW.2026.P03.01.001",
+          "catalog_no": "01",
+          "title": "Hồ sơ các quy định pháp luật về kiểm soát thủ tục hành chính, chế độ công vụ và vị trí việc làm",
+          "retention_period": "Vĩnh viễn",
+          "usage_mode": "Công khai",
+          "start_date": "01/10/2026",
+          "end_date": "20/10/2026",
+          "creator_unit": "Văn phòng Chính phủ / Bộ Nội vụ",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "cp_219692",
+            "cp_219702",
+            "cp_219717",
+            "cp_219739",
+            "cp_219754",
+            "cp_219755",
+            "cp_219786",
+            "cp_219794",
+            "cp_219890",
+            "cp_219891",
+            "cp_219892",
+            "cp_219911",
+            "cp_219913",
+            "cp_219915",
+            "cp_219916",
+            "cp_219917",
+            "cp_219918",
+            "cp_219922",
+            "cp_219934",
+            "cp_219946",
+            "cp_219947",
+            "cp_219948",
+            "cp_219955",
+            "cp_219956",
+            "cp_219962"
+          ]
+        },
+        {
+          "file_code": "TW.2026.P03.01.002",
+          "catalog_no": "01",
+          "title": "Hồ sơ quy định tài chính công, cơ cấu tổ chức bộ máy và phí khai thác cơ sở dữ liệu",
+          "retention_period": "50 năm",
+          "usage_mode": "Công khai",
+          "start_date": "30/09/2026",
+          "end_date": "23/10/2026",
+          "creator_unit": "Bộ Tài chính / Văn phòng Chính phủ",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "cp_219963",
+            "cp_219966",
+            "cp_219967",
+            "cp_219968",
+            "cp_220004",
+            "cp_220006",
+            "cp_220016",
+            "cp_220017",
+            "cp_220022",
+            "cp_220023",
+            "cp_220024",
+            "cp_220028",
+            "cp_220030",
+            "cp_220032",
+            "cp_220033",
+            "cp_220034",
+            "cp_220035",
+            "cp_220039",
+            "cp_220040",
+            "cp_220041",
+            "cp_220042"
+          ]
+        },
+        {
+          "file_code": "TW.2026.P03.01.003",
+          "catalog_no": "01",
+          "title": "Hồ sơ các kết luận, chỉ đạo chuyên đề về kinh tế, hạ tầng và giáo dục của Chính phủ",
+          "retention_period": "20 năm",
+          "usage_mode": "Công khai",
+          "start_date": "02/10/2026",
+          "end_date": "22/10/2026",
+          "creator_unit": "Văn phòng Chính phủ",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": [
+            "cp_220046",
+            "cp_220047",
+            "cp_220048",
+            "cp_220049",
+            "cp_220054",
+            "cp_220056",
+            "cp_220057",
+            "cp_220061",
+            "cp_220063",
+            "cp_220065",
+            "cp_220067",
+            "cp_220068",
+            "cp_220069",
+            "cp_220070",
+            "cp_220072",
+            "cp_220073",
+            "cp_220074",
+            "cp_220075",
+            "cp_220076",
+            "cp_220077",
+            "cp_220078",
+            "cp_220079",
+            "cp_220080",
+            "cp_220084"
+          ]
+        }
+      ]
+    },
+    {
+      "fond_id": "P_TIEP_NHAN",
+      "fond_name": "Phông Tiếp nhận hồ sơ số hóa mới",
+      "agency_name": "Bộ phận Một cửa / Tiếp nhận số hóa",
+      "time_range": "2026",
+      "description": "Các tài liệu văn bản scan được tải lên tiếp nhận để bóc tách thông tin và phân loại vào phông lưu trữ.",
+      "dossiers": [
+        {
+          "file_code": "TN.2026.P99.01.001",
+          "catalog_no": "01",
+          "title": "Hồ sơ tiếp nhận văn bản số hóa mới tải lên hệ thống",
+          "retention_period": "Chờ duyệt",
+          "usage_mode": "Công khai",
+          "start_date": "2026",
+          "end_date": "2026",
+          "creator_unit": "Bộ phận Tiếp nhận số hóa",
+          "location": "UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1",
+          "status": "Tạo mới",
+          "doc_ids": []
+        }
+      ]
+    }
+  ]
+}

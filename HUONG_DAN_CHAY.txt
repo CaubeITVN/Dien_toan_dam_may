@@ -1,0 +1,43 @@
+================================================================================
+HỆ THỐNG LƯU TRỮ SỐ HÓA, TRA CỨU LAI VÀ HỎI ĐÁP RAG TRÊN ĐÁM MÂY CÔNG CỘNG
+Học phần: Điện toán Đám mây — Nhóm 04 — ICTU
+================================================================================
+
+1. YÊU CẦU MÔI TRƯỜNG
+--------------------------------------------------------------------------------
+- Python 3.10 trở lên (hoặc Docker / Docker Compose).
+- Tesseract OCR 5 có gói tiếng Việt (`vie`) khi cần OCR tệp PDF scan tải lên.
+
+2. CHẠY CỤC BỘ BẰNG PYTHON
+--------------------------------------------------------------------------------
+Bước 1: Di chuyển vào thư mục dự án:
+    cd Dien_toan_dam_may
+
+Bước 2: Tạo tệp cấu hình `.env` từ `.env.example` và điền `OPENROUTER_API_KEY`,
+`APP_ADMIN_PASSWORD`, `APP_SECRET_KEY`.
+
+Bước 3: Khởi động máy chủ web:
+    uvicorn web.app:app --host 127.0.0.1 --port 7860
+
+Truy cập trên trình duyệt:
+- Cổng Quản lý Lưu trữ Số hóa:       http://127.0.0.1:7860/
+- Không gian Tra cứu & Hỏi đáp RAG:  http://127.0.0.1:7860/notebooklm
+- Bảng điều khiển Hạ tầng Đám mây:   http://127.0.0.1:7860/cloud
+- Kiểm tra sức khỏe dịch vụ:         http://127.0.0.1:7860/healthz và /readyz
+
+3. CHẠY BẰNG DOCKER COMPOSE (CÓ LƯU TRỮ BỀN VỮNG)
+--------------------------------------------------------------------------------
+    docker compose up --build
+
+4. TRIỂN KHAI LÊN HUGGING FACE SPACES (CHẾ ĐỘ TÁCH DỮ LIỆU)
+--------------------------------------------------------------------------------
+Kiểm tra đóng gói không tải lên:
+    python scripts/deploy_cloud.py --mode decoupled --dry-run
+
+Triển khai thật lên Private Dataset Storage + Docker Space:
+    python scripts/deploy_cloud.py --mode decoupled --token <HF_WRITE_TOKEN> --sync-secrets
+
+5. CHẠY KIỂM THỬ TỰ ĐỘNG
+--------------------------------------------------------------------------------
+    python -m pytest -q
+================================================================================

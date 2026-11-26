@@ -1,0 +1,52 @@
+{
+ "doc_id": "cp_220061",
+ "key": "c229b906600e09b3",
+ "kind": "llm",
+ "points": [
+  {
+   "text": "Nội dung chính: Phó Thủ tướng Nguyễn Văn Thắng chủ trì buổi làm việc với lãnh đạo thành phố Quảng Ninh về tình hình thực hiện nhiệm vụ phát triển kinh tế-xã hội và mục tiêu tăng trưởng \"hai con số\", giải ngân vốn đầu tư công, vận hành chính quyền địa phương 2 cấp.",
+   "sources": [
+    1
+   ]
+  },
+  {
+   "text": "Cơ quan chịu trách nhiệm: Văn phòng Chính phủ.",
+   "sources": [
+    1
+   ]
+  }
+ ],
+ "citations": [
+  {
+   "doc_id": "cp_220061",
+   "page_no": 1,
+   "start": 0,
+   "end": 863,
+   "text": "VĂN PHÒNG CHÍNH PHỦ\n_________\nSố: 543/TB-VPCP\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\n________________________________________\nHà Nội, ngày 22 tháng 10 năm 2026\nTHÔNG BÁO\nKết luận của Phó Thủ tướng Chính phủ Nguyễn Văn Thắng tại buổi làm việc với Lãnh đạo thành phố Quảng Ninh\n____________\nNgày 15 tháng 10 năm 2026, tại trụ sở Ủy ban nhân dân thành phố Quảng Ninh,\nPhó Thủ tướng Chính phủ Nguyễn Văn Thắng chủ trì buổi làm việc với Lãnh đạo thành phố Quảng Ninh về tình hình thực hiện nhiệm vụ phát triển kinh tế - xã hội và mục tiêu tăng trưởng “hai con số”, giải ngân vốn đầu tư công, vận hành chính quyền địa phương 2 cấp. Cùng dự buổi làm việc với Phó Thủ tướng Chính phủ có đại diện các Bộ, cơ quan: Tài chính, Xây dựng, Công Thương, Nông nghiệp và Môi trường, Văn hóa, Thể thao và Du lịch, Công an, Ngoại giao và Văn phòng Chính phủ."
+  }
+ ],
+ "meta": {
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "n_passages": 6,
+  "pages": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "seconds": 36.08,
+  "new_tokens": 148,
+  "raw": "- Thông báo số 543/TB-VPCP của Văn phòng Chính phủ về kết luận của Phó Thủ tướng Nguyễn Văn Thắng tại buổi làm việc với lãnh đạo thành phố Quảng Ninh, ngày 15/10/2026. \n\n- Nội dung chính: Phó Thủ tướng Nguyễn Văn Thắng chủ trì buổi làm việc với lãnh đạo thành phố Quảng Ninh về tình hình thực hiện nhiệm vụ phát triển kinh tế-xã hội và mục tiêu tăng trưởng \"hai con số\", giải ngân vốn đầu tư công, vận hành chính quyền địa phương 2 cấp. \n\n- Cơ quan chịu trách nhiệm: Văn phòng Chính phủ. \n\n- Thời hạn: Không có thông tin.",
+  "dropped": [
+   {
+    "text": "Thông báo số 543/TB-VPCP của Văn phòng Chính phủ về kết luận của Phó Thủ tướng Nguyễn Văn Thắng tại buổi làm việc với lãnh đạo thành phố Quảng Ninh, ngày 15/10/2026.",
+    "reason": "con số không có trong nguồn: 15/10/2026"
+   },
+   {
+    "text": "Thời hạn: Không có thông tin.",
+    "reason": "chỉ 50% từ khóa có trong nguồn"
+   }
+  ],
+  "n_auto_cited": 2
+ }
+}

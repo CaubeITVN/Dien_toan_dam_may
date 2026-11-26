@@ -1,0 +1,21 @@
+{
+  "seed": 13,
+  "version": {
+    "variants": "1",
+    "clean": "2",
+    "spellfix": "5"
+  },
+  "timestamp": "2026-11-22T04:57:19.507370+00:00",
+  "gold_dir": "data\\gold\\ocr_gold",
+  "pages_path": "data\\processed\\pages.jsonl",
+  "out_dir": "data\\processed\\variants",
+  "n_gold_matched": 30,
+  "n_total_pages": 630,
+  "has_spellfix_lm": true,
+  "missing_ocr_pages": [],
+  "files": {
+    "gold": "data\\processed\\variants\\pages_gold.jsonl",
+    "raw_ocr": "data\\processed\\variants\\pages_raw_ocr.jsonl",
+    "clean_spellfix": "data\\processed\\variants\\pages_clean_spellfix.jsonl"
+  }
+}

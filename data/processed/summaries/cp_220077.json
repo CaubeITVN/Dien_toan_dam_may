@@ -1,0 +1,80 @@
+{
+ "doc_id": "cp_220077",
+ "key": "2e280c9f858a4964",
+ "kind": "llm",
+ "points": [
+  {
+   "text": "Cơ quan chịu trách nhiệm là Văn phòng Chính phủ, thông qua Công văn số 10790/VPCP-CN.",
+   "sources": [
+    1
+   ]
+  },
+  {
+   "text": "Thời hạn là trong tháng 12 năm 2026.",
+   "sources": [
+    2
+   ]
+  },
+  {
+   "text": "Nội dung chính bao gồm: chỉ đạo các bộ, cơ quan và địa phương phát triển điện mặt trời mái nhà, khuyến khích lắp đặt hệ thống lưu trữ năng lượng, hoàn thành các nhà máy nhiệt điện, phối hợp với Bộ Nông nghiệp và Môi trường, rà soát các dự án nguồn điện và lưới truyền tải điện, trực tiếp làm việc với các địa phương.",
+   "sources": [
+    3
+   ]
+  },
+  {
+   "text": "Các địa phương cần xây dựng kế hoạch chi tiết, đường găng tiến độ triển khai các công trình, dự án thuộc phạm vi quản lý, bảo đảm hoàn thành theo đúng Quy hoạch điện VIII điều chỉnh.",
+   "sources": [
+    4
+   ]
+  }
+ ],
+ "citations": [
+  {
+   "doc_id": "cp_220077",
+   "page_no": 1,
+   "start": 40,
+   "end": 53,
+   "text": "Loại: Công văn\nSố: 10790/VPCP-CN\nNgày: 22/10/2026\nCơ quan: VĂN PHÒNG CHÍNH PHỦ\nTrích yếu: tập trung triển khai ngay các giải pháp bảo đảm cung ứng điện giai đoạn 2027 – 2030"
+  },
+  {
+   "doc_id": "cp_220077",
+   "page_no": 1,
+   "start": 301,
+   "end": 1028,
+   "text": "- Đồng chí Bộ trưởng Bộ Công Thương;\n- Đồng chí Bí thư Thành ủy, Tỉnh ủy các tỉnh, thành phố;\n- Đồng chí Chủ tịch Ủy ban nhân dân các tỉnh, thành phố.\nBảo đảm vững chắc an ninh năng lượng quốc gia, cung ứng đủ điện là yếu tố nền tảng và quyết định thực hiện thành công nhiệm vụ phát triển kinh tế xã hội, là nhiệm vụ chính trị đặc biệt quan trọng của cả hệ thống chính trị. Ngày 12 tháng 10 năm 2026, Thủ tướng Chính phủ đã họp và có chỉ đạo về các giải pháp bảo đảm cung ứng điện giai đoạn 2026-2030 và điều chỉnh Quy hoạch điện VIII điều chỉnh (văn bản số 531/TB-VPCP ngày 17 tháng 10 năm 2026). Thực hiện các kết luận của Trung ương, Nghị quyết của Bộ Chính trị và chỉ đạo của lãnh đạo\nChủ chốt, Thủ tướng Chính phủ yêu cầu:"
+  },
+  {
+   "doc_id": "cp_220077",
+   "page_no": 1,
+   "start": 1678,
+   "end": 2401,
+   "text": "a) Tập trung thực hiện các giải pháp cấp bách trước mắt để bảo đảm cung ứng đủ điện năm 2027:\n- Chỉ đạo, đôn đốc các bộ, cơ quan và địa phương tập trung phát triển điện mặt trời mái nhà tự sản tự tiêu tại các hộ gia đình, cơ quan, công sở, cơ sở sản xuất kinh doanh, bảo đảm thực hiện đúng chỉ đạo của Thủ tướng Chính phủ tại\nChỉ thị 10/CT-TTg ngày 30 tháng 3 năm 2026, khuyến khích lắp đặt hệ thống lưu trữ năng lượng (BESS) nhằm giảm phụ tải giờ cao điểm và tăng khả năng tự chủ nguồn điện tại chỗ, trong đó, đề xuất Chính phủ, Thủ tướng Chính phủ giao chỉ tiêu cho từng địa phương, đặc biệt là các tỉnh miền Bắc (trong đó nêu rõ số lượng, mốc thời gian vận hành), kết quả triển khai nhiệm vụ được giao này sẽ là chỉ tiêu"
+  },
+  {
+   "doc_id": "cp_220077",
+   "page_no": 3,
+   "start": 799,
+   "end": 1444,
+   "text": "- Trực tiếp làm việc với các địa phương xây dựng kế hoạch chi tiết, đường găng tiến độ triển khai các công trình, dự án thuộc phạm vi quản lý, bảo đảm hoàn thành theo đúng Quy hoạch điện VIII điều chỉnh, trong đó xác định rõ các mốc tiến độ, thời điểm đưa vào vận hành và cam kết bằng văn bản, đồng gửi Bộ Công\nThương để tổng hợp, theo dõi, giám sát; rà soát cụ thể tính khả thi từng dự án, trường hợp không thể hoàn thành theo đúng tiến độ yêu cầu, Bộ Công Thương chủ trì phối hợp với Ủy ban nhân dân tỉnh, thành phố có dự án xem xét, quyết định phương án thay thế. Trường hợp vượt thẩm quyền, báo cáo Thủ tướng Chính phủ xem xét theo quy định."
+  }
+ ],
+ "meta": {
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "n_passages": 6,
+  "pages": [
+   1,
+   2,
+   3
+  ],
+  "seconds": 42.81,
+  "new_tokens": 227,
+  "raw": "- Văn bản này tập trung triển khai các giải pháp bảo đảm cung ứng điện giai đoạn 2027-2030, với mục tiêu đảm bảo an ninh năng lượng quốc gia và cung ứng đủ điện.\n- Cơ quan chịu trách nhiệm là Văn phòng Chính phủ, thông qua Công văn số 10790/VPCP-CN.\n- Thời hạn là trong tháng 12 năm 2026.\n- Nội dung chính bao gồm: chỉ đạo các bộ, cơ quan và địa phương phát triển điện mặt trời mái nhà, khuyến khích lắp đặt hệ thống lưu trữ năng lượng, hoàn thành các nhà máy nhiệt điện, phối hợp với Bộ Nông nghiệp và Môi trường, rà soát các dự án nguồn điện và lưới truyền tải điện, trực tiếp làm việc với các địa phương.\n- Các địa phương cần xây dựng kế hoạch chi tiết, đường găng tiến độ triển khai các công trình, dự án thuộc phạm vi quản lý, bảo đảm hoàn thành theo đúng Quy hoạch điện VIII điều chỉnh.",
+  "dropped": [
+   {
+    "text": "Văn bản này tập trung triển khai các giải pháp bảo đảm cung ứng điện giai đoạn 2027-2030, với mục tiêu đảm bảo an ninh năng lượng quốc gia và cung ứng đủ điện.",
+    "reason": "con số không có trong nguồn: 2027-2030"
+   }
+  ],
+  "n_auto_cited": 4
+ }
+}

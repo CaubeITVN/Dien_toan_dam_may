@@ -1,0 +1,78 @@
+{
+ "doc_id": "cp_220070",
+ "key": "f177454daa610a4c",
+ "kind": "extractive",
+ "points": [
+  {
+   "text": "Sở Giáo dục và Đào tạo trực tiếp hướng dẫn chuyên môn, nghiệp vụ, kiểm tra việc nghiệm thu, bàn giao kết quả giáo dục học sinh hoàn thành chương trình tiểu học lên lớp 6 và việc kế thừa, chuyển giao, đồng bộ, khai thác và sử dụng dữ liệu",
+   "sources": [
+    1
+   ]
+  },
+  {
+   "text": "bảo đảm dữ liệu đánh giá học sinh đầy đủ, chính xác, kịp thời, thống nhất với hồ sơ quản lý của nhà trường.”.",
+   "sources": [
+    2
+   ]
+  },
+  {
+   "text": "Đánh giá học sinh khuyết tật và học sinh học tại lớp dành cho trẻ em có hoàn cảnh khó khăn không có điều kiện đi học ở trường cấp trung học cơ sở 1, Việc đánh giá học sinh khuyết tật được thực hiện theo quy định tại khoản 1, khoản 2 và khoản 3 Điều 8 của Quy định đánh giá học sinh tiểu học ban hành kèm theo",
+   "sources": [
+    3
+   ]
+  },
+  {
+   "text": "Trường hợp sử dụng dạng hồ sơ điện tử, Sở Giáo dục và Đào tạo hướng dẫn thực hiện theo lộ trình phù hợp với điều kiện của địa phương, nhà trường, khả năng thực hiện của giáo viên và bảo đảm tính hợp pháp của hồ sơ điện tử.”",
+   "sources": [
+    4
+   ]
+  }
+ ],
+ "citations": [
+  {
+   "doc_id": "cp_220070",
+   "page_no": 3,
+   "start": 2181,
+   "end": 2844,
+   "text": "3. Sở Giáo dục và Đào tạo trực tiếp hướng dẫn chuyên môn, nghiệp vụ, kiểm tra việc nghiệm thu, bàn giao kết quả giáo dục học sinh hoàn thành chương trình tiểu học lên lớp 6 và việc kế thừa, chuyển giao, đồng bộ, khai thác và sử dụng dữ liệu\nHọc bạ số khi học sinh chuyên lớp, chuyển cấp, chuyển trường tại các cơ sở giáo dục có cấp tiểu học trên địa bàn theo quy định.\nỦy ban nhân dân cấp xã bảo đảm các điều kiện để các cơ sở giáo dục có cấp tiểu học thuộc phạm vi quản lý thực hiện việc nghiệm thu, bản giao kết quả giáo dục học sinh và cập nhật, quản lý dữ liệu Học bạ số theo quy định; phối hợp với Sở Giáo dục và Đào tạo trong việc kiểm tra theo thẩm quyền.”"
+  },
+  {
+   "doc_id": "cp_220070",
+   "page_no": 5,
+   "start": 724,
+   "end": 1295,
+   "text": "Điều 9. Sửa đổi, bổ sung điểm a khoản 1 và điểm b khoản 2 Điều 16 như sau:\n1. Sửa đổi, bổ sung điểm a khoản 1 Điều 16 như sau:\n“a) Đánh giá, tổng hợp kết quả giáo dục học sinh trong lớp; hoàn thành hồ sơ đánh giá học sinh; cập nhật nhận xét, kết quả tổng hợp chung của lớp đề lập Học bạ số; thực hiện ký số xác nhận Học bạ số của lớp chủ nhiệm sau khi giáo viên bộ môn đã hoàn thành ký số môn học; nghiệm thu, bàn giao kết quả giáo dục học sinh cho lớp học sau; bảo đảm dữ liệu đánh giá học sinh đầy đủ, chính xác, kịp thời, thống nhất với hồ sơ quản lý của nhà trường.”."
+  },
+  {
+   "doc_id": "cp_220070",
+   "page_no": 7,
+   "start": 217,
+   "end": 687,
+   "text": "Điều 17. Sửa đổi, bổ sung Điều 11 như sau:\n“Điều 11. Đánh giá học sinh khuyết tật và học sinh học tại lớp dành cho trẻ em có hoàn cảnh khó khăn không có điều kiện đi học ở trường cấp trung học cơ sở 1, Việc đánh giá học sinh khuyết tật được thực hiện theo quy định tại khoản 1, khoản 2 và khoản 3 Điều 8 của Quy định đánh giá học sinh tiểu học ban hành kèm theo\nThông tư số 27/2020/TT-BGDĐT, phù hợp với chương trình, nội dung giáo dục và hình thức đánh giá của cấp học."
+  },
+  {
+   "doc_id": "cp_220070",
+   "page_no": 8,
+   "start": 633,
+   "end": 1074,
+   "text": "2. Hướng dẫn các cơ sở giáo dục sử dụng số theo dõi và đánh giá học sinh\n(theo lớp học), số theo dõi và đánh giá học sinh (của giáo viên) theo mẫu quy định tại Phụ lục kèm theo Thông tư này và Học bạ số theo quy định. Trường hợp sử dụng dạng hồ sơ điện tử, Sở Giáo dục và Đào tạo hướng dẫn thực hiện theo lộ trình phù hợp với điều kiện của địa phương, nhà trường, khả năng thực hiện của giáo viên và bảo đảm tính hợp pháp của hồ sơ điện tử.”"
+  }
+ ],
+ "meta": {
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "n_passages": 6,
+  "pages": [
+   3,
+   5,
+   7,
+   8,
+   9
+  ],
+  "seconds": 8.04,
+  "new_tokens": 400,
+  "raw": "",
+  "dropped": [],
+  "n_auto_cited": 0,
+  "fallback": "Không ý nào của LLM qua bước kiểm nguồn."
+ }
+}

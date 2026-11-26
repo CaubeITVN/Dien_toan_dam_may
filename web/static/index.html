@@ -1,0 +1,3681 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cổng Quản lý và Khai thác Tài liệu Lưu trữ Số hóa - Tỉnh Thái Nguyên</title>
+<style>
+:root {
+  --bg: #f4f6fa; --panel: #ffffff; --panel-2: #f8fafc; --text: #1e293b; --muted: #64748b; --line: #e2e8f0;
+  --accent: #b91c1c; --accent-hover: #991b1b; --accent-ink: #ffffff; --accent-soft: #fef2f2;
+  --gold: #d97706; --gold-soft: #fef3c7; --gold-ink: #92400e;
+  --chip: #f1f5f9; --chip-ink: #334155;
+  --ok: #15803d; --ok-soft: #dcfce7; --warn: #b45309; --warn-soft: #fef3c7; --no: #b91c1c; --no-soft: #fee2e2;
+  --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .04);
+  --radius: 12px;
+}
+:root[data-theme="dark"] {
+  --bg: #0f172a; --panel: #1e293b; --panel-2: #182234; --text: #f1f5f9; --muted: #94a3b8; --line: #334155;
+  --accent: #ef4444; --accent-hover: #dc2626; --accent-ink: #ffffff; --accent-soft: #451a1a;
+  --gold: #f59e0b; --gold-soft: #3b2a0d; --gold-ink: #fde68a;
+  --chip: #27354a; --chip-ink: #cbd5e1;
+  --ok: #22c55e; --ok-soft: #143520; --warn: #f59e0b; --warn-soft: #3b2a0d; --no: #ef4444; --no-soft: #451a1a;
+  --shadow: none;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font: 14px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; display: flex; flex-direction: column; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
+input, select, textarea { font: inherit; color: inherit; }
+
+/* HEADER BỘ NHẬN DIỆN THÁI NGUYÊN */
+.top-bar {
+  background: linear-gradient(135deg, #991b1b 0%, #b91c1c 50%, #c2410c 100%);
+  color: #ffffff; padding: 8px 18px; display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-bottom: 3px solid var(--gold);
+}
+.emblem-box {
+  width: 44px; height: 44px; border-radius: 50%; background: #ffffff;
+  display: grid; place-items: center; font-size: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.brand-text { display: flex; flex-direction: column; }
+.sub-agency { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.92; font-weight: 600; }
+.main-title { font-size: 16px; font-weight: 700; letter-spacing: 0.2px; text-transform: uppercase; }
+.url-tag { font-size: 11px; opacity: 0.85; font-family: monospace; }
+.top-stats { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 12px; }
+.stat-pill { background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(4px); }
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.top-btn { background: rgba(255,255,255,0.2); color: #ffffff; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.top-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* TAB BAR ĐIỀU HƯỚNG CHÍNH */
+.nav-tabs {
+  background: var(--panel); border-bottom: 1px solid var(--line); display: flex; padding: 0 16px; gap: 8px;
+}
+.nav-tab-btn {
+  padding: 11px 18px; font-weight: 600; font-size: 13.5px; color: var(--muted);
+  border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 8px; transition: all 0.15s ease;
+}
+.nav-tab-btn:hover { color: var(--text); background: var(--panel-2); }
+.nav-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--panel); }
+
+/* BỐ CỤC CHÍNH */
+.layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 480px; gap: 12px; padding: 12px; }
+.layout.viewer-closed { grid-template-columns: minmax(0, 1fr) 0; }
+.layout.viewer-closed #viewer { display: none; }
+.panel {
+  background: var(--panel); border-radius: var(--radius); border: 1px solid var(--line);
+  box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+.tab-content { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.tab-content.active { display: flex; }
+
+/* TRA CỨU NỘI DUNG VĂN BẢN CHUYÊN SÂU */
+.search-controls { padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+.search-bar-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.main-search-input {
+  flex: 1; padding: 11px 16px; border: 1.5px solid var(--line); border-radius: 8px;
+  background: var(--panel); font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.main-search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.primary-btn {
+  background: var(--accent); color: var(--accent-ink); padding: 0 22px; border-radius: 8px;
+  font-weight: 600; display: flex; align-items: center; gap: 6px; transition: background 0.15s;
+}
+.primary-btn:hover { background: var(--accent-hover); }
+
+.search-mode-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 12.5px; }
+.mode-toggle { display: inline-flex; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.mode-btn { padding: 4px 12px; border-radius: 6px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.mode-btn.active { background: var(--accent); color: var(--accent-ink); }
+
+.filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.filter-group label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
+.filter-group select, .filter-group input {
+  width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel); font-size: 12.5px; outline: none;
+}
+
+.search-summary-bar {
+  padding: 8px 20px; background: var(--panel); border-bottom: 1px solid var(--line);
+  font-size: 12.5px; color: var(--muted); display: flex; justify-content: space-between; align-items: center;
+}
+
+.search-results-list { flex: 1; overflow-y: auto; padding: 16px 20px; list-style: none; margin: 0; }
+.passage-card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 14px; transition: all 0.15s ease; border-left: 4px solid var(--accent);
+}
+.passage-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-1px); }
+.passage-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+.result-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+.badge-fond { background: var(--accent-soft); color: var(--accent); }
+.badge-dossier { background: var(--chip); color: var(--chip-ink); font-family: monospace; }
+.badge-page { background: var(--gold-soft); color: var(--gold-ink); font-weight: 700; }
+.badge-score { background: var(--ok-soft); color: var(--ok); }
+.badge-retention { background: #e0f2fe; color: #0369a1; }
+.badge-usage { background: #fef3c7; color: #92400e; }
+.passage-doc-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.passage-snippet {
+  font-size: 13.5px; line-height: 1.65; color: var(--text); background: var(--panel-2);
+  padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 10px;
+}
+.kw-highlight { background: #fef08a; color: #854d0e; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+:root[data-theme="dark"] .kw-highlight { background: #713f12; color: #fef08a; }
+
+.passage-footer { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.btn-action-view {
+  background: var(--accent-soft); color: var(--accent); font-weight: 600; padding: 5px 12px;
+  border-radius: 6px; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-action-view:hover { background: var(--accent); color: var(--accent-ink); }
+
+/* TAB 2: CÂY PHÔNG & HỒ SƠ */
+.tree-layout { display: grid; grid-template-columns: 340px 1fr; flex: 1; min-height: 0; }
+.tree-sidebar { border-right: 1px solid var(--line); overflow-y: auto; padding: 12px; background: var(--panel-2); }
+.tree-main { overflow-y: auto; padding: 16px 20px; }
+.fond-item { margin-bottom: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fond-head { padding: 10px 12px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+.dossier-list { list-style: none; margin: 0; padding: 4px 0; }
+.dossier-item { padding: 9px 12px; border-bottom: 1px dashed var(--line); cursor: pointer; font-size: 12.5px; transition: background 0.15s; }
+.dossier-item:last-child { border-bottom: none; }
+.dossier-item:hover { background: var(--panel-2); }
+.dossier-item.active { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
+.dossier-code { font-family: monospace; font-size: 11px; color: var(--muted); }
+
+/* TAB 3: TIẾP NHẬN & SỐ HÓA */
+.upload-view { padding: 24px; overflow-y: auto; flex: 1; }
+.drop-zone {
+  border: 2px dashed var(--line); border-radius: 14px; padding: 36px 20px;
+  text-align: center; background: var(--panel-2); cursor: pointer; transition: all 0.2s;
+}
+.drop-zone:hover { border-color: var(--accent); background: var(--accent-soft); }
+.drop-icon { font-size: 38px; color: var(--accent); margin-bottom: 10px; }
+
+/* CỘT VIEWER XEM VĂN BẢN VÀ CĂN CỨ */
+.viewer-panel { border-left: 1px solid var(--line); }
+.viewer-head { padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.viewer-tabs { display: flex; gap: 6px; }
+.v-tab-btn { padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; }
+.v-tab-btn.active { background: var(--accent-soft); color: var(--accent); }
+.viewer-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; justify-content: center; background: var(--panel-2); }
+.page-image { max-width: 100%; height: auto; box-shadow: var(--shadow); border: 1px solid var(--line); background: #ffffff; }
+.fields-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.fields-table th, .fields-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.fields-table th { width: 110px; color: var(--muted); font-weight: 600; }
+
+/* =========================================================================
+   FLOATING CHATBOT WIDGET (TRỢ LÝ ẢO NỔI GÓC PHẢI MÀN HÌNH)
+   ========================================================================= */
+.floating-chat-btn {
+  position: fixed; right: 26px; bottom: 26px; z-index: 1000;
+  background: linear-gradient(135deg, #b91c1c 0%, #c2410c 100%);
+  color: #ffffff; padding: 12px 20px; border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(185, 28, 28, 0.45);
+  display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px;
+  cursor: pointer; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid var(--gold);
+}
+.floating-chat-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(185, 28, 28, 0.6);
+}
+.bot-pulse-dot {
+  width: 10px; height: 10px; background: #22c55e; border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite;
+}
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+.floating-chat-window {
+  position: fixed; right: 26px; bottom: 86px; width: 440px; height: 580px; max-height: calc(100vh - 110px);
+  z-index: 1000; background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22); display: none; flex-direction: column; overflow: hidden;
+  transition: all 0.25s ease;
+}
+.floating-chat-window.open { display: flex; animation: slideUp 0.25s ease forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.chat-win-header {
+  background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+  color: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 2px solid var(--gold);
+}
+.chat-win-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+.chat-win-actions { display: flex; gap: 6px; }
+.win-btn { color: #ffffff; opacity: 0.8; padding: 4px 8px; border-radius: 4px; font-size: 15px; }
+.win-btn:hover { opacity: 1; background: rgba(255,255,255,0.2); }
+
+.chat-quick-chips {
+  padding: 8px 12px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+  display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+}
+.chat-quick-chips::-webkit-scrollbar { display: none; }
+.prompt-chip {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 10px; font-size: 11.5px; color: var(--muted); cursor: pointer; flex-shrink: 0;
+}
+.prompt-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+.chat-messages-area { flex: 1; overflow-y: auto; padding: 14px 16px; scroll-behavior: smooth; }
+.msg { margin-bottom: 14px; max-width: 88%; }
+.msg.user { margin-left: auto; }
+.msg-bubble { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.55; }
+.msg.user .msg-bubble { background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 2px; }
+.msg.assistant .msg-bubble { background: var(--panel-2); border: 1px solid var(--line); border-bottom-left-radius: 2px; overflow-wrap: anywhere; }
+.msg.assistant.refused .msg-bubble { border-left: 3px solid var(--no); }
+.chat-refused-tag { font-size: 11.5px; font-weight: 700; color: var(--no); margin-bottom: 4px; }
+.chat-warning-banner {
+  margin-top: 6px; padding: 6px 10px; border-radius: 8px;
+  background: var(--warn-soft); color: var(--warn); font-size: 11.5px; line-height: 1.45;
+  border: 1px solid #fde68a;
+}
+.chat-503-actions { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chat-503-btn {
+  background: var(--accent); color: var(--accent-ink); border-radius: 6px; padding: 4px 10px;
+  font-size: 11.5px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+}
+.chat-503-btn.secondary { background: var(--panel); color: var(--accent); border: 1px solid var(--line); }
+.msg-citations { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; }
+.citation-row { display: flex; align-items: stretch; gap: 6px; width: 100%; }
+.cite-btn {
+  flex: 1; min-width: 0; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 9px; color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cite-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+.cite-pdf-link {
+  background: var(--chip); color: var(--accent); border: 1px solid var(--line);
+  border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 700;
+  text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;
+  transition: all 0.15s; cursor: pointer;
+}
+.cite-pdf-link:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.cite-bubble-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 5px; margin: 0 2px;
+  border-radius: 999px; background: #fee2e2; color: #b91c1c;
+  font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #fecaca;
+  vertical-align: 2px; transition: all 0.15s;
+}
+.cite-bubble-btn:hover {
+  background: #b91c1c; color: #ffffff; border-color: #991b1b; transform: scale(1.1);
+}
+:root[data-theme="dark"] .cite-bubble-btn {
+  background: #451a1a; color: #fca5a5; border-color: #7f1d1d;
+}
+:root[data-theme="dark"] .cite-bubble-btn:hover {
+  background: #ef4444; color: #ffffff; border-color: #dc2626;
+}
+
+/* MODAL XEM TRÍCH DẪN & TÀI LIỆU PDF TRONG NGUỒN */
+.pdf-modal-overlay {
+  position: fixed; inset: 0; z-index: 100000; background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center;
+  padding: 16px; opacity: 1; transition: opacity 0.2s ease;
+}
+.pdf-modal-overlay.hidden { display: none !important; opacity: 0; }
+.pdf-modal-card {
+  background: var(--panel); border-radius: 14px; width: min(960px, 96vw);
+  max-height: 92vh; display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.4); border: 1px solid var(--line);
+  animation: modalPop 0.2s ease-out;
+}
+@keyframes modalPop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.pdf-modal-header {
+  background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+  color: #ffffff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.pdf-modal-title { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.pdf-modal-title span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pdf-modal-actions { display: flex; align-items: center; gap: 8px; }
+.pdf-action-btn {
+  background: rgba(255,255,255,0.22); color: #fff; border-radius: 6px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex;
+  align-items: center; gap: 5px; transition: background 0.15s; cursor: pointer; border: 0;
+}
+.pdf-action-btn:hover { background: rgba(255,255,255,0.38); }
+.pdf-action-btn.btn-close { background: transparent; font-size: 16px; padding: 4px 8px; }
+.pdf-action-btn.btn-close:hover { background: rgba(255,255,255,0.25); }
+
+.pdf-modal-body { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; }
+.evidence-quote-box {
+  background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #d97706;
+  border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1e293b;
+}
+:root[data-theme="dark"] .evidence-quote-box {
+  background: #2a1f0c; border-color: #78350f; border-left-color: #f59e0b; color: #f1f5f9;
+}
+.evidence-quote-badge { font-weight: 700; color: #b45309; font-size: 11.5px; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+:root[data-theme="dark"] .evidence-quote-badge { color: #fcd34d; }
+.evidence-quote-text { font-style: italic; line-height: 1.55; margin-bottom: 4px; }
+.evidence-quote-tip { font-size: 11.5px; color: #d97706; font-weight: 550; }
+
+.pdf-view-viewport {
+  background: #525659; border-radius: 8px; border: 1px solid var(--line);
+  padding: 12px; text-align: center; max-height: 56vh; overflow: auto;
+}
+.pdf-view-img {
+  width: 100%; max-width: none; height: auto; display: inline-block; border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  transition: width 0.16s ease;
+}
+.pdf-view-nav {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 4px 0; font-size: 12.5px;
+}
+
+.chat-input-bar { padding: 10px 12px; border-top: 1px solid var(--line); display: flex; gap: 8px; background: var(--panel); }
+.chat-input { flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; outline: none; font-size: 13px; }
+.chat-input:focus { border-color: var(--accent); }
+
+/* =========================================================================
+   GIAO DIỆN CỔNG QUẢN LÝ TÀI LIỆU LƯU TRỮ SỐ HÓA THÁI NGUYÊN (CHUẨN THỰC TẾ)
+   ========================================================================= */
+
+/* TOP NAVBAR (HEADER) */
+.gov-top-nav {
+  background: #1a4388;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: #ffffff;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.gov-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.gov-hamburger-btn {
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+.gov-nav-emblem {
+  height: 32px;
+  width: auto;
+  display: block;
+  cursor: pointer;
+}
+.gov-nav-agency-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.gov-top-search {
+  width: 380px;
+  max-width: 36vw;
+  height: 34px;
+  background: #ffffff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.gov-search-icon {
+  color: #1a4388;
+  font-size: 14px;
+}
+.gov-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #1e293b;
+  background: transparent;
+}
+.gov-search-input::placeholder {
+  color: #94a3b8;
+}
+.gov-search-arrow {
+  color: #1a4388;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.gov-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.gov-nav-icon-btn {
+  color: #ffffff;
+  font-size: 17px;
+  cursor: pointer;
+  opacity: 0.9;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gov-nav-icon-btn:hover {
+  opacity: 1;
+}
+.gov-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  position: relative;
+}
+.gov-user-pill:hover {
+  background: rgba(255,255,255,0.15);
+}
+.gov-user-avatar-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #1a4388;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.gov-user-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #ffffff;
+}
+.gov-user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  min-width: 220px;
+  z-index: 1000;
+  padding: 8px 0;
+  color: #1e293b;
+  display: none;
+}
+.gov-user-dropdown-menu.open {
+  display: block;
+}
+.gov-user-info-box {
+  padding: 8px 16px 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12.5px;
+}
+.gov-user-dropdown-item {
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e293b;
+  transition: background 0.15s;
+}
+.gov-user-dropdown-item:hover {
+  background: #f1f5f9;
+}
+
+/* SUBNAV MENUBAR */
+.gov-subnav-bar {
+  background: #ffffff;
+  min-height: 42px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2px 16px;
+  gap: 4px;
+  font-size: 13px;
+  position: relative;
+  z-index: 999;
+}
+.gov-menu-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 0.15s;
+  position: relative;
+}
+.gov-menu-item:hover, .gov-menu-item.active {
+  color: #1a4388;
+  background: #f0f5ff;
+}
+.gov-menu-arrow {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* SUBNAV DROPDOWN MENU */
+.gov-subnav-dropdown {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-radius: 4px;
+  min-width: 190px;
+  z-index: 1000;
+  padding: 4px 0;
+  display: none;
+}
+.gov-subnav-dropdown.open {
+  display: block;
+}
+.gov-dropdown-link {
+  display: block;
+  padding: 8px 14px;
+  color: #334155;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.gov-dropdown-link:hover, .gov-dropdown-link.active {
+  background: #f0f5ff;
+  color: #1a4388;
+  font-weight: 600;
+}
+
+/* MAIN CONTENT AREA */
+.gov-portal-main {
+  flex: 1;
+  background: #f4f6fa;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.gov-view {
+  width: 100%;
+}
+
+/* DASHBOARD VIEW */
+.gov-stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.gov-stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.gov-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.gov-stat-card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.gov-stat-icon-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.icon-circle-blue { background: #e0edff; color: #1e56a0; }
+.icon-circle-green { background: #dcfce7; color: #15803d; }
+.icon-circle-cyan { background: #e0f2fe; color: #0284c7; }
+.icon-circle-red { background: #fee2e2; color: #dc2626; }
+.gov-stat-card-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+}
+.gov-stat-card-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gov-dashboard-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.gov-chart-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+}
+.gov-chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 14px 0;
+  text-transform: uppercase;
+}
+.gov-chart-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+.gov-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #ffffff;
+  font-size: 12.5px;
+  color: #1e293b;
+}
+
+/* QUẢN LÝ HỒ SƠ VIEW */
+.gov-breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 14px;
+}
+.gov-breadcrumb-bar a {
+  color: #64748b;
+  text-decoration: none;
+}
+.gov-breadcrumb-bar a:hover {
+  color: #1a4388;
+}
+.gov-breadcrumb-active {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.gov-dossier-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.gov-dossier-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.gov-dossier-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.gov-dossier-btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gov-act-btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.gov-act-btn:hover { opacity: 0.9; }
+.btn-green-add { background: #16a34a; }
+.btn-teal-import { background: #0d9488; }
+.btn-blue-sample { background: #2563eb; }
+.btn-olive-export { background: #65a30d; }
+.btn-navy-print { background: #1d4ed8; }
+
+.gov-filter-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.gov-filter-item label {
+  display: block;
+  font-size: 12.5px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+.gov-filter-item input, .gov-filter-item select {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  background: #ffffff;
+  outline: none;
+}
+.gov-filter-item input:focus, .gov-filter-item select:focus {
+  border-color: #1a4388;
+}
+
+/* DATA TABLE */
+.gov-table-container {
+  overflow-x: auto;
+}
+.gov-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.gov-data-table th {
+  background: #f8fafc;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+.gov-data-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
+}
+.gov-data-table tbody tr:hover {
+  background: #f8fafc;
+}
+.code-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #1e293b;
+  font-weight: 600;
+  cursor: pointer;
+}
+.code-arrow:hover {
+  color: #1a4388;
+}
+.btn-more-dots {
+  color: #2563eb;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.btn-more-dots:hover {
+  background: #eff6ff;
+}
+
+/* FOOTER */
+.gov-portal-footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 12px;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  margin-top: auto;
+}
+
+/* =========================================================================
+   GIAO DIỆN ĐĂNG NHẬP CHUẨN CỔNG QUẢN LÝ TÀI LIỆU ĐIỆN TỬ
+   ========================================================================= */
+.gov-login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: linear-gradient(135deg, #83a0ee 0%, #9cbdf0 50%, #b3ccf5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.gov-login-bg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.gov-login-card {
+  position: relative;
+  z-index: 10;
+  background: #ffffff;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 12px;
+  padding: 38px 36px 40px 36px;
+  box-shadow: 0 12px 32px rgba(22, 60, 130, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.gov-emblem-wrap {
+  text-align: center;
+  margin-bottom: 14px;
+}
+.gov-emblem-img {
+  width: 96px;
+  height: auto;
+  display: inline-block;
+}
+.gov-emblem-subtitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+  margin-top: 6px;
+}
+.gov-login-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: #222222;
+  text-align: center;
+  margin: 0 0 24px 0;
+  line-height: 1.35;
+}
+.gov-form-group {
+  margin-bottom: 14px;
+}
+.gov-form-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 6px;
+}
+.gov-star {
+  color: #e11d48;
+  margin-left: 2px;
+  font-weight: 700;
+}
+.gov-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.gov-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+.gov-input:focus {
+  border-color: #2454ad;
+  box-shadow: 0 0 0 2px rgba(36, 84, 173, 0.15);
+}
+.gov-input::placeholder {
+  color: #9ca3af;
+  font-size: 13.5px;
+}
+.gov-eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+.gov-eye-btn:hover {
+  color: #374151;
+}
+.gov-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  margin-bottom: 22px;
+  font-size: 13px;
+}
+.gov-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+.gov-checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: #2454ad;
+  cursor: pointer;
+  margin: 0;
+}
+.gov-forgot-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+.gov-forgot-link:hover {
+  text-decoration: underline;
+}
+.gov-btn-submit {
+  width: 100%;
+  height: 42px;
+  background: #2454ad;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gov-btn-submit:hover {
+  background: #1b438f;
+}
+.gov-error-box {
+  margin-top: 12px;
+  padding: 9px 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 12.5px;
+  text-align: center;
+}
+
+/* MARKDOWN TRONG CHATBOT & CHIPS GỢI Ý */
+.chat-md-h { font-size: 13.5px; font-weight: 700; color: #1a4388; margin: 6px 0 4px; }
+.chat-md-p { margin: 4px 0; line-height: 1.55; }
+.chat-md-list { margin: 4px 0 6px; padding-left: 18px; }
+.chat-md-list li { margin-bottom: 4px; line-height: 1.5; }
+.chat-inline-code {
+  background: #e2e8f0; color: #991b1b; padding: 1px 5px; border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11.5px;
+}
+:root[data-theme="dark"] .chat-inline-code { background: #334155; color: #fca5a5; }
+.chat-followups { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.chat-follow-chip {
+  background: #ffffff; border: 1px solid #cbd5e1; border-radius: 999px;
+  padding: 3px 10px; font-size: 11px; color: #1a4388; cursor: pointer; font-weight: 500;
+  transition: all 0.15s; text-align: left;
+}
+.chat-follow-chip:hover { background: #eff6ff; border-color: #1a4388; }
+
+/* TOAST THÔNG BÁO HỆ THỐNG (THAY THẾ ALERT THÔ) */
+.toast-container {
+  position: fixed; top: 18px; right: 18px; z-index: 100005;
+  display: flex; flex-direction: column; gap: 8px; max-width: 390px; pointer-events: none;
+}
+.toast-item {
+  pointer-events: auto; background: #1e293b; color: #ffffff; padding: 11px 14px;
+  border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+  font-size: 13px; display: flex; align-items: flex-start; gap: 10px;
+  border-left: 4px solid #3b82f6; animation: slideUp 0.2s ease;
+}
+.toast-item.success { border-left-color: #22c55e; }
+.toast-item.warning { border-left-color: #f59e0b; }
+.toast-item.error { border-left-color: #ef4444; }
+.toast-close { margin-left: auto; color: #94a3b8; font-size: 14px; cursor: pointer; padding: 0 2px; }
+.toast-close:hover { color: #ffffff; }
+
+/* MODAL CHỨC NĂNG CỔNG LƯU TRỮ */
+.gov-modal-overlay {
+  position: fixed; inset: 0; z-index: 100002; background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.gov-modal-overlay.hidden { display: none !important; }
+.gov-modal-card {
+  background: #ffffff; color: #1e293b; border-radius: 10px; width: min(720px, 95vw);
+  max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.28); border: 1px solid #cbd5e1;
+  animation: modalPop 0.18s ease-out;
+}
+.gov-modal-header {
+  background: #1a4388; color: #ffffff; padding: 13px 18px;
+  display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 14.5px;
+}
+.gov-modal-close {
+  color: #ffffff; font-size: 18px; cursor: pointer; opacity: 0.85; padding: 2px 6px; border-radius: 4px;
+}
+.gov-modal-close:hover { opacity: 1; background: rgba(255,255,255,0.18); }
+.gov-modal-body { padding: 18px 20px; overflow-y: auto; flex: 1; font-size: 13px; }
+.gov-modal-footer {
+  padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: flex-end; gap: 8px;
+}
+.gov-modal-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gov-modal-form-grid .full { grid-column: 1 / -1; }
+.gov-field label { display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+.gov-field input, .gov-field select, .gov-field textarea {
+  width: 100%; padding: 7px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+  font-size: 13px; background: #ffffff; outline: none;
+}
+.gov-field input:focus, .gov-field select:focus, .gov-field textarea:focus { border-color: #1a4388; }
+
+/* THANH THAO TÁC HÀNG LOẠT & SẮP XẾP HỒ SƠ */
+.gov-batch-bar {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px;
+  font-size: 12.5px;
+}
+.gov-status-pill {
+  display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  background: #dcfce7; color: #15803d; white-space: nowrap;
+}
+.gov-status-pill.pending { background: #fef3c7; color: #b45309; }
+.gov-status-pill.approved { background: #dbeafe; color: #1d4ed8; }
+.gov-status-pill.archived { background: #e0e7ff; color: #4338ca; }
+
+/* POPOVER THÔNG BÁO GÓC PHẢI */
+.gov-notify-wrap { position: relative; }
+.gov-notify-dot {
+  position: absolute; top: 1px; right: 1px; width: 8px; height: 8px;
+  background: #ef4444; border-radius: 50%; border: 1.5px solid #1a4388;
+}
+.gov-notify-popover {
+  position: absolute; top: 100%; right: 0; margin-top: 8px; width: 320px;
+  background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18); z-index: 1005; display: none; overflow: hidden;
+}
+.gov-notify-popover.open { display: block; }
+.gov-notify-head {
+  padding: 10px 14px; font-weight: 700; font-size: 13px; background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;
+}
+.gov-notify-list { max-height: 280px; overflow-y: auto; }
+.gov-notify-item {
+  padding: 10px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12.5px; cursor: pointer;
+}
+.gov-notify-item:hover { background: #f8fafc; }
+
+.active-dossier-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a;
+  padding: 8px 14px; margin: 8px 20px 0; border-radius: 8px; font-size: 12.5px;
+}
+
+@media (max-width: 1024px) {
+  .gov-stat-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .gov-dashboard-charts-grid { grid-template-columns: 1fr; }
+  .layout, .layout.viewer-closed { grid-template-columns: minmax(0, 1fr); }
+  .tree-layout { grid-template-columns: 1fr; }
+  .tree-sidebar { border-right: none; border-bottom: 1px solid var(--line); max-height: 260px; }
+}
+@media (max-width: 760px) {
+  .gov-top-nav { height: auto; min-height: 52px; flex-wrap: wrap; padding: 8px 12px; gap: 8px; }
+  .gov-nav-agency-title { font-size: 12.5px; white-space: normal; }
+  .gov-top-search { order: 3; width: 100%; max-width: 100%; }
+  .gov-portal-main { padding: 12px; }
+  .gov-stat-cards-grid { grid-template-columns: 1fr; }
+  .gov-modal-form-grid { grid-template-columns: 1fr; }
+  .gov-filter-grid-row { grid-template-columns: 1fr; }
+  .gov-report-two-col { grid-template-columns: 1fr !important; }
+  .floating-chat-window {
+    width: min(440px, calc(100vw - 24px)); right: 12px; bottom: 74px;
+    height: min(560px, calc(100vh - 96px));
+  }
+  .floating-chat-btn { right: 12px; bottom: 14px; padding: 10px 14px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =========================================================================
+     GIAO DIỆN ĐĂNG NHẬP CHÍNH THỨC - PHẦN MỀM QUẢN LÝ TÀI LIỆU ĐIỆN TỬ
+     ========================================================================= -->
+<div id="loginScreen" class="gov-login-screen">
+  <!-- Nền vector lượn sóng trang nhã chuẩn giao diện Cổng Thái Nguyên -->
+  <svg class="gov-login-bg-svg" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M-100 200 C 150 250, 300 500, 220 900" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" />
+    <path d="M-150 150 C 120 200, 260 450, 180 850" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
+    <path d="M-200 100 C 90 150, 220 400, 140 800" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+    <path d="M-250 50 C 60 100, 180 350, 100 750" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" />
+    <path d="M-300 0 C 30 50, 140 300, 60 700" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+
+    <path d="M1540 700 C 1290 650, 1140 400, 1220 0" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" />
+    <path d="M1590 750 C 1320 700, 1180 450, 1260 50" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
+    <path d="M1640 800 C 1350 750, 1220 500, 1300 100" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+    <path d="M1690 850 C 1380 800, 1260 550, 1340 150" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" />
+    <path d="M1740 900 C 1410 850, 1300 600, 1380 200" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+  </svg>
+
+  <!-- Khung Đăng nhập màu trắng ở trung tâm -->
+  <div class="gov-login-card">
+    <div class="gov-emblem-wrap">
+      <img src="/static/quoc_huy.png?v=3" alt="Quốc huy Việt Nam" class="gov-emblem-img">
+      <div class="gov-emblem-subtitle">Quản lý tài liệu</div>
+    </div>
+    <h1 class="gov-login-title">Phần mềm Quản lý tài liệu điện tử</h1>
+
+    <div class="gov-form-group">
+      <label class="gov-form-label" for="loginUsername">Tên đăng nhập<span class="gov-star">*</span></label>
+      <input type="text" id="loginUsername" class="gov-input" placeholder="Tài khoản" autocomplete="username">
+    </div>
+
+    <div class="gov-form-group" style="margin-top: 14px;">
+      <label class="gov-form-label" for="loginPassword">Mật khẩu<span class="gov-star">*</span></label>
+      <div class="gov-input-wrapper">
+        <input type="password" id="loginPassword" class="gov-input" placeholder="Mật khẩu" autocomplete="current-password" style="padding-right: 38px;">
+        <button type="button" class="gov-eye-btn" id="btnTogglePassword" onclick="togglePasswordVisibility()" title="Hiển thị mật khẩu">
+          <svg id="eyeIconSvg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="gov-actions-row">
+      <label class="gov-checkbox-label">
+        <input type="checkbox" id="chkRememberMe" class="gov-checkbox">
+        <span>Nhớ tài khoản</span>
+      </label>
+      <a href="javascript:void(0)" class="gov-forgot-link" onclick="handleForgotPassword()">Quên mật khẩu</a>
+    </div>
+
+    <button type="button" id="btnSubmitLogin" class="gov-btn-submit" onclick="doSubmitLogin()">
+      Đăng nhập
+    </button>
+
+    <div id="loginErrorMessage" class="gov-error-box" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     CỔNG CHÍNH LƯU TRỮ SỐ HÓA THÁI NGUYÊN (CHỈ HIỂN THỊ KHI ĐÃ ĐĂNG NHẬP)
+     ========================================================================= -->
+<div id="portalApp" style="display:none; flex-direction:column; min-height:100vh;">
+
+<!-- TOP NAVBAR BỘ NHẬN DIỆN THÁI NGUYÊN (SCREENSHOT 1, 2, 3) -->
+<header class="gov-top-nav">
+  <div class="gov-nav-left">
+    <div class="gov-hamburger-btn" onclick="toggleSidebarMenu()" title="Chức năng hệ thống">☰</div>
+    <img src="/static/quoc_huy.png?v=3" alt="Quốc huy Việt Nam" class="gov-nav-emblem" onclick="switchPortalView('dashboard')">
+    <span class="gov-nav-agency-title" id="portalAgencyTitle" onclick="switchPortalView('dashboard')">SỞ GIÁO DỤC VÀ ĐÀO TẠO</span>
+  </div>
+
+  <div class="gov-top-search">
+    <span class="gov-search-icon">🔍</span>
+    <input type="text" id="topNavSearchInput" class="gov-search-input" placeholder="Tìm tài liệu trong kho">
+    <span class="gov-search-arrow" onclick="executeTopSearch()" title="Bấm để tra cứu">▾</span>
+  </div>
+
+  <div class="gov-nav-right">
+    <a href="/cloud" title="Mở Bảng điều khiển Hạ tầng & Vận hành Đám mây" style="text-decoration:none; color:#ffffff; font-size:12px; font-weight:600; background:rgba(255,255,255,0.18); padding:5px 12px; border-radius:16px; display:inline-flex; align-items:center; gap:5px; margin-right:4px;">
+      ☁️ Hạ tầng Cloud
+    </a>
+    <a href="/notebooklm" title="Mở bản giao diện NotebookLM (3 cột nghiên cứu trích xuất)" style="text-decoration:none; color:#ffffff; font-size:12px; font-weight:600; background:rgba(255,255,255,0.18); padding:5px 12px; border-radius:16px; display:inline-flex; align-items:center; gap:5px; margin-right:4px;">
+      📑 Giao diện NotebookLM
+    </a>
+    <div class="gov-nav-icon-btn" id="btnRoleModal" onclick="openRoleModal(event)" title="Phân quyền & Vai trò tiếp cận tài liệu">
+      👥 <span id="roleMiniBadge" style="font-size:10px; background:rgba(255,255,255,0.22); padding:1px 6px; border-radius:999px; margin-left:3px; font-weight:700;">admin</span>
+    </div>
+    <div class="gov-notify-wrap">
+      <div class="gov-nav-icon-btn" id="btnNotifyBell" onclick="toggleNotifyPopover(event)" title="Thông báo hệ thống">
+        🔔<span class="gov-notify-dot" id="notifyDot"></span>
+      </div>
+      <div class="gov-notify-popover" id="notifyPopover">
+        <div class="gov-notify-head">
+          <span>🔔 Thông báo hệ thống</span>
+          <button style="font-size:11px; color:#1a4388; font-weight:600;" onclick="refreshNotifications()">Làm mới</button>
+        </div>
+        <div class="gov-notify-list" id="notifyList">
+          <div class="gov-notify-item">Đang đồng bộ trạng thái kho số hóa...</div>
+        </div>
+      </div>
+    </div>
+    <div class="gov-user-pill" id="govUserPillBtn" onclick="toggleUserDropdown(event)">
+      <div class="gov-user-avatar-circle">👤</div>
+      <span class="gov-user-name" id="govTopUsername">admin</span>
+      <span style="font-size:10px; opacity:0.8;">▾</span>
+
+      <!-- Dropdown người dùng -->
+      <div class="gov-user-dropdown-menu" id="govUserDropdownMenu">
+        <div class="gov-user-info-box">
+          <div style="font-weight:700; color:#1a4388;" id="govUserFullName">Quản trị viên Hệ thống</div>
+          <div style="color:#64748b; font-size:11.5px;" id="govUserRoleTitle">Quản trị viên</div>
+          <div style="color:#94a3b8; font-size:11px;" id="govUserAgency">Sở Giáo dục và Đào tạo</div>
+        </div>
+        <div class="gov-user-dropdown-item" onclick="switchPortalView('dashboard')">
+          <span>🏠 Tổng quan (Dashboard)</span>
+        </div>
+        <div class="gov-user-dropdown-item" onclick="switchPortalView('dossiers')">
+          <span>📁 Quản lý hồ sơ</span>
+        </div>
+        <div class="gov-user-dropdown-item" onclick="switchPortalView('search')">
+          <span>🔍 Tra cứu toàn văn & AI</span>
+        </div>
+        <a href="/notebooklm" class="gov-user-dropdown-item" style="text-decoration:none; color:#1d4ed8; font-weight:600;">
+          <span>📑 Bản nghiên cứu (NotebookLM)</span>
+        </a>
+        <div class="gov-user-dropdown-item" style="color:#dc2626; border-top:1px solid #f1f5f9;" onclick="doLogout()">
+          <span>🚪 Đăng xuất</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- THANH MENU ĐIỀU HƯỚNG SUBNAV CHUẨN -->
+<nav class="gov-subnav-bar">
+  <div class="gov-menu-item" data-nav="doc_mgmt" onclick="openDocManagementView()">
+    <span>📁 Quản trị Tài liệu</span> <span class="gov-menu-arrow">▾</span>
+  </div>
+  <div class="gov-menu-item" data-nav="pending_fix" onclick="openDossiersWorkflow('Chờ hiệu chỉnh', 'Hồ sơ chờ hiệu chỉnh')">
+    <span>📁 Hồ sơ chờ hiệu chỉnh</span> <span class="gov-menu-arrow">▾</span>
+  </div>
+  <div class="gov-menu-item active" id="btnMenuAgencyArchive" onclick="toggleSubnavDropdown(event)">
+    <span>📁 Kho lưu trữ cơ quan</span> <span class="gov-menu-arrow" id="agencyMenuArrow">▾</span>
+    
+    <!-- Dropdown Kho lưu trữ cơ quan -->
+    <div class="gov-subnav-dropdown" id="dropdownAgencyArchive">
+      <div class="gov-dropdown-link" onclick="openDossiersSortMode(event)">Sắp xếp hồ sơ</div>
+      <div class="gov-dropdown-link" onclick="openWarehouseTreeView(event)">Quản lý kho</div>
+      <div class="gov-dropdown-link active" onclick="openDossiersWorkflow('', 'Quản lý hồ sơ', event)">Quản lý hồ sơ</div>
+      <div class="gov-dropdown-link" onclick="openDossiersWorkflow('Tạo mới', 'Duyệt lưu kho', event)">Duyệt lưu kho</div>
+      <div class="gov-dropdown-link" onclick="openDossiersWorkflow('Đã duyệt', 'Đăng ký nộp lưu lịch sử', event)">Đăng ký nộp lưu lịch sử</div>
+      <div class="gov-dropdown-link" onclick="openDossiersWorkflow('Đang nộp lưu', 'Duyệt nộp lưu lịch sử', event)">Duyệt nộp lưu lịch sử</div>
+      <div class="gov-dropdown-link" onclick="openDossiersWorkflow('Đã nộp lưu lịch sử', 'Nộp lưu hồ sơ', event)">Nộp lưu hồ sơ</div>
+    </div>
+  </div>
+  <div class="gov-menu-item" data-nav="work_dossiers" onclick="openDossiersWorkflow('', 'Hồ sơ công việc')">
+    <span>📁 Hồ sơ công việc</span> <span class="gov-menu-arrow">▾</span>
+  </div>
+  <div class="gov-menu-item" data-nav="borrow" onclick="openBorrowModal()">
+    <span>⇄ Mượn tài liệu</span> <span class="gov-menu-arrow">▾</span>
+  </div>
+  <div class="gov-menu-item" data-nav="report" onclick="openReportModal()">
+    <span>📊 Báo cáo</span> <span class="gov-menu-arrow">▾</span>
+  </div>
+  <div class="gov-menu-item" data-nav="search" onclick="switchPortalView('search')" style="margin-left:auto; color:#1a4388; font-weight:600;">
+    <span>🔍 Tra cứu Toàn văn & AI</span>
+  </div>
+</nav>
+
+<!-- KHU VỰC NỘI DUNG CHÍNH (3 PHÂN HỆ: DASHBOARD, QUẢN LÝ HỒ SƠ, TRA CỨU) -->
+<main class="gov-portal-main">
+
+  <!-- =====================================================================
+       PHÂN HỆ 1: TỔNG QUAN / DASHBOARD
+       ===================================================================== -->
+  <div id="viewDashboard" class="gov-view">
+    <!-- 4 THẺ THỐNG KÊ TRÊN CÙNG -->
+    <div class="gov-stat-cards-grid">
+      <div class="gov-stat-card" onclick="switchPortalView('dossiers')">
+        <div class="gov-stat-card-left">
+          <div class="gov-stat-icon-circle icon-circle-blue">📄</div>
+          <span class="gov-stat-card-label">Hồ sơ</span>
+        </div>
+        <div class="gov-stat-card-val" id="dashValDossiers">—</div>
+      </div>
+      <div class="gov-stat-card" onclick="switchPortalView('search')">
+        <div class="gov-stat-card-left">
+          <div class="gov-stat-icon-circle icon-circle-green">📄</div>
+          <span class="gov-stat-card-label">Văn bản</span>
+        </div>
+        <div class="gov-stat-card-val" id="dashValDocs">—</div>
+      </div>
+      <div class="gov-stat-card" onclick="openWarehouseTreeView()">
+        <div class="gov-stat-card-left">
+          <div class="gov-stat-icon-circle icon-circle-cyan">🏛️</div>
+          <span class="gov-stat-card-label">Phông lưu trữ</span>
+        </div>
+        <div class="gov-stat-card-val" id="dashValFonds">—</div>
+      </div>
+      <div class="gov-stat-card" onclick="openBorrowModal()">
+        <div class="gov-stat-card-left">
+          <div class="gov-stat-icon-circle icon-circle-red">⇄</div>
+          <span class="gov-stat-card-label">Phiếu mượn / khai thác</span>
+        </div>
+        <div class="gov-stat-card-val" id="dashValBorrows">0</div>
+      </div>
+    </div>
+
+    <!-- 2 KHUNG BIỂU ĐỒ THỐNG KÊ (BIỂU ĐỒ TRÒN & BIỂU ĐỒ TỌA ĐỘ) -->
+    <div class="gov-dashboard-charts-grid">
+      <!-- BIỂU ĐỒ TRÒN THỐNG KÊ TỔNG SỐ HỒ SƠ TÀI LIỆU -->
+      <div class="gov-chart-box">
+        <h3 class="gov-chart-title">THỐNG KÊ TỔNG SỐ HỒ SƠ TÀI LIỆU</h3>
+        <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:10px 0;">
+          <svg viewBox="0 0 240 240" width="220" height="220">
+            <circle cx="120" cy="120" r="95" fill="#6ba5f2" />
+            <path d="M 120 120 L 120 25 A 95 95 0 0 1 135 26 Z" fill="#22c55e" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- BIỂU ĐỒ ĐƯỜNG THỐNG KÊ SỐ LƯỢNG HỒ SƠ -->
+      <div class="gov-chart-box">
+        <h3 class="gov-chart-title">THỐNG KÊ SỐ LƯỢNG HỒ SƠ</h3>
+        <div class="gov-chart-subtitle-row">
+          <span>Bắt đầu từ</span>
+          <div class="gov-date-badge">29/07/2026 📅</div>
+          <span>đến 3 tháng tiếp theo</span>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:10px 0;">
+          <svg viewBox="0 0 460 180" width="100%" height="180">
+            <g stroke="#e2e8f0" stroke-width="1">
+              <line x1="40" y1="20" x2="450" y2="20" />
+              <line x1="40" y1="45" x2="450" y2="45" />
+              <line x1="40" y1="70" x2="450" y2="70" />
+              <line x1="40" y1="95" x2="450" y2="95" />
+              <line x1="40" y1="120" x2="450" y2="120" />
+              <line x1="40" y1="145" x2="450" y2="145" />
+              <line x1="40" y1="170" x2="450" y2="170" />
+            </g>
+            <g font-size="11" fill="#64748b" text-anchor="end">
+              <text x="32" y="24">1.0</text>
+              <text x="32" y="49">0.9</text>
+              <text x="32" y="74">0.8</text>
+              <text x="32" y="99">0.7</text>
+              <text x="32" y="124">0.6</text>
+              <text x="32" y="149">0.5</text>
+              <text x="32" y="174">0.4</text>
+            </g>
+            <circle cx="65" cy="20" r="4.5" fill="#f43f5e" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       PHÂN HỆ 2: QUẢN LÝ HỒ SƠ
+       ===================================================================== -->
+  <div id="viewDossiers" class="gov-view" style="display:none;">
+    <!-- BREADCRUMB -->
+    <div class="gov-breadcrumb-bar">
+      <span>🏠 Home</span>
+      <span>/</span>
+      <a href="javascript:void(0)" onclick="switchPortalView('dashboard')">Kho lưu trữ cơ quan</a>
+      <span>/</span>
+      <span class="gov-breadcrumb-active" id="dossierBreadcrumbTitle">Quản lý hồ sơ</span>
+    </div>
+
+    <!-- KHUNG DANH SÁCH HỒ SƠ -->
+    <div class="gov-dossier-card">
+      <div class="gov-dossier-header-row">
+        <h2 class="gov-dossier-title" id="dossierSectionTitle">Danh sách hồ sơ</h2>
+        <div class="gov-dossier-btn-group">
+          <button class="gov-act-btn btn-green-add" id="btnAddDossier" onclick="openDossierModal()">➕ Thêm</button>
+          <button class="gov-act-btn btn-teal-import" id="btnImportDossier" onclick="triggerImportDossiers()">⬆ Nhập</button>
+          <input type="file" id="dossierImportInput" accept=".csv,.json,text/csv,application/json" style="display:none;">
+          <button class="gov-act-btn btn-blue-sample" id="btnTemplateDossier" onclick="downloadDossierTemplate()">⬇ Mẫu</button>
+          <button class="gov-act-btn btn-olive-export" id="btnExportDossier" onclick="exportDossiersExcel()">📊 Xuất</button>
+          <button class="gov-act-btn btn-navy-print" onclick="window.print()">🖨 In</button>
+        </div>
+      </div>
+
+      <!-- 3 Ô BỘ LỌC TÌM KIẾM HỒ SƠ -->
+      <div class="gov-filter-grid-row">
+        <div class="gov-filter-item">
+          <label>Nhập tiêu đề hồ sơ</label>
+          <input type="text" id="filterDosTitle" placeholder="Nhập tiêu đề hồ sơ" oninput="filterDossiersTable()">
+        </div>
+        <div class="gov-filter-item">
+          <label>Nhập mã hồ sơ</label>
+          <input type="text" id="filterDosCode" placeholder="Nhập mã hồ sơ" oninput="filterDossiersTable()">
+        </div>
+        <div class="gov-filter-item">
+          <label>Trạng thái</label>
+          <select id="filterDosStatus" onchange="filterDossiersTable()">
+            <option value="">--Chọn trạng thái--</option>
+            <option value="Tạo mới">Tạo mới</option>
+            <option value="Chờ hiệu chỉnh">Chờ hiệu chỉnh</option>
+            <option value="Đã duyệt">Đã duyệt</option>
+            <option value="Đang nộp lưu">Đang nộp lưu</option>
+            <option value="Đã nộp lưu lịch sử">Đã nộp lưu lịch sử</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- THANH SẮP XẾP & THAO TÁC HÀNG LOẠT -->
+      <div class="gov-batch-bar" id="dossierBatchBar">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span id="dosSelectionCount" style="font-weight:600; color:#1e3a8a;">Đã chọn: 0 hồ sơ</span>
+          <select id="batchStatusSelect" style="padding:4px 8px; border:1px solid #cbd5e1; border-radius:4px; background:#fff; font-size:12px;">
+            <option value="Chờ hiệu chỉnh">Chờ hiệu chỉnh</option>
+            <option value="Đã duyệt">Duyệt lưu kho (Đã duyệt)</option>
+            <option value="Đang nộp lưu">Đăng ký nộp lưu (Đang nộp lưu)</option>
+            <option value="Đã nộp lưu lịch sử">Đã nộp lưu lịch sử</option>
+          </select>
+          <button class="gov-act-btn btn-blue-sample" style="padding:4px 10px; font-size:12px;" onclick="applyBatchDossierStatus()">✓ Áp dụng trạng thái</button>
+          <button class="gov-act-btn btn-olive-export" style="padding:4px 10px; font-size:12px;" onclick="exportDossiersExcel(true)">📊 Xuất mục đã chọn</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="sortDosSelect" style="color:#475569; font-weight:600;">Sắp xếp:</label>
+          <select id="sortDosSelect" onchange="filterDossiersTable()" style="padding:4px 8px; border:1px solid #cbd5e1; border-radius:4px; background:#fff; font-size:12px;">
+            <option value="">Mặc định</option>
+            <option value="code_asc">Mã hồ sơ (A → Z)</option>
+            <option value="title_asc">Tiêu đề (A → Z)</option>
+            <option value="docs_desc">Số lượng văn bản (giảm dần)</option>
+            <option value="status_asc">Theo trạng thái</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- BẢNG DỮ LIỆU HỒ SƠ -->
+      <div class="gov-table-container">
+        <table class="gov-data-table">
+          <thead>
+            <tr>
+              <th style="width: 45px;">STT</th>
+              <th style="width: 35px;"><input type="checkbox" id="chkSelectAllDos" onchange="toggleAllDossiers(this)" style="cursor:pointer;"></th>
+              <th>Mã hồ sơ</th>
+              <th>Tiêu đề</th>
+              <th>Thời gian tài liệu</th>
+              <th>Thời hạn bảo quản</th>
+              <th>Số lượng tài liệu</th>
+              <th>Vị trí</th>
+              <th>Trạng thái</th>
+              <th style="width: 70px; text-align:center;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="dossiersTableBody">
+            <!-- Nạp động bằng JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       PHÂN HỆ 3: TRA CỨU NỘI DUNG VĂN BẢN (DEEP SEARCH) & TRÌNH XEM PDF
+       ===================================================================== -->
+  <div id="viewSearch" class="gov-view" style="display:none; flex:1; min-height:0; flex-direction:column;">
+    <!-- Nút quay lại Quản lý hồ sơ & Thanh chuyển tab nội bộ -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+      <div class="gov-breadcrumb-bar" style="margin-bottom:0;">
+        <span>🏠 Home</span>
+        <span>/</span>
+        <a href="javascript:void(0)" onclick="switchPortalView('dossiers')">Kho lưu trữ cơ quan</a>
+        <span>/</span>
+        <span class="gov-breadcrumb-active">Tra cứu chuyên sâu văn bản & Kho số hóa</span>
+      </div>
+      <button class="gov-act-btn btn-blue-sample" onclick="switchPortalView('dossiers')">⬅ Quay lại Quản lý hồ sơ</button>
+    </div>
+
+    <div class="nav-tabs" style="border-radius: 10px 10px 0 0; margin: 0 12px;">
+      <button class="nav-tab-btn active" data-tab="tab-search">🔍 Tra cứu Toàn văn & Nội dung</button>
+      <button class="nav-tab-btn" data-tab="tab-tree">🏛️ Cây Phông & Mục lục Kho</button>
+      <button class="nav-tab-btn" data-tab="tab-upload">📤 Quản trị & Tiếp nhận PDF (OCR)</button>
+    </div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout" id="mainLayout">
+  <!-- CỘT TRÁI: NỘI DUNG THEO TAB -->
+  <main class="panel">
+
+    <!-- TAB 1: TRA CỨU NỘI DUNG VĂN BẢN (DEEP CONTENT SEARCH) -->
+    <section class="tab-content active" id="tab-search">
+      <div class="search-controls">
+        <div class="search-bar-row">
+          <input type="text" class="main-search-input" id="searchKeyword" placeholder="Nhập câu từ, điều khoản hoặc từ khóa cần tra cứu (ví dụ: chuyển đổi số cấp xã, phụ cấp công vụ, kiểm soát thủ tục hành chính đất đai)...">
+          <button class="primary-btn" id="btnDoSearch">🔍 Tra cứu Nội dung</button>
+        </div>
+        <div class="search-mode-row">
+          <div style="font-weight: 600; color: var(--muted);">Phạm vi tra cứu:</div>
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="modeContent" onclick="setSearchMode('content')">📄 Đoạn trích nội dung (Deep Passage)</button>
+            <button class="mode-btn" id="modeDoc" onclick="setSearchMode('doc')">📁 Văn bản & Hồ sơ</button>
+          </div>
+        </div>
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label>Phông lưu trữ</label>
+            <select id="filterFond">
+              <option value="">-- Tất cả Phông --</option>
+              <option value="P_UBND_TN">Phông UBND tỉnh Thái Nguyên</option>
+              <option value="P_SGD_TN">Phông Sở GD&ĐT Thái Nguyên</option>
+              <option value="P_TW_APPLY">Phông Văn bản Trung ương</option>
+              <option value="P_TIEP_NHAN">Phông Tiếp nhận số hóa mới</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Loại văn bản</label>
+            <select id="filterDocType">
+              <option value="">-- Tất cả loại VB --</option>
+              <option value="Nghị định">Nghị định</option>
+              <option value="Quyết định">Quyết định</option>
+              <option value="Chỉ thị">Chỉ thị</option>
+              <option value="Công văn">Công văn</option>
+              <option value="Thông báo">Thông báo</option>
+              <option value="Báo cáo">Báo cáo</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Năm ban hành</label>
+            <select id="filterYear">
+              <option value="">-- Tất cả năm --</option>
+              <option value="2026">Năm 2026</option>
+              <option value="2015">Năm 2015</option>
+              <option value="2010">Năm 2010</option>
+              <option value="2009">Năm 2009</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Thời hạn bảo quản</label>
+            <select id="filterRetention">
+              <option value="">-- Tất cả thời hạn --</option>
+              <option value="Vĩnh viễn">Vĩnh viễn</option>
+              <option value="50 năm">50 năm</option>
+              <option value="20 năm">20 năm</option>
+              <option value="10 năm">10 năm</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Người ký / Lãnh đạo</label>
+            <input type="text" id="filterSigner" placeholder="Tên người ký...">
+          </div>
+        </div>
+      </div>
+
+      <div id="activeDossierBanner" class="active-dossier-banner" style="display:none;"></div>
+
+      <div class="search-summary-bar">
+        <span id="searchResultStat">Đang nạp dữ liệu lưu trữ...</span>
+        <span id="searchEngineTag" style="font-size: 11px; background: var(--chip); padding: 2px 8px; border-radius: 4px;">Công nghệ: BM25 + Vector e5 + RRF</span>
+      </div>
+
+      <ul class="search-results-list" id="searchResults">
+        <!-- Render kết quả tra cứu đoạn nội dung tại đây -->
+      </ul>
+    </section>
+
+    <!-- TAB 2: CÂY PHÔNG & HỒ SƠ LƯU TRỮ -->
+    <section class="tab-content" id="tab-tree">
+      <div class="tree-layout">
+        <aside class="tree-sidebar" id="archiveTreeNav">
+          <!-- Cây phân cấp Phông -> Hồ sơ -->
+        </aside>
+        <div class="tree-main" id="archiveTreeContent">
+          <div style="text-align: center; color: var(--muted); padding-top: 40px;">
+            <h3>Chọn một Hồ sơ lưu trữ từ cột bên trái</h3>
+            <p>Để xem danh mục văn bản số hóa, quyết định nộp lưu và thông tin thể thức theo Thông tư 02/2019/TT-BNV.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TIẾP NHẬN & SỐ HÓA NỘP LƯU -->
+    <section class="tab-content" id="tab-upload">
+      <div class="upload-view">
+        <div class="drop-zone" id="dropZone" onclick="$('fileUploadInput').click()">
+          <div class="drop-icon">📤</div>
+          <h3 style="margin: 0 0 6px;">Kéo thả hoặc chọn tệp PDF văn bản scan để tiếp nhận số hóa</h3>
+          <p style="color: var(--muted); margin: 0 0 14px;">Hỗ trợ tệp văn bản hành chính PDF lên đến 30 MB. Hệ thống tự động OCR tiếng Việt, bóc tách thực thể theo Nghị định 30/2020/NĐ-CP và nạp vào hồ sơ nộp lưu.</p>
+          <button class="primary-btn" style="display: inline-flex; margin: 0 auto;" type="button">Chọn tệp từ máy tính</button>
+          <input type="file" id="fileUploadInput" accept="application/pdf" style="display: none;">
+        </div>
+        <div style="margin-top: 24px;">
+          <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Danh sách tài liệu đã tiếp nhận tải lên</h3>
+          <ul id="uploadList" style="list-style: none; padding: 0; margin: 0;"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CỘT PHẢI: TRÌNH XEM VĂN BẢN VÀ THẺ CĂN CỨ -->
+  <aside class="panel viewer-panel" id="viewer">
+    <div class="viewer-head">
+      <div class="viewer-tabs">
+        <button class="v-tab-btn active" id="btnVTabPage" onclick="switchViewerTab('page')">📄 Trang & Căn cứ</button>
+        <button class="v-tab-btn" id="btnVTabCard" onclick="switchViewerTab('card')">📋 Thẻ thông tin (NĐ 30)</button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="vPageNav" style="font-size: 12px; color: var(--muted);">Trang 1/1</span>
+        <button onclick="closeViewer()" style="font-size: 16px; color: var(--muted); padding: 4px;">✕</button>
+      </div>
+    </div>
+    <div style="padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line); font-weight: 700; font-size: 13px; color: var(--accent);" id="viewerDocTitle">
+      Tiêu đề văn bản
+    </div>
+    <div class="viewer-body" id="viewerBody">
+      <!-- Trang ảnh hoặc bảng thẻ thông tin -->
+    </div>
+  </aside>
+</div>
+  </div> <!-- /#viewSearch -->
+
+  <!-- FOOTER BẢN QUYỀN HỆ THỐNG -->
+  <footer class="gov-portal-footer">
+    ©2026 - PHẦN MỀM QUẢN LÝ TÀI LIỆU LƯU TRỮ SỐ HÓA TỈNH THÁI NGUYÊN
+  </footer>
+</main>
+
+<!-- =========================================================================
+     FLOATING CHATBOT WIDGET: TRỢ LÝ ẢO NỔI GÓC PHẢI MÀN HÌNH
+     ========================================================================= -->
+<button class="floating-chat-btn" id="btnToggleFloatingChat" onclick="toggleFloatingChat()">
+  <span class="bot-pulse-dot"></span>
+  <span>🤖 Trợ lý AI Lưu trữ</span>
+</button>
+
+<div class="floating-chat-window" id="floatingChatWindow">
+  <div class="chat-win-header">
+    <div class="chat-win-title">
+      <span>🏛️ TRỢ LÝ SỐ LƯU TRỮ THÁI NGUYÊN</span>
+      <span class="bot-pulse-dot"></span>
+    </div>
+    <div class="chat-win-actions">
+      <button class="win-btn" id="btnChatLlmToggle" onclick="toggleChatLLM()" title="Chuyển chế độ trả lời Trích xuất / Trợ lý AI Đám mây" style="font-size:11px; background:var(--gold); font-weight:600;">🤖 LLM</button>
+      <a class="win-btn" href="/notebooklm" target="_blank" title="Mở Không gian Hỏi đáp 3 cột chuyên sâu" style="text-decoration:none; font-size:13px;">📑</a>
+      <button class="win-btn" onclick="clearChatHistory()" title="Xóa lịch sử hội thoại">🗑️</button>
+      <button class="win-btn" onclick="toggleFloatingChat()" title="Thu nhỏ">_</button>
+    </div>
+  </div>
+
+  <div class="chat-quick-chips">
+    <button class="prompt-chip" onclick="askPrompt('Xin chào! Bạn làm được gì?')">👋 Xin chào / Hướng dẫn</button>
+    <button class="prompt-chip" onclick="askPrompt('Thống kê kho lưu trữ hiện có gì?')">📊 Thống kê kho</button>
+    <button class="prompt-chip" onclick="askPrompt('Có những phông lưu trữ nào?')">🏛️ Các phông lưu trữ?</button>
+    <button class="prompt-chip" onclick="askPrompt('Hồ sơ chỉ đạo triển khai Chuyển đổi số gồm những văn bản nào?')">📑 Hồ sơ Chuyển đổi số?</button>
+    <button class="prompt-chip" onclick="askPrompt('Thủ tục xin cấp bản sao trích lục hồ sơ lưu trữ tỉnh Thái Nguyên thế nào?')">📋 Thủ tục xin trích lục?</button>
+    <button class="prompt-chip" onclick="askPrompt('Ai ký Nghị định 385/2026/NĐ-CP?')">✍️ Ai ký Nghị định 385?</button>
+  </div>
+
+  <div class="chat-messages-area" id="chatMessages">
+    <div class="msg assistant">
+      <div class="msg-bubble">
+        Xin chào! Tôi là <strong>Trợ lý Số Lưu trữ tỉnh Thái Nguyên</strong>. Bạn có thể trò chuyện tự nhiên, hỏi thống kê kho, tra cứu danh mục Phông - Hồ sơ hoặc hỏi nội dung văn bản kèm trích dẫn gốc. Bạn muốn hỏi gì hôm nay?
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-bar">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Nhập câu hỏi giao tiếp, nghiệp vụ hoặc nội dung văn bản...">
+    <button class="primary-btn" id="btnSendChat" style="padding: 0 14px; font-size: 13px;">Gửi</button>
+  </div>
+</div>
+
+<!-- MODAL XEM TRÍCH DẪN & TÀI LIỆU PDF TRONG NGUỒN -->
+<div class="pdf-modal-overlay hidden" id="pdfViewerModal" onclick="closePdfModal(event)">
+  <div class="pdf-modal-card">
+    <div class="pdf-modal-header">
+      <div class="pdf-modal-title">
+        <span id="pdfModalDocTitle">📄 Căn cứ trích dẫn</span>
+      </div>
+      <div class="pdf-modal-actions">
+        <a id="btnOpenPdfTab" href="#" target="_blank" class="pdf-action-btn" title="Mở tệp PDF gốc trực tiếp trong tab mới của trình duyệt">
+          📑 Mở PDF gốc
+        </a>
+        <a id="btnDownloadPdf" href="#" download class="pdf-action-btn" title="Tải tệp PDF về máy">
+          ⬇️ Tải PDF
+        </a>
+        <button class="pdf-action-btn btn-close" onclick="hidePdfModal()" title="Đóng cửa sổ">✕</button>
+      </div>
+    </div>
+    <div class="pdf-modal-body">
+      <div class="evidence-quote-box" id="pdfModalEvidenceBox">
+        <div class="evidence-quote-badge">
+          <span>📌 CĂN CỨ TRÍCH DẪN NGUỒN</span>
+          <span id="pdfModalCiteTag" style="margin-left:auto; font-weight:normal; text-transform:none;"></span>
+        </div>
+        <div class="evidence-quote-text" id="pdfModalQuote"></div>
+        <div class="evidence-quote-tip">✨ Đoạn văn bản căn cứ trên đã được hệ thống tự động tô vàng trực quan trên bản scan bên dưới.</div>
+      </div>
+      <div class="pdf-view-nav">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="primary-btn" id="btnPdfPrev" style="font-size:11px; padding:3px 10px;" onclick="changePdfModalPage(-1)">← Trang trước</button>
+          <span id="pdfModalPageNav" style="font-weight:600; padding:0 4px;">Trang 1/1</span>
+          <button class="primary-btn" id="btnPdfNext" style="font-size:11px; padding:3px 10px;" onclick="changePdfModalPage(1)">Trang sau →</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="primary-btn" style="background:var(--chip); color:var(--text); font-size:11px; padding:3px 8px;" onclick="zoomPdfModal(-0.15)">－</button>
+          <span id="pdfModalZoomVal" style="font-size:11px; font-weight:600;">100%</span>
+          <button class="primary-btn" style="background:var(--chip); color:var(--text); font-size:11px; padding:3px 8px;" onclick="zoomPdfModal(0.15)">＋</button>
+        </div>
+      </div>
+      <div class="pdf-view-viewport" id="pdfModalViewport">
+        <img id="pdfModalImg" class="pdf-view-img" src="" alt="Trang tài liệu PDF scan">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL THÊM / SỬA HỒ SƠ LƯU TRỮ (TT 02/2019/TT-BNV) -->
+<div class="gov-modal-overlay hidden" id="dossierFormModal" onclick="if(event.target===this) closeModal('dossierFormModal')">
+  <div class="gov-modal-card">
+    <div class="gov-modal-header">
+      <span id="dossierFormTitle">➕ Thêm mới Hồ sơ Lưu trữ</span>
+      <button class="gov-modal-close" onclick="closeModal('dossierFormModal')">✕</button>
+    </div>
+    <div class="gov-modal-body">
+      <input type="hidden" id="dosFormEditCode" value="">
+      <div class="gov-modal-form-grid">
+        <div class="gov-field">
+          <label>Mã hồ sơ (để trống để tự sinh)</label>
+          <input type="text" id="dosFormCode" placeholder="VD: TN.2026.P01.02.010">
+        </div>
+        <div class="gov-field">
+          <label>Phông lưu trữ</label>
+          <select id="dosFormFond">
+            <option value="P_UBND_TN">Phông UBND tỉnh Thái Nguyên</option>
+            <option value="P_SGD_TN">Phông Sở GD&ĐT Thái Nguyên</option>
+            <option value="P_TW_APPLY">Phông Văn bản Trung ương</option>
+            <option value="P_TIEP_NHAN">Phông Tiếp nhận số hóa mới</option>
+          </select>
+        </div>
+        <div class="gov-field full">
+          <label>Tiêu đề hồ sơ <span style="color:#dc2626">*</span></label>
+          <input type="text" id="dosFormTitleInput" placeholder="Nhập tiêu đề hồ sơ theo Thông tư 02/2019/TT-BNV">
+        </div>
+        <div class="gov-field">
+          <label>Thời gian bắt đầu</label>
+          <input type="text" id="dosFormStart" placeholder="01/01/2026">
+        </div>
+        <div class="gov-field">
+          <label>Thời gian kết thúc</label>
+          <input type="text" id="dosFormEnd" placeholder="31/12/2026">
+        </div>
+        <div class="gov-field">
+          <label>Thời hạn bảo quản</label>
+          <select id="dosFormRetention">
+            <option value="Vĩnh viễn">Vĩnh viễn</option>
+            <option value="50 năm">50 năm</option>
+            <option value="20 năm">20 năm</option>
+            <option value="10 năm">10 năm</option>
+            <option value="5 năm">5 năm</option>
+          </select>
+        </div>
+        <div class="gov-field">
+          <label>Chế độ sử dụng</label>
+          <select id="dosFormUsage">
+            <option value="Công khai">Công khai</option>
+            <option value="Nội bộ">Nội bộ</option>
+            <option value="Hạn chế">Hạn chế</option>
+          </select>
+        </div>
+        <div class="gov-field">
+          <label>Trạng thái nghiệp vụ</label>
+          <select id="dosFormStatus">
+            <option value="Tạo mới">Tạo mới</option>
+            <option value="Chờ hiệu chỉnh">Chờ hiệu chỉnh</option>
+            <option value="Đã duyệt">Đã duyệt</option>
+            <option value="Đang nộp lưu">Đang nộp lưu</option>
+            <option value="Đã nộp lưu lịch sử">Đã nộp lưu lịch sử</option>
+          </select>
+        </div>
+        <div class="gov-field">
+          <label>Đơn vị lập hồ sơ</label>
+          <input type="text" id="dosFormUnit" placeholder="Văn phòng UBND Tỉnh Thái Nguyên">
+        </div>
+        <div class="gov-field full">
+          <label>Vị trí lưu trữ trong kho</label>
+          <input type="text" id="dosFormLocation" value="UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1">
+        </div>
+      </div>
+    </div>
+    <div class="gov-modal-footer">
+      <button class="gov-act-btn" style="background:#64748b;" onclick="closeModal('dossierFormModal')">Hủy</button>
+      <button class="gov-act-btn btn-green-add" id="btnSaveDossierForm" onclick="saveDossierForm()">💾 Lưu hồ sơ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MƯỢN & KHAI THÁC TÀI LIỆU -->
+<div class="gov-modal-overlay hidden" id="borrowModal" onclick="if(event.target===this) closeModal('borrowModal')">
+  <div class="gov-modal-card" style="width:min(820px, 95vw);">
+    <div class="gov-modal-header">
+      <span>⇄ Sổ Đăng ký Mượn & Trích lục Tài liệu Lưu trữ</span>
+      <button class="gov-modal-close" onclick="closeModal('borrowModal')">✕</button>
+    </div>
+    <div class="gov-modal-body">
+      <div class="gov-modal-form-grid" style="background:#f8fafc; padding:12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:14px;">
+        <div class="gov-field">
+          <label>Họ tên người khai thác / Đơn vị</label>
+          <input type="text" id="borrowerName" placeholder="VD: Nguyễn Văn An - Sở Tư pháp">
+        </div>
+        <div class="gov-field">
+          <label>Hồ sơ đề nghị khai thác</label>
+          <select id="borrowDossierSelect"></select>
+        </div>
+        <div class="gov-field">
+          <label>Hình thức khai thác</label>
+          <select id="borrowType">
+            <option value="Đọc tại chỗ">Đọc tại chỗ (Phòng đọc)</option>
+            <option value="Cấp bản sao / Trích lục">Cấp bản sao / Trích lục có chứng thực</option>
+            <option value="Mượn bản số hóa điện tử">Khai thác bản số hóa trực tuyến</option>
+          </select>
+        </div>
+        <div class="gov-field">
+          <label>Lý do / Mục đích</label>
+          <input type="text" id="borrowPurpose" placeholder="Phục vụ công tác chuyên môn / nghiên cứu">
+        </div>
+        <div class="gov-field full" style="text-align:right;">
+          <button class="gov-act-btn btn-green-add" onclick="submitBorrowRequest()">➕ Tạo phiếu đăng ký mượn</button>
+        </div>
+      </div>
+      <h4 style="margin:0 0 8px; color:#1e3a8a;">Danh sách phiếu mượn / khai thác đã ghi nhận</h4>
+      <div class="gov-table-container">
+        <table class="gov-data-table" id="borrowTable">
+          <thead>
+            <tr>
+              <th>Mã phiếu</th>
+              <th>Người mượn / Đơn vị</th>
+              <th>Mã hồ sơ</th>
+              <th>Hình thức</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="borrowTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="gov-modal-footer">
+      <button class="gov-act-btn" style="background:#64748b;" onclick="closeModal('borrowModal')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BÁO CÁO & THỐNG KÊ TỔNG HỢP -->
+<div class="gov-modal-overlay hidden" id="reportModal" onclick="if(event.target===this) closeModal('reportModal')">
+  <div class="gov-modal-card" style="width:min(820px, 95vw);">
+    <div class="gov-modal-header">
+      <span>📊 Báo cáo & Thống kê Lưu trữ Tổng hợp (Thông tư 02/2019/TT-BNV)</span>
+      <button class="gov-modal-close" onclick="closeModal('reportModal')">✕</button>
+    </div>
+    <div class="gov-modal-body" id="reportModalBody">
+      Đang tổng hợp số liệu...
+    </div>
+    <div class="gov-modal-footer">
+      <button class="gov-act-btn btn-olive-export" onclick="exportStatisticalReportCsv()">📊 Xuất báo cáo CSV (Excel)</button>
+      <button class="gov-act-btn btn-navy-print" onclick="window.print()">🖨 In báo cáo</button>
+      <button class="gov-act-btn" style="background:#64748b;" onclick="closeModal('reportModal')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PHÂN QUYỀN & CHUYỂN ĐỔI VAI TRÒ KIỂM THỬ -->
+<div class="gov-modal-overlay hidden" id="roleModal" onclick="if(event.target===this) closeModal('roleModal')">
+  <div class="gov-modal-card" style="width:min(520px, 95vw);">
+    <div class="gov-modal-header">
+      <span>👥 Phân quyền & Kiểm soát tiếp cận (RBAC mô phỏng)</span>
+      <button class="gov-modal-close" onclick="closeModal('roleModal')">✕</button>
+    </div>
+    <div class="gov-modal-body">
+      <p style="margin-top:0; color:#475569;">Hệ thống áp dụng kiểm soát quyền tiếp cận theo chế độ sử dụng hồ sơ (<strong>Công khai</strong> / <strong>Nội bộ</strong> / <strong>Hạn chế</strong>). Bạn có thể chuyển nhanh vai trò phiên làm việc bên dưới để kiểm thử trực tiếp khi tra cứu & hỏi AI:</p>
+      <div class="gov-field" style="margin-bottom:12px;">
+        <label>Vai trò hiện hành của phiên làm việc</label>
+        <select id="roleSwitcherSelect">
+          <option value="admin">admin — Quản trị viên Sở Nội vụ (Toàn quyền)</option>
+          <option value="internal">internal — Cán bộ chuyên môn nội bộ (Công khai + Nội bộ)</option>
+          <option value="public">public — Công dân / Cổng công khai (Chỉ tài liệu Công khai)</option>
+        </select>
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:12.5px; color:#334155;">
+        <strong>Đơn vị chủ quản:</strong> Trung tâm Lưu trữ Lịch sử - Sở Nội vụ tỉnh Thái Nguyên<br>
+        <strong>Cơ quan liên kết:</strong> Văn phòng UBND tỉnh Thái Nguyên, Sở Giáo dục & Đào tạo
+      </div>
+    </div>
+    <div class="gov-modal-footer">
+      <button class="gov-act-btn" style="background:#64748b;" onclick="closeModal('roleModal')">Đóng</button>
+      <button class="gov-act-btn btn-blue-sample" onclick="applyActiveRole()">✓ Áp dụng vai trò</button>
+    </div>
+  </div>
+</div>
+</div> <!-- /#portalApp -->
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let S = {
+  activeTab: 'tab-search',
+  searchMode: 'content', // 'content' (đoạn trích nội dung) | 'doc' (văn bản)
+  sessionId: 'ses_' + Math.random().toString(36).substring(2, 9),
+  useLLM: true,
+  chatBusy: false,
+  llmStatus: null,
+  activeRole: 'public',
+  activeFileCode: null,
+  selectedDossiers: new Set(),
+  viewer: null,
+  fonds: [],
+  docs: []
+};
+
+function authHeaders(extra = {}) {
+  const token = localStorage.getItem('archive_token');
+  return token ? { ...extra, 'Authorization': `Bearer ${token}` } : { ...extra };
+}
+
+function setActiveSubnav(key) {
+  document.querySelectorAll('.gov-subnav-bar .gov-menu-item').forEach(el => {
+    const match = (key === 'agency' && el.id === 'btnMenuAgencyArchive') || (el.dataset.nav === key);
+    el.classList.toggle('active', Boolean(match));
+  });
+}
+
+let allDossiers = [];
+
+function escapeHtml(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function showToast(message, type = 'info', duration = 4200) {
+  const container = $('toastContainer');
+  if (!container) return;
+  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast-item ${type}`;
+  el.innerHTML = `
+    <span style="flex-shrink:0;">${icons[type] || 'ℹ️'}</span>
+    <div style="flex:1; line-height:1.45;">${escapeHtml(message)}</div>
+    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(el);
+  if (duration > 0) {
+    setTimeout(() => { if (el.parentElement) el.remove(); }, duration);
+  }
+}
+
+function openModal(id) {
+  const m = $(id);
+  if (m) m.classList.remove('hidden');
+}
+
+function closeModal(id) {
+  const m = $(id);
+  if (m) m.classList.add('hidden');
+}
+
+// Khởi chạy ứng dụng
+window.addEventListener('DOMContentLoaded', async () => {
+  setupTabs();
+  setupEvents();
+  updateBorrowDashCount();
+  checkAuthSession();
+});
+
+function setupTabs() {
+  document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activateSearchTab(btn.getAttribute('data-tab'));
+    });
+  });
+}
+
+function activateSearchTab(tabId) {
+  document.querySelectorAll('.nav-tab-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === tabId);
+  });
+  S.activeTab = tabId;
+  if (tabId === 'tab-upload') loadUploadsList();
+  if (tabId === 'tab-tree' && !S.fonds.length) loadArchiveTree();
+}
+
+function setSearchMode(mode) {
+  S.searchMode = mode;
+  $('modeContent').classList.toggle('active', mode === 'content');
+  $('modeDoc').classList.toggle('active', mode === 'doc');
+  loadFacetedSearch();
+}
+
+async function syncChatLlmLabel() {
+  const btn = $('btnChatLlmToggle');
+  if (!btn) return;
+  try {
+    const st = await fetch('/api/llm/status').then(r => r.ok ? r.json() : null);
+    if (st) S.llmStatus = st;
+  } catch {}
+  if (!S.useLLM) {
+    btn.textContent = '⚡ Trích xuất';
+    btn.style.background = 'rgba(255,255,255,0.2)';
+    return;
+  }
+  const st = S.llmStatus;
+  if (st && st.provider === 'openrouter') {
+    const shortName = (st.openrouter_model || st.model || '').split('/').pop().slice(0, 18);
+    if (st.has_api_key) {
+      btn.textContent = `🤖 ${shortName || 'OpenRouter'}`;
+      btn.style.background = 'var(--gold)';
+    } else {
+      btn.textContent = '🤖 LLM (Chưa có key)';
+      btn.style.background = 'rgba(245, 158, 11, 0.55)';
+    }
+  } else if (st && st.provider === 'local') {
+    const shortName = (st.local_model || 'Local LLM').split('/').pop().slice(0, 18);
+    btn.textContent = `🤖 ${shortName}`;
+    btn.style.background = 'var(--gold)';
+  } else {
+    btn.textContent = '🤖 OpenRouter LLM';
+    btn.style.background = 'var(--gold)';
+  }
+}
+
+function toggleFloatingChat() {
+  const win = $('floatingChatWindow');
+  const isOpen = win.classList.contains('open');
+  if (isOpen) {
+    win.classList.remove('open');
+  } else {
+    win.classList.add('open');
+    syncChatLlmLabel();
+    $('chatInput').focus();
+  }
+}
+
+function switchChatToExtractiveAndRetry(q) {
+  S.useLLM = false;
+  syncChatLlmLabel();
+  if (q) {
+    $('chatInput').value = q;
+    sendChatMessage();
+  }
+}
+
+function toggleChatLLM() {
+  S.useLLM = !S.useLLM;
+  syncChatLlmLabel();
+  showToast(
+    S.useLLM ? 'Đã chuyển sang chế độ diễn đạt bằng LLM (OpenRouter / kiểm tra nguồn).' : 'Đã chuyển sang chế độ Trích xuất nguyên văn (tốc độ nhanh).',
+    'info',
+    2600
+  );
+}
+
+function clearChatHistory() {
+  S.sessionId = 'ses_' + Math.random().toString(36).substring(2, 9);
+  const chat = $('chatMessages');
+  if (!chat) return;
+  chat.innerHTML = `
+    <div class="msg assistant">
+      <div class="msg-bubble">
+        Đã làm mới phiên hội thoại. Tôi là <strong>Trợ lý Số Lưu trữ tỉnh Thái Nguyên</strong> — bạn hãy nhập câu hỏi hoặc chọn nhanh gợi ý bên trên nhé!
+      </div>
+    </div>
+  `;
+}
+
+function setupEvents() {
+  if ($('loginUsername')) {
+    $('loginUsername').onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        if (!$('loginPassword').value) $('loginPassword').focus();
+        else doSubmitLogin();
+      }
+    };
+  }
+  if ($('loginPassword')) {
+    $('loginPassword').onkeydown = (e) => {
+      if (e.key === 'Enter') doSubmitLogin();
+    };
+  }
+
+  const topSearch = $('topNavSearchInput');
+  if (topSearch) {
+    topSearch.onkeydown = (e) => { if (e.key === 'Enter') executeTopSearch(); };
+  }
+
+  if ($('btnDoSearch')) $('btnDoSearch').onclick = () => loadFacetedSearch();
+  if ($('searchKeyword')) $('searchKeyword').onkeydown = (e) => { if (e.key === 'Enter') loadFacetedSearch(); };
+  if ($('filterFond')) $('filterFond').onchange = () => loadFacetedSearch();
+  if ($('filterDocType')) $('filterDocType').onchange = () => loadFacetedSearch();
+  if ($('filterYear')) $('filterYear').onchange = () => loadFacetedSearch();
+  if ($('filterRetention')) $('filterRetention').onchange = () => loadFacetedSearch();
+  if ($('filterSigner')) $('filterSigner').onkeydown = (e) => { if (e.key === 'Enter') loadFacetedSearch(); };
+
+  if ($('btnSendChat')) $('btnSendChat').onclick = () => sendChatMessage();
+  if ($('chatInput')) $('chatInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage(); };
+
+  if ($('dossierImportInput')) {
+    $('dossierImportInput').onchange = handleImportDossiersFile;
+  }
+
+  if ($('fileUploadInput')) {
+    $('fileUploadInput').onchange = async (e) => {
+      const file = e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      showToast(`Đang tải lên và xử lý OCR: ${file.name}...`, 'info', 4000);
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: authHeaders({'Content-Type': 'application/pdf', 'X-Filename': encodeURIComponent(file.name)}),
+          body: file
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const d = await res.json();
+        showToast(`Tiếp nhận thành công văn bản ${d.label}!`, 'success');
+        await Promise.all([loadStatus(), loadDossiersTable(), loadArchiveTree(), loadFacetedSearch(), loadUploadsList()]);
+        openViewer(d.doc_id);
+      } catch (err) {
+        showToast('Lỗi tải lên: ' + err.message, 'error');
+      }
+    };
+  }
+}
+
+async function loadUploadsList() {
+  const ul = $('uploadList');
+  if (!ul) return;
+  try {
+    const res = await fetch('/api/uploads', { headers: authHeaders() });
+    const items = await res.json();
+    if (!items || !items.length) {
+      ul.innerHTML = '<li style="color:var(--muted); padding:12px; border:1px dashed var(--line); border-radius:8px; text-align:center;">Chưa có tài liệu nào được tải lên qua web trong kho tiếp nhận.</li>';
+      return;
+    }
+    ul.innerHTML = items.map(u => `
+      <li style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border:1px solid var(--line); border-radius:8px; margin-bottom:8px; background:var(--panel);">
+        <div>
+          <div style="font-weight:700; color:var(--accent);">${escapeHtml(u.original_name || u.doc_id)}</div>
+          <div style="font-size:12px; color:var(--muted);">Mã: <code>${escapeHtml(u.doc_id)}</code> · Tải lên: ${escapeHtml(u.uploaded_at || '')}</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="gov-act-btn btn-blue-sample" onclick="openViewer('${escapeHtml(u.doc_id)}')">📄 Xem tài liệu</button>
+          <button class="gov-act-btn" style="background:#dc2626;" onclick="deleteUploadedDoc('${escapeHtml(u.doc_id)}')">🗑️ Xóa</button>
+        </div>
+      </li>
+    `).join('');
+  } catch (e) {
+    ul.innerHTML = `<li style="color:#dc2626;">Không nạp được danh sách tải lên: ${escapeHtml(e.message)}</li>`;
+  }
+}
+
+async function deleteUploadedDoc(docId) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa tài liệu tải lên "${docId}" khỏi kho lưu trữ và khỏi đĩa?`)) return;
+  try {
+    const res = await fetch(`/api/uploads/${encodeURIComponent(docId)}`, { method: 'DELETE', headers: authHeaders() });
+    if (!res.ok) throw new Error(await res.text());
+    showToast(`Đã xóa tài liệu tải lên ${docId}.`, 'success');
+    await Promise.all([loadStatus(), loadUploadsList(), loadArchiveTree(), loadFacetedSearch()]);
+  } catch (e) {
+    showToast('Không xóa được tài liệu: ' + e.message, 'error');
+  }
+}
+
+async function loadStatus() {
+  try {
+    const res = await fetch('/api/status', { headers: authHeaders() });
+    const data = await res.json();
+    if ($('dashValDossiers')) $('dashValDossiers').textContent = data.n_dossiers ?? '0';
+    if ($('dashValDocs')) $('dashValDocs').textContent = data.n_docs ?? '0';
+    if ($('dashValFonds')) $('dashValFonds').textContent = data.n_fonds ?? '0';
+    refreshNotifications(data);
+  } catch (e) { console.error(e); }
+}
+
+function clearActiveDossierFilter() {
+  S.activeFileCode = null;
+  const banner = $('activeDossierBanner');
+  if (banner) {
+    banner.style.display = 'none';
+    banner.innerHTML = '';
+  }
+  loadFacetedSearch();
+}
+
+async function loadFacetedSearch() {
+  const query = $('searchKeyword').value.trim();
+  const banner = $('activeDossierBanner');
+  if (banner) {
+    if (S.activeFileCode) {
+      const dos = allDossiers.find(d => d.file_code === S.activeFileCode);
+      banner.style.display = 'flex';
+      banner.innerHTML = `
+        <span>📁 Đang lọc theo hồ sơ: <strong><code>${escapeHtml(S.activeFileCode)}</code></strong>${dos ? ' — ' + escapeHtml(dos.title) : ''}</span>
+        <button class="gov-act-btn" style="background:#dc2626; padding:3px 10px; font-size:11.5px;" onclick="clearActiveDossierFilter()">✕ Bỏ lọc hồ sơ</button>
+      `;
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  const payload = {
+    query: query,
+    fond_id: $('filterFond').value || null,
+    file_code: S.activeFileCode || null,
+    doc_type: $('filterDocType').value || null,
+    year: $('filterYear').value || null,
+    retention_period: $('filterRetention').value || null,
+    signer: $('filterSigner').value.trim() || null,
+    user_role: S.activeRole || 'public',
+    search_mode: S.searchMode,
+    page: 1,
+    page_size: 30
+  };
+
+  const container = $('searchResults');
+  container.innerHTML = '<li style="text-align: center; padding: 30px; color: var(--muted);">Đang tra cứu nội dung trong kho lưu trữ số hóa...</li>';
+
+  try {
+    const res = await fetch('/api/archive/search', {
+      method: 'POST',
+      headers: authHeaders({'Content-Type': 'application/json'}),
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    container.innerHTML = '';
+
+    if (data.status === 'access_denied' || data.access_denied) {
+      $('searchResultStat').textContent = 'Bị giới hạn theo phân quyền tiếp cận (RBAC mô phỏng).';
+      container.innerHTML = `<li style="text-align:center; padding:32px; color:#b45309; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">⚠️ ${escapeHtml(data.message || 'Không có quyền tiếp cận hồ sơ nội bộ/hạn chế với vai trò hiện tại.')}</li>`;
+      return;
+    }
+
+    if (!data.items || data.items.length === 0) {
+      $('searchResultStat').textContent = 'Không tìm thấy nội dung phù hợp với điều kiện lọc.';
+      container.innerHTML = '<li style="text-align: center; padding: 40px; color: var(--muted);">Không tìm thấy đoạn nội dung nào thỏa mãn từ khóa và bộ lọc.</li>';
+      return;
+    }
+
+    if (S.searchMode === 'content') {
+      $('searchResultStat').innerHTML = `Tìm thấy <strong>${data.total}</strong> đoạn nội dung khớp trong <strong>${data.total_docs || data.items.length}</strong> tài liệu`;
+    } else {
+      $('searchResultStat').innerHTML = `Tìm thấy <strong>${data.total}</strong> văn bản lưu trữ phù hợp`;
+    }
+
+    data.items.forEach((item) => {
+      const li = document.createElement('li');
+      li.className = 'passage-card';
+
+      const pageBadge = item.page_no ? `<span class="badge badge-page">Trang ${item.page_no}/${item.n_pages || '?'}</span>` : '';
+      const scoreBadge = item.score ? `<span class="badge badge-score" title="Điểm phù hợp RRF">Khớp: ${item.score}</span>` : '';
+
+      li.innerHTML = `
+        <div class="passage-header">
+          <div class="result-badges">
+            <span class="badge badge-fond">${escapeHtml(item.fond_name || 'Phông Lưu trữ')}</span>
+            <span class="badge badge-dossier" title="Mã hồ sơ TT 02/2019">${escapeHtml(item.file_code || '')}</span>
+            ${pageBadge}
+            ${scoreBadge}
+          </div>
+          <span style="font-size: 11.5px; color: var(--muted);">${item.issue_date ? 'Ban hành: ' + escapeHtml(item.issue_date) : ''}</span>
+        </div>
+        <div class="passage-doc-title">
+          ${item.doc_type ? escapeHtml(item.doc_type) + ' - ' : ''}Số ${escapeHtml(item.doc_number || item.label)}
+          ${item.signer ? `<span style="font-size: 12px; font-weight: normal; color: var(--muted);"> (Người ký: ${escapeHtml(item.signer)})</span>` : ''}
+        </div>
+        <div class="passage-snippet">
+          ${item.snippet_html || escapeHtml(item.snippet || item.subject || '(Trích yếu nội dung)')}
+        </div>
+        <div class="passage-footer">
+          <div>Thuộc hồ sơ: <strong>${escapeHtml(item.dossier_title || 'Hồ sơ lưu trữ số hóa')}</strong></div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action-view" onclick="openViewer('${escapeHtml(item.doc_id)}', ${item.page_no || 1}, ${item.start || 0}, ${item.end || 0})">
+              📄 Xem trên trang PDF & Căn cứ
+            </button>
+            <button class="btn-action-view" style="background: var(--chip); color: var(--chip-ink);" onclick="askAboutDoc(decodeURIComponent('${encodeURIComponent(item.label || '')}'), decodeURIComponent('${encodeURIComponent(item.doc_id || '')}'))">
+              💬 Hỏi AI về văn bản này
+            </button>
+          </div>
+        </div>
+      `;
+      container.appendChild(li);
+    });
+  } catch (e) {
+    container.innerHTML = `<li style="color: var(--no); padding: 20px;">Lỗi tra cứu: ${escapeHtml(e.message)}</li>`;
+  }
+}
+
+function askAboutDoc(label, docId) {
+  if (!$('floatingChatWindow').classList.contains('open')) toggleFloatingChat();
+  $('chatInput').value = `Tóm tắt nội dung chính của ${label}?`;
+  sendChatMessage();
+}
+
+async function loadArchiveTree() {
+  try {
+    const res = await fetch('/api/archive/tree', { headers: authHeaders() });
+    const fonds = await res.json();
+    S.fonds = fonds;
+    syncFondSelectOptions(fonds);
+    const nav = $('archiveTreeNav');
+    if (!nav) return;
+    nav.innerHTML = '<h3 style="font-size: 13px; font-weight: 700; margin: 0 0 10px; text-transform: uppercase; color: var(--muted);">Hệ thống Phông & Mục lục</h3>';
+
+    fonds.forEach((f, fIdx) => {
+      const fBox = document.createElement('div');
+      fBox.className = 'fond-item';
+      fBox.innerHTML = `
+        <div class="fond-head" onclick="toggleFond(${fIdx})">
+          <span>🏛️ ${escapeHtml(f.fond_name)}</span>
+          <span style="font-size: 11px;">(${f.total_dossiers} hồ sơ) ▾</span>
+        </div>
+        <ul class="dossier-list" id="fond_dossiers_${fIdx}">
+          ${f.dossiers.map(d => `
+            <li class="dossier-item" onclick="selectDossier('${escapeHtml(d.file_code)}')">
+              <div class="dossier-code">${escapeHtml(d.file_code)}</div>
+              <div>${escapeHtml(d.title)}</div>
+            </li>
+          `).join('')}
+        </ul>
+      `;
+      nav.appendChild(fBox);
+    });
+  } catch (e) { console.error(e); }
+}
+
+function syncFondSelectOptions(fonds) {
+  if (!fonds || !fonds.length) return;
+  const formSel = $('dosFormFond');
+  const filterSel = $('filterFond');
+  if (formSel) {
+    const prev = formSel.value;
+    formSel.innerHTML = fonds.map(f => `<option value="${escapeHtml(f.fond_id)}">${escapeHtml(f.fond_name)}</option>`).join('');
+    if (prev && fonds.some(f => f.fond_id === prev)) formSel.value = prev;
+  }
+  if (filterSel) {
+    const prev = filterSel.value;
+    filterSel.innerHTML = '<option value="">-- Tất cả Phông --</option>' + fonds.map(f => `<option value="${escapeHtml(f.fond_id)}">${escapeHtml(f.fond_name)}</option>`).join('');
+    if (prev && fonds.some(f => f.fond_id === prev)) filterSel.value = prev;
+  }
+}
+
+function toggleFond(fIdx) {
+  const el = $(`fond_dossiers_${fIdx}`);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function selectDossier(fileCode) {
+  const content = $('archiveTreeContent');
+  content.innerHTML = '<div style="text-align: center; padding: 30px;">Đang nạp thông tin hồ sơ...</div>';
+
+  try {
+    const res = await fetch(`/api/archive/dossiers/${encodeURIComponent(fileCode)}`, { headers: authHeaders() });
+    if (!res.ok) throw new Error('Không tải được chi tiết hồ sơ');
+    const dos = await res.json();
+
+    const docsRows = dos.access_restricted
+      ? '<tr><td colspan="5" style="text-align:center; color:#b45309; background:#fffbeb; padding:16px;">🔒 Hồ sơ thuộc chế độ Nội bộ — vui lòng đăng nhập Quản trị viên để xem danh sách văn bản bên trong.</td></tr>'
+      : ((dos.documents && dos.documents.length) ? dos.documents.map(d => `
+            <tr>
+              <td><strong>${escapeHtml(d.doc_number || d.label)}</strong></td>
+              <td>${escapeHtml(d.issue_date || '—')}</td>
+              <td>${escapeHtml(d.doc_type || '—')}</td>
+              <td>${escapeHtml(d.subject || '(Chưa trích yếu)')}</td>
+              <td>
+                <button class="primary-btn" style="font-size: 11.5px; padding: 4px 8px;" onclick="openViewer('${escapeHtml(d.doc_id)}')">
+                  Mở trang PDF
+                </button>
+              </td>
+            </tr>
+          `).join('') : '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:16px;">Hồ sơ mới chưa gắn văn bản số hóa nào.</td></tr>');
+
+    content.innerHTML = `
+      <div style="background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
+        <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+          <span class="badge badge-fond">${escapeHtml(dos.fond_name)}</span>
+          <span class="badge badge-retention">Bảo quản: ${escapeHtml(dos.retention_period)}</span>
+          <span class="badge badge-usage">${escapeHtml(dos.usage_mode)}</span>
+          <span class="gov-status-pill">${escapeHtml(dos.status || 'Tạo mới')}</span>
+        </div>
+        <h2 style="font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--accent);">${escapeHtml(dos.title)}</h2>
+        <div style="font-size: 13px; color: var(--muted); display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div>Mã định danh hồ sơ: <strong><code>${escapeHtml(dos.file_code)}</code></strong></div>
+          <div>Mục lục số: <strong>${escapeHtml(dos.catalog_no)}</strong></div>
+          <div>Đơn vị lập hồ sơ: <strong>${escapeHtml(dos.creator_unit || 'Cơ quan nộp lưu')}</strong></div>
+          <div>Thời gian tài liệu: <strong>${escapeHtml(dos.start_date || '—')} - ${escapeHtml(dos.end_date || '—')}</strong></div>
+          <div style="grid-column: 1/-1;">Vị trí kho: <strong>${escapeHtml(dos.location || 'Kho lưu trữ cơ quan')}</strong></div>
+        </div>
+      </div>
+      <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Các văn bản số hóa bên trong hồ sơ (${dos.access_restricted ? 'Hạn chế' : ((dos.documents || []).length + ' văn bản')})</h3>
+      <table class="fields-table" style="background: var(--panel); border: 1px solid var(--line); border-radius: 8px;">
+        <thead>
+          <tr style="background: var(--panel-2);">
+            <th>Số ký hiệu</th>
+            <th>Ngày ban hành</th>
+            <th>Loại văn bản</th>
+            <th>Trích yếu nội dung</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${docsRows}
+        </tbody>
+      </table>
+    `;
+  } catch (e) {
+    content.innerHTML = `<div style="color: var(--no);">Lỗi: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+/* =========================================================================
+   CHATBOT: RENDER MARKDOWN GỌN ĐẸP + CITATIONS + GỢI Ý HỎI TIẾP
+   ========================================================================= */
+
+function formatInlineMd(escapedLine, citations) {
+  const codeTokens = [];
+  let s = escapedLine.replace(/`([^`]+)`/g, (_, code) => {
+    const idx = codeTokens.length;
+    codeTokens.push(`<code class="chat-inline-code">${code}</code>`);
+    return `\uE000CODE_${idx}\uE000`;
+  });
+
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+
+  if (citations && citations.length > 0) {
+    s = s.replace(/\[(\d+)\]/g, (match, p1) => {
+      const idx = parseInt(p1, 10) - 1;
+      const c = citations[idx];
+      if (!c) return match;
+      if (String(c.doc_id || '').startsWith('GUIDE_')) {
+        return `<span class="cite-bubble-btn" title="${escapeHtml(c.label || 'Quy chế chuẩn')}">[${p1}]</span>`;
+      }
+      const escText = encodeURIComponent(c.text || '');
+      const escLabel = encodeURIComponent(c.label || c.doc_id);
+      return `<button class="cite-bubble-btn" onclick="openPdfModal('${escapeHtml(c.doc_id)}', ${c.page_no || 1}, ${c.start || 0}, ${c.end || 0}, decodeURIComponent('${escText}'), decodeURIComponent('${escLabel}'), ${p1})" title="Nhấp để mở xem tài liệu PDF: ${escapeHtml(c.label || c.doc_id)} - Trang ${c.page_no || 1}">[${p1}]</button>`;
+    });
+  }
+
+  s = s.replace(/\uE000CODE_(\d+)\uE000/g, (_, idx) => codeTokens[Number(idx)] || '');
+  return s;
+}
+
+function formatChatMarkdown(rawText, citations) {
+  const escaped = escapeHtml(rawText || '');
+  const lines = escaped.split(/\r?\n/);
+  const parts = [];
+  let inList = false;
+
+  const closeList = () => {
+    if (inList) {
+      parts.push('</ul>');
+      inList = false;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+    if (!trimmed) {
+      closeList();
+      continue;
+    }
+    const headingMatch = trimmed.match(/^#{2,3}\s+(.*)$/);
+    if (headingMatch) {
+      closeList();
+      parts.push(`<div class="chat-md-h">${formatInlineMd(headingMatch[1], citations)}</div>`);
+      continue;
+    }
+    const listMatch = trimmed.match(/^(?:[-•*]|\d+\.)\s+(.*)$/);
+    if (listMatch) {
+      if (!inList) {
+        parts.push('<ul class="chat-md-list">');
+        inList = true;
+      }
+      parts.push(`<li>${formatInlineMd(listMatch[1], citations)}</li>`);
+      continue;
+    }
+    closeList();
+    parts.push(`<p class="chat-md-p">${formatInlineMd(trimmed, citations)}</p>`);
+  }
+  closeList();
+  return parts.join('') || escapeHtml(rawText || '');
+}
+
+async function sendChatMessage() {
+  const input = $('chatInput');
+  const q = input.value.trim();
+  if (!q || S.chatBusy) return;
+  S.chatBusy = true;
+  if ($('btnSendChat')) $('btnSendChat').disabled = true;
+  input.value = '';
+
+  const chat = $('chatMessages');
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user';
+  userDiv.innerHTML = `<div class="msg-bubble">${escapeHtml(q)}</div>`;
+  chat.appendChild(userDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'msg assistant';
+  aiDiv.innerHTML = `<div class="msg-bubble" style="color: var(--muted);">Đang xử lý yêu cầu trên cơ sở tri thức Thái Nguyên...</div>`;
+  chat.appendChild(aiDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: authHeaders({'Content-Type': 'application/json'}),
+      body: JSON.stringify({
+        question: q,
+        use_llm: S.useLLM,
+        session_id: S.sessionId,
+        user_role: S.activeRole || 'public'
+      })
+    });
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      const msg = errBody.detail || `Lỗi máy chủ (${res.status})`;
+      if (res.status === 503 && /OPENROUTER_API_KEY|mô hình/i.test(msg)) {
+        const encQ = encodeURIComponent(q);
+        aiDiv.innerHTML = `
+          <div class="msg-bubble" style="color: var(--warn);">
+            <div>⚠️ ${escapeHtml(msg)}</div>
+            <div class="chat-503-actions">
+              <button type="button" class="chat-503-btn" onclick="switchChatToExtractiveAndRetry(decodeURIComponent('${encQ}'))">⚡ Chuyển sang Trích xuất &amp; Hỏi lại</button>
+              <a href="/notebooklm" target="_blank" class="chat-503-btn secondary">📑 Mở Không gian 3 cột</a>
+            </div>
+          </div>
+        `;
+        chat.scrollTop = chat.scrollHeight;
+        return;
+      }
+      throw new Error(msg);
+    }
+    const ans = await res.json();
+
+    const isRefused = ans.status === 'refused';
+    if (isRefused) aiDiv.classList.add('refused');
+    const refusedHtml = isRefused
+      ? `<div class="chat-refused-tag">⚠️ Không đủ căn cứ / Từ chối trả lời</div>`
+      : '';
+    const richHtml = formatChatMarkdown(ans.text || '', ans.citations || []);
+    const reasonHtml = (isRefused && ans.reason)
+      ? `<div style="margin-top:6px; font-size:11.5px; color:var(--muted);">${escapeHtml(ans.reason)}</div>`
+      : '';
+    const warningsHtml = (Array.isArray(ans.warnings) && ans.warnings.length > 0)
+      ? ans.warnings.map(w => `<div class="chat-warning-banner">⚠️ ${escapeHtml(w)}</div>`).join('')
+      : '';
+
+    let citesHtml = '';
+    if (ans.citations && ans.citations.length > 0) {
+      citesHtml = '<div class="msg-citations"><div style="font-weight: 700; color: var(--muted); margin-bottom: 2px;">Căn cứ trích dẫn nguồn:</div>' +
+        ans.citations.map((c, i) => {
+          const isGuide = String(c.doc_id || '').startsWith('GUIDE_');
+          if (isGuide) {
+            return `
+              <div class="citation-row">
+                <div class="cite-btn" style="cursor:default;">
+                  📘 [${i+1}] ${escapeHtml(c.label || c.doc_id)}
+                </div>
+              </div>
+            `;
+          }
+          const escText = encodeURIComponent(c.text || '');
+          const escLabel = encodeURIComponent(c.label || c.doc_id);
+          const pdfUrl = `/api/docs/${encodeURIComponent(c.doc_id)}/pdf#page=${c.page_no || 1}`;
+          return `
+            <div class="citation-row">
+              <button class="cite-btn" onclick="openPdfModal('${escapeHtml(c.doc_id)}', ${c.page_no || 1}, ${c.start || 0}, ${c.end || 0}, decodeURIComponent('${escText}'), decodeURIComponent('${escLabel}'), ${i+1})" title="Mở xem trang ${c.page_no || 1} của tài liệu có tô sáng vàng">
+                📄 [${i+1}] ${c.fond_name ? escapeHtml(c.fond_name) + ' · ' : ''}${escapeHtml(c.label || c.doc_id)} (Trang ${c.page_no || 1})
+              </button>
+              <a href="${pdfUrl}" target="_blank" class="cite-pdf-link" title="Mở trực tiếp tệp PDF gốc đến trang ${c.page_no || 1}">
+                📑 Mở PDF gốc
+              </a>
+            </div>
+          `;
+        }).join('') + '</div>';
+    }
+
+    let followHtml = '';
+    if (ans.suggestions && ans.suggestions.length > 0) {
+      followHtml = '<div class="chat-followups">' + ans.suggestions.map(sg =>
+        `<button class="chat-follow-chip" onclick="askPrompt(decodeURIComponent('${encodeURIComponent(sg)}'))">💡 ${escapeHtml(sg)}</button>`
+      ).join('') + '</div>';
+    }
+
+    aiDiv.innerHTML = `
+      <div class="msg-bubble">${refusedHtml}${richHtml}${reasonHtml}</div>
+      ${warningsHtml}
+      ${citesHtml}
+      ${followHtml}
+    `;
+    chat.scrollTop = chat.scrollHeight;
+  } catch (err) {
+    aiDiv.innerHTML = `<div class="msg-bubble" style="color: var(--no);">Lỗi: ${escapeHtml(err.message)}</div>`;
+  } finally {
+    S.chatBusy = false;
+    if ($('btnSendChat')) $('btnSendChat').disabled = false;
+    syncChatLlmLabel();
+  }
+}
+
+function askPrompt(text) {
+  if (!$('floatingChatWindow').classList.contains('open')) toggleFloatingChat();
+  $('chatInput').value = text;
+  sendChatMessage();
+}
+
+/* =========================================================================
+   XỬ LÝ MODAL XEM TRÍCH DẪN & TÀI LIỆU PDF TRONG NGUỒN
+   ========================================================================= */
+let currentPdfModalState = null;
+let pdfModalZoom = 1.0;
+
+function openPdfModal(docId, pageNo = 1, start = 0, end = 0, citedText = '', docLabel = '', citeIdx = 1) {
+  currentPdfModalState = { docId, pageNo: Number(pageNo) || 1, start: Number(start) || 0, end: Number(end) || 0, citedText, docLabel, citeIdx, totalPages: 1 };
+  pdfModalZoom = 1.0;
+
+  const displayTitle = docLabel || docId;
+  $('pdfModalDocTitle').textContent = `📄 [${citeIdx}] ${displayTitle} · Trang ${pageNo}`;
+  $('btnOpenPdfTab').href = `/api/docs/${encodeURIComponent(docId)}/pdf#page=${pageNo}`;
+  $('btnDownloadPdf').href = `/api/docs/${encodeURIComponent(docId)}/pdf`;
+  $('btnDownloadPdf').setAttribute('download', `${displayTitle}.pdf`);
+
+  const quoteBox = $('pdfModalEvidenceBox');
+  if (citedText) {
+    quoteBox.style.display = 'block';
+    $('pdfModalQuote').textContent = `“${citedText}”`;
+    $('pdfModalCiteTag').textContent = `Trích đoạn trang ${pageNo}`;
+  } else {
+    quoteBox.style.display = 'none';
+  }
+
+  renderPdfModalView();
+  $('pdfViewerModal').classList.remove('hidden');
+
+  fetch(`/api/docs/${encodeURIComponent(docId)}`, { headers: authHeaders() })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (d && currentPdfModalState && currentPdfModalState.docId === docId) {
+        currentPdfModalState.totalPages = d.n_pages || 1;
+        if (!docLabel && d.label) {
+          currentPdfModalState.docLabel = d.label;
+          $('pdfModalDocTitle').textContent = `📄 [${citeIdx}] ${d.label} · Trang ${currentPdfModalState.pageNo}`;
+        }
+        $('pdfModalPageNav').textContent = `Trang ${currentPdfModalState.pageNo} / ${currentPdfModalState.totalPages}`;
+        $('btnPdfPrev').disabled = currentPdfModalState.pageNo <= 1;
+        $('btnPdfNext').disabled = currentPdfModalState.pageNo >= currentPdfModalState.totalPages;
+      }
+    }).catch(() => {});
+}
+
+function renderPdfModalView() {
+  if (!currentPdfModalState) return;
+  const s = currentPdfModalState;
+  const imgUrl = `/api/page/${encodeURIComponent(s.docId)}/${s.pageNo}.png?start=${s.start}&end=${s.end}`;
+  const img = $('pdfModalImg');
+  img.src = imgUrl;
+  img.style.width = `${Math.round(pdfModalZoom * 100)}%`;
+  img.style.transform = '';
+  $('pdfModalPageNav').textContent = `Trang ${s.pageNo} / ${s.totalPages || 1}`;
+  $('btnPdfPrev').disabled = s.pageNo <= 1;
+  $('btnPdfNext').disabled = s.totalPages ? s.pageNo >= s.totalPages : false;
+  $('pdfModalZoomVal').textContent = `${Math.round(pdfModalZoom * 100)}%`;
+  $('btnOpenPdfTab').href = `/api/docs/${encodeURIComponent(s.docId)}/pdf#page=${s.pageNo}`;
+}
+
+function changePdfModalPage(delta) {
+  if (!currentPdfModalState) return;
+  const next = currentPdfModalState.pageNo + delta;
+  if (next >= 1 && (!currentPdfModalState.totalPages || next <= currentPdfModalState.totalPages)) {
+    currentPdfModalState.pageNo = next;
+    currentPdfModalState.start = 0;
+    currentPdfModalState.end = 0;
+    currentPdfModalState.citedText = '';
+    $('pdfModalEvidenceBox').style.display = 'none';
+    renderPdfModalView();
+  }
+}
+
+function zoomPdfModal(delta) {
+  pdfModalZoom = Math.min(2.5, Math.max(0.6, Math.round((pdfModalZoom + delta) * 10) / 10));
+  renderPdfModalView();
+}
+
+function hidePdfModal() {
+  $('pdfViewerModal').classList.add('hidden');
+  currentPdfModalState = null;
+}
+
+function closePdfModal(e) {
+  if (e.target.id === 'pdfViewerModal') hidePdfModal();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    hidePdfModal();
+    closeModal('dossierFormModal');
+    closeModal('borrowModal');
+    closeModal('reportModal');
+    closeModal('roleModal');
+    const np = $('notifyPopover');
+    if (np) np.classList.remove('open');
+  }
+});
+
+async function openViewer(docId, pageNo = 1, start = 0, end = 0) {
+  try {
+    const res = await fetch(`/api/docs/${encodeURIComponent(docId)}`, { headers: authHeaders() });
+    if (!res.ok) throw new Error(res.status === 403 ? 'Không đủ quyền xem văn bản nội bộ/hạn chế' : 'Không tìm thấy tài liệu');
+    const doc = await res.json();
+    S.viewer = {doc, pageNo, start, end, tab: 'page'};
+    $('mainLayout').classList.remove('viewer-closed');
+    $('viewerDocTitle').textContent = doc.label + (doc.fond_name ? ` (${doc.fond_name})` : '');
+    renderViewer();
+    openPdfModal(docId, pageNo, start, end, '', doc.label, 1);
+  } catch (e) {
+    showToast('Không mở được văn bản: ' + e.message, 'error');
+  }
+}
+
+function closeViewer() {
+  $('mainLayout').classList.add('viewer-closed');
+  S.viewer = null;
+}
+
+function switchViewerTab(tab) {
+  if (!S.viewer) return;
+  S.viewer.tab = tab;
+  $('btnVTabPage').classList.toggle('active', tab === 'page');
+  $('btnVTabCard').classList.toggle('active', tab === 'card');
+  renderViewer();
+}
+
+function renderViewer() {
+  if (!S.viewer) return;
+  const v = S.viewer, d = v.doc;
+  const body = $('viewerBody');
+
+  if (v.tab === 'page') {
+    body.innerHTML = `
+      <div style="text-align: center;">
+        ${v.end > v.start ? '<div style="font-size: 12px; color: #b45309; font-weight: 600; margin-bottom: 8px; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #fde68a;">✨ Vị trí căn cứ trích dẫn đang được tô vàng trên trang tài liệu gốc</div>' : ''}
+        <div style="max-height: calc(100vh - 280px); overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: #525659; padding: 8px;">
+          <img class="page-image" src="/api/page/${encodeURIComponent(d.doc_id)}/${v.pageNo}.png?start=${v.start}&end=${v.end}" alt="Trang ${v.pageNo}" style="max-width: 100%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-radius: 4px;">
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+          <button class="primary-btn" style="font-size: 11px; padding: 4px 10px;" onclick="changeViewerPage(-1)" ${v.pageNo <= 1 ? 'disabled' : ''}>← Trang trước</button>
+          <span style="font-size: 12px; font-weight: 600; padding: 0 4px;">Trang ${v.pageNo} / ${d.n_pages}</span>
+          <button class="primary-btn" style="font-size: 11px; padding: 4px 10px;" onclick="changeViewerPage(1)" ${v.pageNo >= d.n_pages ? 'disabled' : ''}>Trang sau →</button>
+          <a href="/notebooklm" target="_blank" style="margin-left: 10px; font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 3px;" title="Mở trong không gian nghiên cứu 3 cột">📑 Mở bản 3 Cột</a>
+        </div>
+      </div>
+    `;
+  } else {
+    body.innerHTML = `
+      <table class="fields-table">
+        <tbody>
+          <tr><th>Phông lưu trữ</th><td>${escapeHtml(d.fond_name || '—')}</td></tr>
+          <tr><th>Hồ sơ lưu trữ</th><td><strong>${escapeHtml(d.file_code || '—')}</strong> (${escapeHtml(d.dossier_title || '')})</td></tr>
+          <tr><th>Thời hạn</th><td>${escapeHtml(d.retention_period || 'Vĩnh viễn')} | Chế độ: ${escapeHtml(d.usage_mode || 'Công khai')}</td></tr>
+          <tr><th>Loại văn bản</th><td>${escapeHtml(d.doc_type || '—')}</td></tr>
+          <tr><th>Số ký hiệu</th><td><strong>${escapeHtml(d.doc_number || d.label)}</strong></td></tr>
+          <tr><th>Ngày ban hành</th><td>${escapeHtml(d.issue_date || '—')}</td></tr>
+          <tr><th>Cơ quan ban hành</th><td>${escapeHtml(d.issuer || '—')}</td></tr>
+          <tr><th>Người ký</th><td><strong>${escapeHtml(d.signer || '—')}</strong></td></tr>
+          <tr><th>Trích yếu</th><td>${escapeHtml(d.subject || '—')}</td></tr>
+        </tbody>
+      </table>
+    `;
+  }
+}
+
+function changeViewerPage(delta) {
+  if (!S.viewer) return;
+  const nextP = S.viewer.pageNo + delta;
+  if (nextP >= 1 && nextP <= S.viewer.doc.n_pages) {
+    S.viewer.pageNo = nextP;
+    S.viewer.start = 0; S.viewer.end = 0;
+    renderViewer();
+  }
+}
+
+/* =========================================================================
+   XỬ LÝ ĐĂNG NHẬP, ĐĂNG XUẤT VÀ PHÂN QUYỀN
+   ========================================================================= */
+
+function togglePasswordVisibility() {
+  const pInput = $('loginPassword');
+  const eyeSvg = $('eyeIconSvg');
+  if (!pInput || !eyeSvg) return;
+  if (pInput.type === 'password') {
+    pInput.type = 'text';
+    eyeSvg.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+  } else {
+    pInput.type = 'password';
+    eyeSvg.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+  }
+}
+
+function handleForgotPassword() {
+  showToast('Vui lòng liên hệ Ban Quản trị hệ thống - Trung tâm Lưu trữ Lịch sử tỉnh Thái Nguyên (hoặc kiểm tra biến môi trường APP_ADMIN_PASSWORD) để cấp lại mật khẩu.', 'info', 6000);
+}
+
+async function doSubmitLogin() {
+  const u = $('loginUsername').value.trim();
+  const p = $('loginPassword').value;
+  const errBox = $('loginErrorMessage');
+  errBox.style.display = 'none';
+
+  if (!u || !p) {
+    errBox.textContent = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const btn = $('btnSubmitLogin');
+  btn.disabled = true;
+  btn.textContent = 'Đang đăng nhập...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Tên đăng nhập hoặc mật khẩu không chính xác');
+    }
+    const data = await res.json();
+    localStorage.setItem('archive_token', data.token);
+    if ($('chkRememberMe').checked) {
+      localStorage.setItem('archive_saved_user', u);
+    } else {
+      localStorage.removeItem('archive_saved_user');
+    }
+    showPortalView(data.user);
+  } catch (e) {
+    errBox.textContent = e.message;
+    errBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Đăng nhập';
+  }
+}
+
+function toggleSubnavDropdown(e) {
+  if (e) e.stopPropagation();
+  const dd = $('dropdownAgencyArchive');
+  const arrow = $('agencyMenuArrow');
+  const isOpen = dd.classList.contains('open');
+  if (isOpen) {
+    dd.classList.remove('open');
+    if (arrow) arrow.textContent = '▾';
+  } else {
+    dd.classList.add('open');
+    if (arrow) arrow.textContent = '▴';
+  }
+}
+
+function toggleUserDropdown(e) {
+  if (e) e.stopPropagation();
+  const m = $('govUserDropdownMenu');
+  m.classList.toggle('open');
+}
+
+window.addEventListener('click', (e) => {
+  const dd = $('dropdownAgencyArchive');
+  const arrow = $('agencyMenuArrow');
+  if (dd && !e.target.closest('#btnMenuAgencyArchive')) {
+    dd.classList.remove('open');
+    if (arrow) arrow.textContent = '▾';
+  }
+  const um = $('govUserDropdownMenu');
+  if (um && !e.target.closest('#govUserPillBtn')) {
+    um.classList.remove('open');
+  }
+  const np = $('notifyPopover');
+  if (np && !e.target.closest('.gov-notify-wrap')) {
+    np.classList.remove('open');
+  }
+});
+
+function toggleSidebarMenu() {
+  switchPortalView('dossiers');
+}
+
+function switchPortalView(viewName) {
+  $('viewDashboard').style.display = (viewName === 'dashboard') ? 'block' : 'none';
+  $('viewDossiers').style.display = (viewName === 'dossiers') ? 'block' : 'none';
+  $('viewSearch').style.display = (viewName === 'search') ? 'flex' : 'none';
+  setActiveSubnav(viewName === 'search' ? 'search' : 'agency');
+
+  const dd = $('dropdownAgencyArchive');
+  if (dd) dd.classList.remove('open');
+  const arrow = $('agencyMenuArrow');
+  if (arrow) arrow.textContent = '▾';
+
+  if (viewName === 'dossiers') {
+    loadDossiersTable();
+  }
+  if (viewName === 'search') {
+    loadFacetedSearch();
+  }
+}
+
+/* =========================================================================
+   QUẢN LÝ HỒ SƠ THẬT: THÊM, SỬA, XÓA, NHẬP/XUẤT EXCEL, MẪU, DUYỆT HÀNG LOẠT
+   ========================================================================= */
+
+function closeSubnavDropdown() {
+  const dd = $('dropdownAgencyArchive');
+  if (dd) dd.classList.remove('open');
+  const arrow = $('agencyMenuArrow');
+  if (arrow) arrow.textContent = '▾';
+}
+
+function openDocManagementView() {
+  closeSubnavDropdown();
+  switchPortalView('search');
+  setActiveSubnav('doc_mgmt');
+  activateSearchTab('tab-upload');
+}
+
+function openWarehouseTreeView(e) {
+  if (e) e.stopPropagation();
+  closeSubnavDropdown();
+  switchPortalView('search');
+  setActiveSubnav('agency');
+  activateSearchTab('tab-tree');
+}
+
+function openDossiersSortMode(e) {
+  if (e) e.stopPropagation();
+  closeSubnavDropdown();
+  openDossiersWorkflow('', 'Sắp xếp & Điều chỉnh vị trí hồ sơ');
+  const sortEl = $('sortDosSelect');
+  if (sortEl) {
+    if (!sortEl.value) sortEl.value = 'code_asc';
+    sortEl.focus();
+  }
+  filterDossiersTable();
+}
+
+async function openDossiersWorkflow(statusFilter, headingTitle, e) {
+  if (e) e.stopPropagation();
+  closeSubnavDropdown();
+  setActiveSubnav(statusFilter === 'Chờ hiệu chỉnh' ? 'pending_fix' : (headingTitle === 'Hồ sơ công việc' ? 'work_dossiers' : 'agency'));
+  $('dossierBreadcrumbTitle').textContent = headingTitle || 'Quản lý hồ sơ';
+  $('dossierSectionTitle').textContent = headingTitle ? `Danh sách — ${headingTitle}` : 'Danh sách hồ sơ';
+  if ($('filterDosStatus')) $('filterDosStatus').value = statusFilter || '';
+  if ($('batchStatusSelect')) {
+    if (statusFilter === 'Tạo mới') $('batchStatusSelect').value = 'Đã duyệt';
+    else if (statusFilter === 'Đã duyệt') $('batchStatusSelect').value = 'Đang nộp lưu';
+    else if (statusFilter === 'Đang nộp lưu') $('batchStatusSelect').value = 'Đã nộp lưu lịch sử';
+  }
+  $('viewDashboard').style.display = 'none';
+  $('viewSearch').style.display = 'none';
+  $('viewDossiers').style.display = 'block';
+  await loadDossiersTable();
+}
+
+function getStatusPillClass(status) {
+  if (status === 'Chờ hiệu chỉnh') return 'pending';
+  if (status === 'Đã duyệt') return 'approved';
+  if (status === 'Đang nộp lưu' || status === 'Đã nộp lưu lịch sử') return 'archived';
+  return '';
+}
+
+async function loadDossiersTable() {
+  const tbody = $('dossiersTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:24px; color:#64748b;">Đang tải danh sách hồ sơ lưu trữ...</td></tr>';
+
+  try {
+    const res = await fetch('/api/archive/dossiers', { headers: authHeaders() });
+    allDossiers = await res.json();
+    filterDossiersTable();
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:24px; color:#dc2626;">Lỗi tải dữ liệu: ${escapeHtml(e.message)}</td></tr>`;
+  }
+}
+
+function renderDossiersTable(items) {
+  const tbody = $('dossiersTableBody');
+  if (!tbody) return;
+  if (!items || items.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:24px; color:#64748b;">Không có hồ sơ nào phù hợp với điều kiện lọc hiện tại.</td></tr>';
+    updateDosSelectionCount();
+    return;
+  }
+
+  let html = '';
+  items.forEach((dos, idx) => {
+    const titleSnippet = dos.title.length > 55 ? dos.title.substring(0, 55) + '...' : dos.title;
+    const docCnt = dos.doc_count != null ? dos.doc_count : (dos.doc_ids ? dos.doc_ids.length : 0);
+    const timeText = (dos.start_date || dos.end_date) ? `${dos.start_date || '—'} - ${dos.end_date || '—'}` : 'Chưa cập nhật';
+    const isChecked = S.selectedDossiers.has(dos.file_code) ? 'checked' : '';
+    const st = dos.status || 'Tạo mới';
+
+    html += `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><input type="checkbox" class="dos-row-chk" value="${escapeHtml(dos.file_code)}" ${isChecked} onchange="onDossierRowCheck(this)" style="cursor:pointer;"></td>
+        <td>
+          <span class="code-arrow" onclick="openDossierDocs('${escapeHtml(dos.file_code)}')" title="Nhấp để xem văn bản trong hồ sơ">
+            ${escapeHtml(dos.file_code)} <span style="font-size:10px; color:#64748b;">▾</span>
+          </span>
+        </td>
+        <td>
+          <span style="cursor:pointer; color:#1e293b; font-weight:500;" onclick="openDossierDocs('${escapeHtml(dos.file_code)}')" title="${escapeHtml(dos.title)}">
+            ${escapeHtml(titleSnippet)}
+          </span>
+        </td>
+        <td style="white-space:nowrap;">${escapeHtml(timeText)}</td>
+        <td>${escapeHtml(dos.retention_period || 'Vĩnh viễn')}</td>
+        <td style="text-align:center; font-weight:600;">${docCnt}</td>
+        <td style="color:#475569; font-size:12.5px;">${escapeHtml(dos.location || 'UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1')}</td>
+        <td><span class="gov-status-pill ${getStatusPillClass(st)}">${escapeHtml(st)}</span></td>
+        <td style="text-align:center;">
+          <button class="btn-more-dots" onclick="openDossierModal('${escapeHtml(dos.file_code)}')" title="Chỉnh sửa / Đổi trạng thái / Xóa hồ sơ">•••</button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+  updateDosSelectionCount();
+}
+
+function getFilteredDossiers() {
+  const t = ($('filterDosTitle')?.value || '').toLowerCase().trim();
+  const c = ($('filterDosCode')?.value || '').toLowerCase().trim();
+  const s = ($('filterDosStatus')?.value || '').trim();
+  const sortMode = $('sortDosSelect')?.value || '';
+
+  const filtered = allDossiers.filter(d => {
+    const matchT = !t || (d.title || '').toLowerCase().includes(t);
+    const matchC = !c || (d.file_code || '').toLowerCase().includes(c);
+    const matchS = !s || ((d.status || 'Tạo mới') === s);
+    return matchT && matchC && matchS;
+  });
+
+  if (sortMode === 'code_asc') {
+    filtered.sort((a, b) => (a.file_code || '').localeCompare(b.file_code || ''));
+  } else if (sortMode === 'title_asc') {
+    filtered.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'vi'));
+  } else if (sortMode === 'docs_desc') {
+    filtered.sort((a, b) => (b.doc_count ?? (b.doc_ids?.length || 0)) - (a.doc_count ?? (a.doc_ids?.length || 0)));
+  } else if (sortMode === 'status_asc') {
+    filtered.sort((a, b) => (a.status || '').localeCompare(b.status || '', 'vi'));
+  }
+  return filtered;
+}
+
+function filterDossiersTable() {
+  renderDossiersTable(getFilteredDossiers());
+}
+
+function onDossierRowCheck(cb) {
+  if (cb.checked) S.selectedDossiers.add(cb.value);
+  else S.selectedDossiers.delete(cb.value);
+  updateDosSelectionCount();
+}
+
+function toggleAllDossiers(masterCb) {
+  const rows = document.querySelectorAll('.dos-row-chk');
+  rows.forEach(cb => {
+    cb.checked = masterCb.checked;
+    if (masterCb.checked) S.selectedDossiers.add(cb.value);
+    else S.selectedDossiers.delete(cb.value);
+  });
+  updateDosSelectionCount();
+}
+
+function updateDosSelectionCount() {
+  const lbl = $('dosSelectionCount');
+  if (lbl) lbl.textContent = `Đã chọn: ${S.selectedDossiers.size} hồ sơ`;
+  const rows = document.querySelectorAll('.dos-row-chk');
+  const master = $('chkSelectAllDos');
+  if (master) {
+    master.checked = rows.length > 0 && Array.from(rows).every(r => r.checked);
+  }
+}
+
+async function applyBatchDossierStatus() {
+  const codes = Array.from(S.selectedDossiers);
+  if (!codes.length) {
+    showToast('Vui lòng tích chọn ít nhất 1 hồ sơ trong bảng trước khi áp dụng trạng thái.', 'warning');
+    return;
+  }
+  const newStatus = $('batchStatusSelect').value;
+  try {
+    await Promise.all(codes.map(code =>
+      fetch(`/api/archive/dossiers/${encodeURIComponent(code)}`, {
+        method: 'PUT',
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ status: newStatus })
+      }).then(r => { if (!r.ok) throw new Error(`Lỗi cập nhật ${code}`); })
+    ));
+    S.selectedDossiers.clear();
+    showToast(`Đã cập nhật ${codes.length} hồ sơ sang trạng thái [${newStatus}].`, 'success');
+    await Promise.all([loadDossiersTable(), loadStatus()]);
+  } catch (e) {
+    showToast('Lỗi cập nhật hàng loạt: ' + e.message, 'error');
+  }
+}
+
+function openDossierModal(editFileCode = '') {
+  const existing = editFileCode ? allDossiers.find(d => d.file_code === editFileCode) : null;
+  $('dosFormEditCode').value = existing ? existing.file_code : '';
+  $('dossierFormTitle').textContent = existing ? `✏️ Chỉnh sửa Hồ sơ: ${existing.file_code}` : '➕ Thêm mới Hồ sơ Lưu trữ';
+
+  $('dosFormCode').value = existing ? existing.file_code : '';
+  $('dosFormCode').readOnly = Boolean(existing);
+  $('dosFormCode').style.background = existing ? '#f1f5f9' : '#ffffff';
+
+  if (existing && existing.fond_id) $('dosFormFond').value = existing.fond_id;
+  $('dosFormTitleInput').value = existing ? existing.title : '';
+  $('dosFormStart').value = existing ? (existing.start_date || '') : '01/01/2026';
+  $('dosFormEnd').value = existing ? (existing.end_date || '') : '31/12/2026';
+  $('dosFormRetention').value = existing ? (existing.retention_period || 'Vĩnh viễn') : 'Vĩnh viễn';
+  $('dosFormUsage').value = existing ? (existing.usage_mode || 'Công khai') : 'Công khai';
+  $('dosFormStatus').value = existing ? (existing.status || 'Tạo mới') : 'Tạo mới';
+  $('dosFormUnit').value = existing ? (existing.creator_unit || '') : 'Văn phòng UBND Tỉnh Thái Nguyên';
+  $('dosFormLocation').value = existing ? (existing.location || 'UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1') : 'UBND Tỉnh Thái Nguyên / Cơ quan / Kho số 1';
+
+  const footer = document.querySelector('#dossierFormModal .gov-modal-footer');
+  let viewBtn = $('btnModalViewDosDocs');
+  let delBtn = $('btnModalDeleteDos');
+  if (!viewBtn && footer) {
+    viewBtn = document.createElement('button');
+    viewBtn.id = 'btnModalViewDosDocs';
+    viewBtn.className = 'gov-act-btn btn-blue-sample';
+    viewBtn.textContent = '📂 Xem văn bản';
+    footer.prepend(viewBtn);
+  }
+  if (!delBtn && footer) {
+    delBtn = document.createElement('button');
+    delBtn.id = 'btnModalDeleteDos';
+    delBtn.className = 'gov-act-btn';
+    delBtn.style.background = '#dc2626';
+    delBtn.textContent = '🗑️ Xóa hồ sơ';
+    footer.prepend(delBtn);
+  }
+  if (viewBtn) {
+    viewBtn.style.display = existing ? 'inline-flex' : 'none';
+    viewBtn.onclick = () => { closeModal('dossierFormModal'); openDossierDocs(existing.file_code); };
+  }
+  if (delBtn) {
+    delBtn.style.display = existing ? 'inline-flex' : 'none';
+    delBtn.onclick = () => deleteDossierByCode(existing.file_code);
+  }
+
+  openModal('dossierFormModal');
+}
+
+async function saveDossierForm() {
+  const editCode = $('dosFormEditCode').value.trim();
+  const payload = {
+    file_code: $('dosFormCode').value.trim(),
+    fond_id: $('dosFormFond').value,
+    title: $('dosFormTitleInput').value.trim(),
+    start_date: $('dosFormStart').value.trim(),
+    end_date: $('dosFormEnd').value.trim(),
+    retention_period: $('dosFormRetention').value,
+    usage_mode: $('dosFormUsage').value,
+    status: $('dosFormStatus').value,
+    creator_unit: $('dosFormUnit').value.trim(),
+    location: $('dosFormLocation').value.trim()
+  };
+  if (!payload.title) {
+    showToast('Vui lòng nhập tiêu đề hồ sơ.', 'warning');
+    $('dosFormTitleInput').focus();
+    return;
+  }
+
+  const url = editCode ? `/api/archive/dossiers/${encodeURIComponent(editCode)}` : '/api/archive/dossiers';
+  const method = editCode ? 'PUT' : 'POST';
+  if (editCode) delete payload.file_code;
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Không lưu được hồ sơ');
+    }
+    const saved = await res.json();
+    closeModal('dossierFormModal');
+    showToast(editCode ? `Đã cập nhật hồ sơ ${saved.file_code}.` : `Đã thêm mới hồ sơ ${saved.file_code}.`, 'success');
+    await Promise.all([loadDossiersTable(), loadStatus(), loadArchiveTree()]);
+  } catch (e) {
+    showToast('Lỗi lưu hồ sơ: ' + e.message, 'error');
+  }
+}
+
+async function deleteDossierByCode(fileCode) {
+  try {
+    const res = await fetch(`/api/archive/dossiers/${encodeURIComponent(fileCode)}`, { method: 'DELETE', headers: authHeaders() });
+    if (!res.ok) throw new Error(await res.text());
+    S.selectedDossiers.delete(fileCode);
+    closeModal('dossierFormModal');
+    showToast(`Đã xóa hồ sơ ${fileCode}.`, 'success');
+    await Promise.all([loadDossiersTable(), loadStatus(), loadArchiveTree()]);
+  } catch (e) {
+    showToast('Lỗi xóa hồ sơ: ' + e.message, 'error');
+  }
+}
+
+function triggerImportDossiers() {
+  const inp = $('dossierImportInput');
+  if (inp) inp.click();
+}
+
+async function handleImportDossiersFile(e) {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  try {
+    const text = await file.text();
+    let payload;
+    if (file.name.toLowerCase().endsWith('.json')) {
+      const parsed = JSON.parse(text);
+      payload = { rows: Array.isArray(parsed) ? parsed : (parsed.rows || parsed.dossiers || []) };
+    } else {
+      payload = { csv_text: text };
+    }
+    const res = await fetch('/api/archive/dossiers/import', {
+      method: 'POST',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Không nhập được dữ liệu');
+    }
+    const out = await res.json();
+    showToast(`Nhập danh mục thành công: thêm mới ${out.imported}, cập nhật ${out.updated} (tổng ${out.total} hồ sơ).`, 'success');
+    await Promise.all([loadDossiersTable(), loadStatus(), loadArchiveTree()]);
+  } catch (err) {
+    showToast('Lỗi nhập tệp danh mục: ' + err.message, 'error');
+  }
+}
+
+function downloadDossierTemplate() {
+  window.location.href = '/api/archive/dossiers-template';
+  showToast('Đang tải xuống tệp mẫu danh mục hồ sơ chuẩn TT 02/2019/TT-BNV (.csv mở bằng Excel).', 'info', 3000);
+}
+
+function exportDossiersExcel(onlySelected = false) {
+  const params = new URLSearchParams();
+  const statusVal = $('filterDosStatus')?.value || '';
+  const qVal = $('filterDosTitle')?.value.trim() || $('filterDosCode')?.value.trim() || '';
+  if (onlySelected) {
+    const codes = Array.from(S.selectedDossiers);
+    if (!codes.length) {
+      showToast('Bạn chưa đánh dấu chọn hồ sơ nào để xuất.', 'warning');
+      return;
+    }
+    params.set('file_codes', codes.join(','));
+  } else {
+    if (statusVal) params.set('status', statusVal);
+    if (qVal) params.set('q', qVal);
+  }
+  const qs = params.toString();
+  window.location.href = '/api/archive/dossiers-export' + (qs ? `?${qs}` : '');
+  showToast('Đang tải xuống danh mục hồ sơ Excel (.csv UTF-8 BOM)...', 'success', 3200);
+}
+
+function openDossierDocs(fileCode) {
+  S.activeFileCode = fileCode;
+  switchPortalView('search');
+  activateSearchTab('tab-search');
+  $('searchKeyword').value = '';
+  const match = allDossiers.find(d => d.file_code === fileCode);
+  if (match && match.fond_id && $('filterFond')) {
+    $('filterFond').value = match.fond_id;
+  }
+  loadFacetedSearch();
+}
+
+function executeTopSearch() {
+  const q = $('topNavSearchInput').value.trim();
+  S.activeFileCode = null;
+  switchPortalView('search');
+  activateSearchTab('tab-search');
+  $('searchKeyword').value = q;
+  loadFacetedSearch();
+}
+
+/* =========================================================================
+   SỔ MƯỢN TÀI LIỆU, BÁO CÁO THỐNG KÊ, PHÂN QUYỀN & THÔNG BÁO
+   ========================================================================= */
+
+const BORROW_STORAGE_KEY = 'tn_archive_borrow_slips_v1';
+
+function getBorrowSlips() {
+  try {
+    const raw = localStorage.getItem(BORROW_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  const seed = [
+    { id: 'PM-2026-01', borrower: 'Phòng Cải cách hành chính - Sở Nội vụ', file_code: 'UBNDTN.2026.P01.01.001', type: 'Cấp bản sao / Trích lục', purpose: 'Đối chiếu kế hoạch chuyển đổi số 2026', status: 'Đã duyệt cấp trích lục' },
+    { id: 'PM-2026-02', borrower: 'Thanh tra Sở Giáo dục & Đào tạo', file_code: 'SGDTN.2026.P02.01.001', type: 'Đọc tại chỗ', purpose: 'Kiểm tra lưu trữ báo cáo phổ cập giáo dục', status: 'Chờ duyệt' }
+  ];
+  localStorage.setItem(BORROW_STORAGE_KEY, JSON.stringify(seed));
+  return seed;
+}
+
+function saveBorrowSlips(slips) {
+  localStorage.setItem(BORROW_STORAGE_KEY, JSON.stringify(slips));
+  updateBorrowDashCount();
+}
+
+function updateBorrowDashCount() {
+  const el = $('dashValBorrows');
+  if (el) el.textContent = getBorrowSlips().length;
+}
+
+async function openBorrowModal() {
+  closeSubnavDropdown();
+  setActiveSubnav('borrow');
+  if (!allDossiers.length) {
+    await fetch('/api/archive/dossiers', { headers: authHeaders() }).then(r => r.json()).then(d => { allDossiers = d; }).catch(() => {});
+  }
+  const sel = $('borrowDossierSelect');
+  if (sel) {
+    sel.innerHTML = allDossiers.map(d => `<option value="${escapeHtml(d.file_code)}">${escapeHtml(d.file_code)} — ${escapeHtml(d.title.slice(0, 55))}</option>`).join('');
+  }
+  renderBorrowTable();
+  openModal('borrowModal');
+}
+
+function renderBorrowTable() {
+  const tbody = $('borrowTableBody');
+  if (!tbody) return;
+  const slips = getBorrowSlips();
+  if (!slips.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:#64748b;">Chưa có phiếu đăng ký mượn / khai thác nào.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = slips.map((s, idx) => `
+    <tr>
+      <td><strong><code>${escapeHtml(s.id)}</code></strong></td>
+      <td>${escapeHtml(s.borrower)}<div style="font-size:11px; color:#64748b;">${escapeHtml(s.purpose || '')}</div></td>
+      <td><code>${escapeHtml(s.file_code)}</code></td>
+      <td>${escapeHtml(s.type)}</td>
+      <td><span class="gov-status-pill ${s.status === 'Chờ duyệt' ? 'pending' : (s.status === 'Đã hoàn trả' ? 'archived' : '')}">${escapeHtml(s.status)}</span></td>
+      <td style="white-space:nowrap;">
+        ${s.status === 'Chờ duyệt' ? `<button class="gov-act-btn btn-blue-sample" style="padding:3px 8px; font-size:11px;" onclick="updateBorrowStatus(${idx}, 'Đã duyệt cấp trích lục')">Duyệt</button>` : ''}
+        ${s.status === 'Đã duyệt cấp trích lục' ? `<button class="gov-act-btn btn-teal-import" style="padding:3px 8px; font-size:11px;" onclick="updateBorrowStatus(${idx}, 'Đã hoàn trả')">Trả hồ sơ</button>` : ''}
+        <button class="gov-act-btn" style="background:#dc2626; padding:3px 8px; font-size:11px;" onclick="deleteBorrowSlip(${idx})">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function submitBorrowRequest() {
+  const borrower = $('borrowerName').value.trim();
+  const file_code = $('borrowDossierSelect').value;
+  const type = $('borrowType').value;
+  const purpose = $('borrowPurpose').value.trim();
+  if (!borrower || !file_code) {
+    showToast('Vui lòng nhập tên người / đơn vị khai thác và chọn hồ sơ.', 'warning');
+    return;
+  }
+  const slips = getBorrowSlips();
+  slips.unshift({
+    id: `PM-2026-${String(slips.length + 1).padStart(2, '0')}`,
+    borrower,
+    file_code,
+    type,
+    purpose: purpose || 'Khai thác phục vụ công tác',
+    status: 'Chờ duyệt'
+  });
+  saveBorrowSlips(slips);
+  $('borrowerName').value = '';
+  $('borrowPurpose').value = '';
+  renderBorrowTable();
+  showToast('Đã tạo phiếu đăng ký mượn & khai thác tài liệu.', 'success');
+}
+
+function updateBorrowStatus(idx, nextStatus) {
+  const slips = getBorrowSlips();
+  if (slips[idx]) {
+    slips[idx].status = nextStatus;
+    saveBorrowSlips(slips);
+    renderBorrowTable();
+    showToast(`Đã chuyển trạng thái phiếu ${slips[idx].id} → ${nextStatus}.`, 'success');
+  }
+}
+
+function deleteBorrowSlip(idx) {
+  const slips = getBorrowSlips();
+  slips.splice(idx, 1);
+  saveBorrowSlips(slips);
+  renderBorrowTable();
+}
+
+let cachedReportRows = [];
+
+async function openReportModal() {
+  closeSubnavDropdown();
+  setActiveSubnav('report');
+  openModal('reportModal');
+  const body = $('reportModalBody');
+  body.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;">Đang tổng hợp số liệu thống kê kho lưu trữ...</div>';
+
+  try {
+    const [st, tree, docs] = await Promise.all([
+      fetch('/api/status', { headers: authHeaders() }).then(r => r.json()),
+      fetch('/api/archive/tree', { headers: authHeaders() }).then(r => r.json()),
+      fetch('/api/docs', { headers: authHeaders() }).then(r => r.json())
+    ]);
+    cachedReportRows = [];
+
+    const byRetention = {};
+    const byStatus = {};
+    const byUsage = {};
+    let totalDossiers = 0;
+
+    tree.forEach(f => {
+      (f.dossiers || []).forEach(d => {
+        totalDossiers++;
+        const ret = d.retention_period || 'Vĩnh viễn';
+        const dStatus = d.status || 'Tạo mới';
+        const dUsage = d.usage_mode || 'Công khai';
+        byRetention[ret] = (byRetention[ret] || 0) + 1;
+        byStatus[dStatus] = (byStatus[dStatus] || 0) + 1;
+        byUsage[dUsage] = (byUsage[dUsage] || 0) + 1;
+      });
+      cachedReportRows.push([f.fond_id, f.fond_name, f.total_dossiers, f.total_docs]);
+    });
+
+    const missingOcrDocs = docs.filter(d => d.n_missing > 0).length;
+    const readyDocs = docs.length - missingOcrDocs;
+
+    body.innerHTML = `
+      <div class="gov-stat-cards-grid" style="gap:10px; margin-bottom:16px;">
+        <div class="gov-stat-card" style="cursor:default;"><div class="gov-stat-card-left"><span>Phông lưu trữ</span></div><div class="gov-stat-card-val">${st.n_fonds}</div></div>
+        <div class="gov-stat-card" style="cursor:default;"><div class="gov-stat-card-left"><span>Hồ sơ TT 02/2019</span></div><div class="gov-stat-card-val">${totalDossiers}</div></div>
+        <div class="gov-stat-card" style="cursor:default;"><div class="gov-stat-card-left"><span>Văn bản số hóa</span></div><div class="gov-stat-card-val">${docs.length}</div></div>
+        <div class="gov-stat-card" style="cursor:default;"><div class="gov-stat-card-left"><span>Trang tài liệu</span></div><div class="gov-stat-card-val">${st.n_pages}</div></div>
+      </div>
+
+      <h4 style="margin:0 0 8px; color:#1a4388;">1. Thống kê theo Phông lưu trữ</h4>
+      <table class="gov-data-table" style="margin-bottom:14px; border:1px solid #e2e8f0;">
+        <thead><tr><th>Mã Phông</th><th>Tên Phông lưu trữ</th><th>Số lượng hồ sơ</th><th>Lượt văn bản gắn kết</th></tr></thead>
+        <tbody>
+          ${tree.map(f => `<tr><td><code>${escapeHtml(f.fond_id)}</code></td><td>${escapeHtml(f.fond_name)}</td><td><strong>${f.total_dossiers}</strong></td><td><strong>${f.total_docs}</strong></td></tr>`).join('')}
+        </tbody>
+      </table>
+
+      <div class="gov-report-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div>
+          <h4 style="margin:0 0 8px; color:#1a4388;">2. Theo Thời hạn bảo quản & Chế độ</h4>
+          <table class="gov-data-table" style="border:1px solid #e2e8f0;">
+            <tbody>
+              ${Object.entries(byRetention).map(([k, v]) => `<tr><td>Thời hạn: <strong>${escapeHtml(k)}</strong></td><td>${v} hồ sơ</td></tr>`).join('')}
+              ${Object.entries(byUsage).map(([k, v]) => `<tr><td>Chế độ: <strong>${escapeHtml(k)}</strong></td><td>${v} hồ sơ</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4 style="margin:0 0 8px; color:#1a4388;">3. Trạng thái Hồ sơ & Số hóa OCR</h4>
+          <table class="gov-data-table" style="border:1px solid #e2e8f0;">
+            <tbody>
+              ${Object.entries(byStatus).map(([k, v]) => `<tr><td>Trạng thái: <strong>${escapeHtml(k)}</strong></td><td>${v} hồ sơ</td></tr>`).join('')}
+              <tr><td>Văn bản đủ lớp chữ OCR</td><td><strong>${readyDocs}</strong> / ${docs.length} văn bản</td></tr>
+              <tr><td>Văn bản có trang chờ OCR</td><td><strong>${missingOcrDocs}</strong> văn bản</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    body.innerHTML = `<div style="color:#dc2626;">Không tổng hợp được báo cáo: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+function exportStatisticalReportCsv() {
+  if (!cachedReportRows.length) {
+    showToast('Chưa có dữ liệu báo cáo để xuất.', 'warning');
+    return;
+  }
+  const lines = ['Mã Phông,Tên Phông lưu trữ,Số hồ sơ,Số lượt văn bản'];
+  cachedReportRows.forEach(r => {
+    lines.push(r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+  });
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bao_cao_thong_ke_luu_tru.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('Đã xuất báo cáo thống kê CSV (mở được bằng Excel).', 'success');
+}
+
+function openRoleModal(e) {
+  if (e) e.stopPropagation();
+  if ($('roleSwitcherSelect')) $('roleSwitcherSelect').value = S.activeRole || 'admin';
+  openModal('roleModal');
+}
+
+function applyActiveRole() {
+  const sel = $('roleSwitcherSelect');
+  if (!sel) return;
+  S.activeRole = sel.value;
+  if ($('roleMiniBadge')) $('roleMiniBadge').textContent = S.activeRole;
+  closeModal('roleModal');
+  showToast(`Đã chuyển vai trò kiểm thử sang [${S.activeRole}].`, 'success');
+  if ($('viewSearch').style.display !== 'none') loadFacetedSearch();
+}
+
+function toggleNotifyPopover(e) {
+  if (e) e.stopPropagation();
+  const pop = $('notifyPopover');
+  if (!pop) return;
+  pop.classList.toggle('open');
+  if (pop.classList.contains('open')) refreshNotifications();
+}
+
+function refreshNotifications(statusData = null) {
+  const list = $('notifyList');
+  if (!list) return;
+  const slips = getBorrowSlips();
+  const pendingBorrows = slips.filter(s => s.status === 'Chờ duyệt').length;
+  const pendingDos = allDossiers.filter(d => d.status === 'Chờ hiệu chỉnh' || d.status === 'Tạo mới').length;
+  const nDocs = statusData ? statusData.n_docs : ($('dashValDocs')?.textContent || '—');
+  const nPages = statusData ? statusData.n_pages : '—';
+
+  list.innerHTML = `
+    <div class="gov-notify-item" onclick="switchPortalView('search'); $('notifyPopover').classList.remove('open');">
+      <strong>✅ Chỉ mục tìm kiếm AI sẵn sàng</strong>
+      <div style="color:#64748b; margin-top:2px;">Đang phục vụ ${escapeHtml(nDocs)} văn bản số hóa (${escapeHtml(nPages)} trang).</div>
+    </div>
+    <div class="gov-notify-item" onclick="openDossiersWorkflow('Tạo mới', 'Duyệt lưu kho'); $('notifyPopover').classList.remove('open');">
+      <strong>📁 Hồ sơ chờ duyệt lưu kho</strong>
+      <div style="color:#64748b; margin-top:2px;">Hiện có ${pendingDos} hồ sơ ở trạng thái Tạo mới / Chờ hiệu chỉnh.</div>
+    </div>
+    <div class="gov-notify-item" onclick="openBorrowModal(); $('notifyPopover').classList.remove('open');">
+      <strong>⇄ Phiếu mượn tài liệu</strong>
+      <div style="color:#64748b; margin-top:2px;">Có ${pendingBorrows} phiếu mượn chờ duyệt (tổng ${slips.length} phiếu).</div>
+    </div>
+  `;
+}
+
+function showPortalView(user) {
+  $('loginScreen').style.display = 'none';
+  $('portalApp').style.display = 'flex';
+  if (user) {
+    S.activeRole = user.role || 'admin';
+    if ($('roleMiniBadge')) $('roleMiniBadge').textContent = S.activeRole;
+    $('govTopUsername').textContent = user.username || 'admin';
+    $('govUserFullName').textContent = user.full_name || 'Quản trị viên Hệ thống';
+    $('govUserRoleTitle').textContent = user.role_title || 'Quản trị viên';
+    $('govUserAgency').textContent = user.agency || 'Sở Giáo dục và Đào tạo';
+    if (user.agency) {
+      $('portalAgencyTitle').textContent = user.agency.toUpperCase();
+    }
+  }
+  switchPortalView('dashboard');
+  syncChatLlmLabel();
+  loadStatus();
+  loadDossiersTable();
+  loadArchiveTree();
+}
+
+function showLoginView() {
+  $('loginScreen').style.display = 'flex';
+  $('portalApp').style.display = 'none';
+  $('loginPassword').value = '';
+  $('loginErrorMessage').style.display = 'none';
+  const savedUser = localStorage.getItem('archive_saved_user');
+  if (savedUser) {
+    $('loginUsername').value = savedUser;
+    $('chkRememberMe').checked = true;
+    setTimeout(() => $('loginPassword').focus(), 100);
+  } else {
+    setTimeout(() => $('loginUsername').focus(), 100);
+  }
+}
+
+async function checkAuthSession() {
+  const token = localStorage.getItem('archive_token');
+  if (!token) {
+    showLoginView();
+    return;
+  }
+  try {
+    const res = await fetch('/api/auth/me', {headers: {'Authorization': `Bearer ${token}`}});
+    const data = await res.json();
+    if (data.authenticated && data.user) {
+      showPortalView(data.user);
+    } else {
+      localStorage.removeItem('archive_token');
+      showLoginView();
+    }
+  } catch (e) {
+    showLoginView();
+  }
+}
+
+async function doLogout() {
+  const token = localStorage.getItem('archive_token');
+  if (token) {
+    await fetch('/api/auth/logout', {method: 'POST', headers: {'Authorization': `Bearer ${token}`}}).catch(() => {});
+    localStorage.removeItem('archive_token');
+  }
+  S.activeRole = 'public';
+  S.activeFileCode = null;
+  S.selectedDossiers.clear();
+  S.viewer = null;
+  S.fonds = [];
+  S.docs = [];
+  allDossiers = [];
+  if ($('roleMiniBadge')) $('roleMiniBadge').textContent = 'public';
+  if ($('mainLayout')) $('mainLayout').classList.add('viewer-closed');
+  if ($('floatingChatWindow')) $('floatingChatWindow').classList.remove('open');
+  clearChatHistory();
+  showLoginView();
+}
+</script>
+
+</body>
+</html>
